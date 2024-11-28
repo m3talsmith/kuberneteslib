@@ -1,5 +1,5 @@
 name: kuberneteslib
-description: A Kubernetes API library implementation for dart.
+description: A library that implements the Kubernetes API natively. It is written using the direct specs and currently covers most of the V1 Core, Apps, and Batch resources.
 version: 0.3.2
 repository: https://github.com/m3talsmith/kuberneteslib
 

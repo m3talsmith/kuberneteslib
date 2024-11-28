@@ -12,6 +12,17 @@ import 'bearer_client.dart';
 import 'cert_client.dart';
 import 'cluster_auth_client.dart';
 
+/// [ClusterAuth] is a core class for Kubernetes API authentication. It handles
+/// authentication to the Kubernetes API calls and acts as an http wrapper.
+///
+/// Example Usage:
+///
+/// ```dart
+/// main() async {
+///   final config = Config.fromYaml('<kubernetes cluster yaml>');
+///   final auth = ClusterAuth.fromConfig(config);
+/// }
+/// ```
 class ClusterAuth {
   Cluster? cluster;
   User? user;
@@ -22,6 +33,19 @@ class ClusterAuth {
   Uint8List? clientKeyData;
   ClusterAuthClient? client;
 
+  /// fromConfig offers an on-ramp to getting your ClusterAuth off the ground.
+  ///
+  /// It takes a [config] as an argument and parses the authentication data from
+  /// it.
+  ///
+  /// Example Usage:
+  ///
+  /// ```dart
+  /// main() async {
+  ///   final config = Config.fromYaml('<kubernetes cluster yaml>');
+  ///   final auth = ClusterAuth.fromConfig(config);
+  /// }
+  /// ```
   ClusterAuth.fromConfig(Config config) {
     final context =
         config.contexts.firstWhere((e) => e.name == config.currentContext);
@@ -34,6 +58,8 @@ class ClusterAuth {
     clientKeyData = base64Decode(user?.clientKeyData ?? '');
   }
 
+  /// ensureInitialization processes any auth related variables and
+  /// initializes an [ClusterAuth.client] appropriately.
   Future<void> ensureInitialization() async {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       if (user != null && user!.exec != null) {
@@ -61,6 +87,7 @@ class ClusterAuth {
     client = await _authClient();
   }
 
+  /// An authenticated http wrapper around a get request.
   Future<Response> get(Uri url, {Map<String, String>? headers}) async {
     client ??= await _authClient();
     return client!.get(
@@ -69,6 +96,7 @@ class ClusterAuth {
     );
   }
 
+  /// An authenticated http wrapper around a post request.
   Future<Response> post(
     Uri url, {
     Map<String, String>? headers,
@@ -82,6 +110,7 @@ class ClusterAuth {
     );
   }
 
+  /// An authenticated http wrapper around a put request.
   Future<Response> put(
     Uri url, {
     Map<String, String>? headers,
@@ -95,6 +124,7 @@ class ClusterAuth {
     );
   }
 
+  /// An authenticated http wrapper around a patch request.
   Future<Response> patch(
     Uri url, {
     Map<String, String>? headers,
@@ -108,6 +138,7 @@ class ClusterAuth {
     );
   }
 
+  /// An authenticated http wrapper around a delete request.
   Future<Response> delete(
     Uri url, {
     Map<String, String>? headers,

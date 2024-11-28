@@ -13,8 +13,13 @@ import 'resource_kind.dart';
 /// resource that the Kubernetes API has.
 ///
 class Resource {
+  /// Contains the [ObjectMeta] (metadata) for a [Resource].
   late ObjectMeta metadata;
+
+  /// Contains an optional [Spec] for a [Resource].
   Spec? spec;
+
+  /// Contains an optional [Status] for a [Resource].
   Status? status;
 
   /// Used for internal tracking purposes.
@@ -114,7 +119,7 @@ class Resource {
   ///
   /// ```dart
   /// main () async {
-  ///   final config = '<kubernetes config yaml>';
+  ///   final config = Config.fromYaml('<kubernetes cluster yaml>');
   ///   final auth = ClusterAuth.fromConfig(config);
   ///   await auth.ensureInitialized();
   ///
@@ -194,7 +199,7 @@ class Resource {
   ///
   /// ```dart
   /// main () async {
-  ///   final config = '<kubernetes config yaml>';
+  ///   final config = Config.fromYaml('<kubernetes cluster yaml>');
   ///   final auth = ClusterAuth.fromConfig(config);
   ///   await auth.ensureInitialized();
   ///
@@ -255,7 +260,7 @@ class Resource {
   ///
   /// ```dart
   /// main () async {
-  ///   final config = '<kubernetes config yaml>';
+  ///   final config = Config.fromYaml('<kubernetes cluster yaml>');
   ///   final auth = ClusterAuth.fromConfig(config);
   ///   await auth.ensureInitialized();
   ///
