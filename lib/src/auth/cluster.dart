@@ -3,13 +3,13 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
-import 'package:kubernetes/src/auth/bearer_client.dart';
-import 'package:kubernetes/src/auth/cert_client.dart';
 
 import '../cluster/cluster.dart';
 import '../cluster/config.dart';
 import '../cluster/exec.dart';
 import '../cluster/user.dart';
+import 'bearer_client.dart';
+import 'cert_client.dart';
 import 'cluster_auth_client.dart';
 
 class ClusterAuth {
