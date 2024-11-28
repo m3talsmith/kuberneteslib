@@ -1,0 +1,1 @@
+class MissingAuthException implements Exception {}
