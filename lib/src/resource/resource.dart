@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:humanizer/humanizer.dart';
-import 'package:kubernetes/kubernetes.dart';
-import 'package:kubernetes/src/auth/exceptions.dart';
+import 'package:kuberneteslib/kuberneteslib.dart';
+import 'package:kuberneteslib/src/auth/exceptions.dart';
 
 class Resource {
   late ObjectMeta metadata;
