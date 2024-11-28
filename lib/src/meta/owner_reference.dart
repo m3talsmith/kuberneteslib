@@ -1,3 +1,6 @@
+/// Implements the [OwnerReference] portion of the specification.
+///
+/// [Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#ownerreference-v1-meta)
 class OwnerReference {
   late String apiVersion;
   late bool blockOwnerDeletion;
@@ -6,6 +9,7 @@ class OwnerReference {
   late String name;
   late String uid;
 
+  /// Takes a [Map] and pulls out the necessary information.
   OwnerReference.fromMap(Map<String, dynamic> data) {
     apiVersion = data['apiVersion'];
     blockOwnerDeletion = data['blockOwnerDeletion'];

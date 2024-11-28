@@ -1,6 +1,11 @@
 import 'managed_field_entry.dart';
 import 'owner_reference.dart';
 
+/// Implements the [ObjectMeta] Kubernetes API specification. All fields (with
+/// the exception of [name]) are optional to support the flexibility of this
+/// structure.
+///
+/// [Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)
 class ObjectMeta {
   Map<String, dynamic>? annotations;
   DateTime? creationTimestamp;
@@ -18,6 +23,7 @@ class ObjectMeta {
   String? selfLink;
   String? uid;
 
+  /// Takes a [Map] and pulls out the necessary information.
   ObjectMeta.fromMap(Map<String, dynamic> data) {
     annotations = data['annotations'];
     if (data['creationTimestamp'] != null) {

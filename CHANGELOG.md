@@ -1,3 +1,8 @@
+## 0.3.3
+
+- Added documentation for ClusterAuth
+- Added documentation for Metadata
+
 ## 0.3.2
 
 - Improved usage examples in Resource
