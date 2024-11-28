@@ -1,3 +1,7 @@
+## 0.3.4
+
+- Added example code
+
 ## 0.3.3
 
 - Added documentation for ClusterAuth
