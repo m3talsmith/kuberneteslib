@@ -1,3 +1,7 @@
+## 0.3.2
+
+- Improved usage examples in Resource
+
 ## 0.3.1
 
 - Added documentation for Resource

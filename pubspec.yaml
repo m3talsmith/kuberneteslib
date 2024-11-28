@@ -1,6 +1,6 @@
 name: kuberneteslib
 description: A Kubernetes API library implementation for dart.
-version: 0.3.1
+version: 0.3.2
 repository: https://github.com/m3talsmith/kuberneteslib
 
 environment:

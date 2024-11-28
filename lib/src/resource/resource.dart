@@ -112,9 +112,10 @@ class Resource {
   ///
   /// Example usage:
   ///
-  /// ```
+  /// ```dart
   /// main () async {
-  ///   final auth = BearerClient(token: 1234);
+  ///   final config = '<kubernetes config yaml>';
+  ///   final auth = ClusterAuth.fromConfig(config);
   ///   await auth.ensureInitialized();
   ///
   ///   final resources = Resource.list({
@@ -191,9 +192,10 @@ class Resource {
   ///
   /// Example usage:
   ///
-  /// ```
+  /// ```dart
   /// main () async {
-  ///   final auth = BearerClient(token: 1234);
+  ///   final config = '<kubernetes config yaml>';
+  ///   final auth = ClusterAuth.fromConfig(config);
   ///   await auth.ensureInitialized();
   ///
   ///   final resource = Resource.show({
@@ -251,9 +253,10 @@ class Resource {
   ///
   /// Example usage:
   ///
-  /// ```
+  /// ```dart
   /// main () async {
-  ///   final auth = BearerClient(token: 1234);
+  ///   final config = '<kubernetes config yaml>';
+  ///   final auth = ClusterAuth.fromConfig(config);
   ///   await auth.ensureInitialized();
   ///
   ///   final resource = Resource.show({
