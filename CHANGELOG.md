@@ -1,3 +1,7 @@
+## 0.3.1
+
+- Added documentation for Resource
+
 ## 0.3.0
 
 - Resources can be listed, viewed, and deleted
