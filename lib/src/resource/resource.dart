@@ -9,19 +9,34 @@ import '../spec/spec.dart';
 import '../status/status.dart';
 import 'resource_kind.dart';
 
+/// A Resource is the core component of Kubernetes. This gives access to every
+/// resource that the Kubernetes API has.
+///
 class Resource {
   late ObjectMeta metadata;
   Spec? spec;
   Status? status;
 
+  /// Used for internal tracking purposes.
   late String kind;
+
+  /// Used for internal tracking purposes.
   late String namespace;
+
+  /// Used for internal tracking purposes.
   late ClusterAuth auth;
 
+  /// The API path for V1 Core resource types.
   static const coreAPI = '/api/v1';
+
+  /// The API path for V1 Apps resource types.
   static const appsAPI = '/apis/apps/v1';
+
+  /// The API path for V1 Batch resource types.
   static const batchAPI = '/apis/batch/v1';
 
+  /// [ignoreList] is a list of [ResourceKind] enums to ignore when listing
+  /// resources.
   static const ignoreList = [
     ResourceKind.unknown,
     ResourceKind.container,
@@ -29,11 +44,17 @@ class Resource {
     ResourceKind.binding,
   ];
 
+  /// [ignoreShow] is a list of [ResourceKind] enums to ignore when showing
+  /// resources.
   static const ignoreShow = [
     ...ignoreList,
     ResourceKind.persistentVolume,
   ];
 
+  /// [apiReadKinds] gathers a list of API readable [ResourceKind]s.
+  ///
+  /// Will return the list sorted by [ResourceKind.name], with [ignoreList]
+  /// resources removed.
   static List<ResourceKind> get apiReadKinds {
     List<ResourceKind> values = [];
     for (var e in ResourceKind.values) {
@@ -48,7 +69,13 @@ class Resource {
       );
   }
 
-  static String? getApi({required String resourceKind, bool pluralize = true}) {
+  /// [getApi] returns the correct API path for a given [resourceKind].
+  ///
+  /// Current supportes API paths are:
+  /// - [coreAPI]
+  /// - [appsAPI]
+  /// - [batchAPI]
+  static String? getApi({required String resourceKind}) {
     switch (ResourceKind.fromString(resourceKind)) {
       case ResourceKind.unknown:
         return coreAPI;
@@ -66,6 +93,36 @@ class Resource {
     }
   }
 
+  /// [list] queries the Kubernetes API for a list of [resourceKind].
+  ///
+  /// [resourceKind] is required and represents the [ResourceKind] of a
+  /// Kubernetes resource.
+  ///
+  /// If an [auth] instance isn't passed, this will throw a
+  /// [MissingAuthException].
+  ///
+  /// [pluralize] (default: true) allows the [resourceKind] to be pluralized for
+  /// the API path.
+  ///
+  /// An optional [namespace] (default: "default") can be passed to narrow the
+  /// query to a specific a Kubernetes [namespace].
+  ///
+  /// [list] will return an empty list if no Kubernetes [Resource] is found in
+  /// the Kubernetes API.
+  ///
+  /// Example usage:
+  ///
+  /// ```
+  /// main () async {
+  ///   final auth = BearerClient(token: 1234);
+  ///   await auth.ensureInitialized();
+  ///
+  ///   final resources = Resource.list({
+  ///     auth: auth,
+  ///     resourceKind: 'pod',
+  ///   });
+  /// }
+  /// ```
   static Future<List<Resource>> list({
     ClusterAuth? auth,
     required String resourceKind,
@@ -95,9 +152,15 @@ class Resource {
     final data = jsonDecode(response.body);
 
     for (var item in data['items']) {
-      item['kind'] = resourceKind;
+      /// Adds additional internal tracking for the [ResourceKind] used
+      item['kind'] = resourceKind.toSingularForm();
+
+      /// Adds additional internal tracking for the api path used
       item['api'] = api;
+
+      /// Adds additional internal tracking for the [auth] instance used
       item['auth'] = auth;
+
       final resource = Resource.fromMap(item);
       resources.add(resource);
     }
@@ -105,6 +168,41 @@ class Resource {
     return resources;
   }
 
+  /// [show] performs a Kubernetes API query to fetch a given [resourceKind] by
+  /// [resourceName].
+  ///
+  /// [resourceName] is required and represents the [Resource.name] of a
+  /// Kubernetes resource.
+  ///
+  /// [resourceKind] is required and represents the [ResourceKind] of a
+  /// Kubernetes resource.
+  ///
+  /// If an [auth] instance isn't passed, this will throw a
+  /// [MissingAuthException].
+  ///
+  /// [pluralize] (default: true) allows the [resourceKind] to be pluralized for
+  /// the API path.
+  ///
+  /// An optional [namespace] (default: "default") can be passed to narrow the
+  /// query to a specific a Kubernetes [namespace].
+  ///
+  /// [show] will return null if no [Resource] is returned from the Kubernetes
+  /// API.
+  ///
+  /// Example usage:
+  ///
+  /// ```
+  /// main () async {
+  ///   final auth = BearerClient(token: 1234);
+  ///   await auth.ensureInitialized();
+  ///
+  ///   final resource = Resource.show({
+  ///     auth: auth,
+  ///     resourceName: 'example-1234',
+  ///     resourceKind: 'pod',
+  ///   });
+  /// }
+  /// ```
   static Future<Resource?> show({
     ClusterAuth? auth,
     required String resourceKind,
@@ -132,11 +230,41 @@ class Resource {
     }
     final data = jsonDecode(response.body);
 
+    /// Adds additional internal tracking for the [ResourceKind] used
     data['kind'] = resourceKind.toSingularForm();
+
+    /// Adds additional internal tracking for the api path used
+    data['api'] = api;
+
+    /// Adds additional internal tracking for the [auth] instance used
     data['auth'] = auth;
+
     return Resource.fromMap(data);
   }
 
+  /// [delete] queries the Kubernetes API to remove an instance of a resource
+  ///
+  /// This relies on the internal:
+  /// - [kind]
+  /// - [metadata.name]
+  /// - [api]
+  ///
+  /// Example usage:
+  ///
+  /// ```
+  /// main () async {
+  ///   final auth = BearerClient(token: 1234);
+  ///   await auth.ensureInitialized();
+  ///
+  ///   final resource = Resource.show({
+  ///     auth: auth,
+  ///     resourceName: 'example-1234',
+  ///     resourceKind: 'pod',
+  ///   });
+  ///
+  ///   await resource.delete();
+  /// }
+  /// ```
   delete() async {
     final api = Resource.getApi(resourceKind: kind);
 
@@ -152,6 +280,8 @@ class Resource {
     }
   }
 
+  /// [Resource.fromMap] constructs an instance of a [Resource] from a
+  /// Kubernetes API result as [data].
   Resource.fromMap(Map<String, dynamic> data) {
     if (data.isEmpty) return;
 

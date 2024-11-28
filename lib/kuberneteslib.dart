@@ -1,3 +1,8 @@
+/// Kuberneteslib
+///
+/// A library that implements and works directly with the Kubernetes API.
+///
+
 library;
 
 export 'src/auth/cluster.dart';
