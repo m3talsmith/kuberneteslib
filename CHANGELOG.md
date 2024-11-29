@@ -1,5 +1,10 @@
 # KubernetesLib
 
+## 0.3.9
+
+- Removed late clause and made fields nullable
+- Added test for string values for match label
+
 ## 0.3.8
 
 - Corrected example
