@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.3.8
+
+- Corrected example
+
 ## 0.3.7
 
 - Updated README
