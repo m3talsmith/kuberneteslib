@@ -342,4 +342,10 @@ class Resource {
       status = Status.fromMap(data['status']);
     }
   }
+
+  Map<String, dynamic> toMap() => {
+        'metatdata': metadata.toMap(),
+        if (spec != null) 'spec': spec!.toMap(),
+        if (status != null) 'status': status!.toMap(),
+      };
 }

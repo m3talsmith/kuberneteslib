@@ -90,4 +90,23 @@ class ObjectMeta {
     selfLink = data['selfLink'];
     uid = data['uid'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'annotations': annotations,
+        'creationTimestamp': creationTimestamp,
+        'deletionGracePeriodSeconds': deletionGracePeriodSeconds,
+        'finalizers': finalizers,
+        'generateName': generateName,
+        'generation': generation,
+        'labels': labels,
+        if (managedFields != null)
+          'managedFields': managedFields!.map((e) => e.toMap()),
+        'name': name,
+        'namespace': namespace,
+        if (ownerReferences != null)
+          'ownerReferences': ownerReferences!.map((e) => e.toMap()),
+        'resourceVersion': resourceVersion,
+        'selfLink': selfLink,
+        'uid': uid,
+      };
 }

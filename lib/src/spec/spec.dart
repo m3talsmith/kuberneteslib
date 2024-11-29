@@ -22,4 +22,13 @@ class Spec {
         return PodSpec.fromMap(data);
     }
   }
+
+  Map<String, dynamic> toMap() {
+    switch (kind) {
+      case ResourceKind.pod:
+        return (this as PodSpec).toMap();
+      default:
+        return (this as PodSpec).toMap();
+    }
+  }
 }

@@ -268,4 +268,129 @@ class PodSpec extends Spec {
       }
     }
   }
+
+  /// Converts this PodSpec instance to a Map representation.
+  /// 
+  /// Returns a Map containing all non-null properties of the PodSpec.
+  /// This is useful for serialization and API communication.
+  Map<String, dynamic> toMap() {
+    final newMap = <String, dynamic>{};
+
+    if (activeDeadlineSeconds != null) {
+      newMap['activeDeadlineSeconds'] = activeDeadlineSeconds;
+    }
+    if (affinity != null) {
+      newMap['affinity'] = affinity!.toMap();
+    }
+    if (automountServiceAccountToken != null) {
+      newMap['automountServiceAccountToken'] = automountServiceAccountToken;
+    }
+    if (containers != null) {
+      newMap['containers'] = containers!.map((e) => e.toMap()).toList();
+    }
+    if (dnsConfig != null) {
+      newMap['dnsConfig'] = dnsConfig!.toMap();
+    }
+    if (dnsPolicy != null) {
+      newMap['dnsPolicy'] = dnsPolicy;
+    }
+    if (enableServiceLinks != null) {
+      newMap['enableServiceLinks'] = enableServiceLinks;
+    }
+    if (ephemeralContainers != null) {
+      newMap['ephemeralContainers'] = ephemeralContainers!.map((e) => e.toMap()).toList();
+    }
+    if (hostAliases != null) {
+      newMap['hostAliases'] = hostAliases!.map((e) => e.toMap()).toList();
+    }
+    if (hostIPC != null) {
+      newMap['hostIPC'] = hostIPC;
+    }
+    if (hostNetwork != null) {
+      newMap['hostNetwork'] = hostNetwork;
+    }
+    if (hostPID != null) {
+      newMap['hostPID'] = hostPID;
+    }
+    if (hostname != null) {
+      newMap['hostname'] = hostname;
+    }
+    if (imagePullSecrets != null) {
+      newMap['imagePullSecrets'] = imagePullSecrets!.map((e) => e.toMap()).toList();
+    }
+    if (initContainers != null) {
+      newMap['initContainers'] = initContainers!.map((e) => e.toMap()).toList();
+    }
+    if (nodeName != null) {
+      newMap['nodeName'] = nodeName;
+    }
+    if (nodeSelector != null) {
+      newMap['nodeSelector'] = nodeSelector;
+    }
+    if (os != null) {
+      newMap['os'] = os!.toMap();
+    }
+    if (overhead != null) {
+      newMap['overhead'] = overhead;
+    }
+    if (preemptionPolicy != null) {
+      newMap['preemptionPolicy'] = preemptionPolicy;
+    }
+    if (priority != null) {
+      newMap['priority'] = priority;
+    }
+    if (priorityClassName != null) {
+      newMap['priorityClassName'] = priorityClassName;
+    }
+    if (readinessGates != null) {
+      newMap['readinessGates'] = readinessGates!.map((e) => e.toMap()).toList();
+    }
+    if (resourceClaims != null) {
+      newMap['resourceClaims'] = resourceClaims!.map((e) => e.toMap()).toList();
+    }
+    if (resourcePolicy != null) {
+      newMap['resourcePolicy'] = resourcePolicy;
+    }
+    if (runtimeClassName != null) {
+      newMap['runtimeClassName'] = runtimeClassName;
+    }
+    if (schedulerName != null) {
+      newMap['schedulerName'] = schedulerName;
+    }
+    if (schedulingGates != null) {
+      newMap['schedulingGates'] = schedulingGates!.map((e) => e.toMap()).toList();
+    }
+    if (securityContext != null) {
+      newMap['securityContext'] = securityContext!.toMap();
+    }
+    if (serviceAccount != null) {
+      newMap['serviceAccount'] = serviceAccount;
+    }
+    if (serviceAccountName != null) {
+      newMap['serviceAccountName'] = serviceAccountName;
+    }
+    if (setHostnameAsFQDN != null) {
+      newMap['setHostnameAsFQDN'] = setHostnameAsFQDN;
+    }
+    if (shareProcessNamespace != null) {
+      newMap['shareProcessNamespace'] = shareProcessNamespace;
+    }
+    if (subdomain != null) {
+      newMap['subdomain'] = subdomain;
+    }
+    if (terminationGracePeriodSeconds != null) {
+      newMap['terminationGracePeriodSeconds'] = terminationGracePeriodSeconds;
+    }
+    if (tolerations != null) {
+      newMap['tolerations'] = tolerations!.map((e) => e.toMap()).toList();
+    }
+    if (topologySpreadConstraints != null) {
+      newMap['topologySpreadConstraints'] = topologySpreadConstraints!.map((e) => e.toMap()).toList();
+    }
+    if (volumes != null) {
+      newMap['volumes'] = volumes!.map((e) => e.toMap()).toList();
+    }
+
+    return newMap;
+  }
 }
