@@ -1,3 +1,9 @@
+# KubernetesLib
+
+## 0.3.7
+
+- Updated README
+
 ## 0.3.6
 
 - Added documentation for GCEPersistentDiskVolumeSource
