@@ -4,7 +4,7 @@
 /// including protocol information and naming.
 class ContainerPort {
   /// The port number inside the container.
-  late int containerPort;
+  int? containerPort;
 
   /// The host IP address to bind to (optional).
   String? hostIP;
@@ -13,10 +13,10 @@ class ContainerPort {
   int? hostPort;
 
   /// The name of this port mapping.
-  late String name;
+  String? name;
 
   /// The protocol for this port (e.g., 'TCP', 'UDP').
-  late String protocol;
+  String? protocol;
 
   /// Creates a [ContainerPort] instance from a map of values.
   /// 

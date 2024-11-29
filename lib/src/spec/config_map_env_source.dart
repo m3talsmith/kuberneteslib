@@ -16,7 +16,7 @@ class ConfigMapEnvSource {
   ///
   /// This must match the name of an existing ConfigMap in the same namespace
   /// as the Pod (unless [optional] is true).
-  late String name;
+  String? name;
 
   /// Specifies whether the referenced ConfigMap is optional.
   ///
@@ -27,7 +27,7 @@ class ConfigMapEnvSource {
   /// If set to `false`:
   /// - The container will fail to start if the ConfigMap is missing
   /// - This is the default behavior if not specified
-  late bool optional;
+  bool? optional;
 
   /// Creates a new [ConfigMapEnvSource] instance from a map of values.
   ///

@@ -8,10 +8,10 @@ import 'label_selector_requirement.dart';
 /// * matchLabels: A map of key-value pairs for direct label matching
 class LabelSelector {
   /// List of label selector requirements that must be met
-  late List<LabelSelectorRequirement> matchExpressions;
+  List<LabelSelectorRequirement>? matchExpressions;
 
   /// Map of label key-value pairs that must match exactly
-  late Map<String, LabelSelectorRequirement> matchLabels;
+  Map<String, LabelSelectorRequirement>? matchLabels;
 
   /// Creates a LabelSelector from a map structure
   ///
@@ -19,14 +19,22 @@ class LabelSelector {
   /// * 'matchExpressions': List of maps defining label selector requirements
   /// * 'matchLabels': Map of label key-value pairs
   LabelSelector.fromMap(Map<String, dynamic> data) {
-    matchExpressions = (data['matchExpressions'] as List<Map<String, dynamic>>)
-        .map(
-          (e) => LabelSelectorRequirement.fromMap(e),
-        )
-        .toList();
-    matchLabels = {};
-    for (var e in (data['matchLabels'] as Map<String, dynamic>).entries) {
-      matchLabels[e.key] = LabelSelectorRequirement.fromMap(e.value);
+    if (data['matchExpressions'] != null) {
+      matchExpressions =
+          (data['matchExpressions'] as List<Map<String, dynamic>>)
+              .map(
+                (e) => LabelSelectorRequirement.fromMap(e),
+          )
+              .toList();
+    }
+    if (data['matchLabels'] != null) {
+      matchLabels = {};
+      for (var e in (data['matchLabels'] as Map<String, dynamic>).entries) {
+        final req = (e.value is String)
+            ? LabelSelectorRequirement(key: e.key, values: [e.value])
+            : LabelSelectorRequirement.fromMap(e.value);
+        matchLabels![e.key] = req;
+      }
     }
   }
 }

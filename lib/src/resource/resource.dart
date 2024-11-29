@@ -249,6 +249,45 @@ class Resource {
     return Resource.fromMap(data);
   }
 
+  static Future<Resource?> create({
+    ClusterAuth? auth,
+    required String resourceKind,
+    required Map<String, dynamic> body,
+    bool pluralize = true,
+    String? namespace = 'default',
+  }) async {
+    if (auth == null) throw MissingAuthException();
+
+    final api = Resource.getApi(resourceKind: resourceKind);
+
+    var resourceKindPluralized = resourceKind;
+    if (pluralize) {
+      resourceKindPluralized = resourceKind.toLowerCase().toPluralForm();
+    }
+
+    final resourcePath = (namespace != null)
+        ? '$api/namespaces/$namespace/$resourceKindPluralized'
+        : '$api/$resourceKindPluralized';
+    final uri = Uri.parse('${auth.cluster!.server!}$resourcePath');
+
+    final response = await auth.post(uri, body: body);
+    if (response.statusCode > 299) {
+      return null;
+    }
+    final data = jsonDecode(response.body);
+
+    /// Adds additional internal tracking for the [ResourceKind] used
+    data['kind'] = resourceKind.toSingularForm();
+
+    /// Adds additional internal tracking for the api path used
+    data['api'] = api;
+
+    /// Adds additional internal tracking for the [auth] instance used
+    data['auth'] = auth;
+
+    return Resource.fromMap(data);
+  }
+
   /// [delete] queries the Kubernetes API to remove an instance of a resource
   ///
   /// This relies on the internal:
