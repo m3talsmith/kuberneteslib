@@ -3,17 +3,48 @@ import 'env_var.dart';
 import 'lifecycle.dart';
 import 'probe.dart';
 
+/// Represents an ephemeral container in Kubernetes.
+/// 
+/// Ephemeral containers are temporary containers that may be added to an existing pod
+/// for user-initiated activities such as debugging.
 class EphemeralContainer {
+  /// Command-line arguments for the container.
   late List<String> args;
+
+  /// Entrypoint array for the container.
   late List<String> command;
+
+  /// List of environment variables to set in the container.
   late List<EnvVar> env;
+
+  /// List of sources to populate environment variables in the container.
   late List<EnvFromSource> envFrom;
+
+  /// Docker image name to use for this container.
   late String image;
+
+  /// Image pull policy for the container.
+  /// 
+  /// Can be one of: 'Always', 'Never', 'IfNotPresent'
   late String imagePullPolicy;
+
+  /// Actions that the management system should take in response to container lifecycle events.
   late Lifecycle lifecycle;
+
+  /// Periodic probe of container liveness.
+  /// 
+  /// Container will be restarted if the probe fails.
   late Probe livenessProbe;
+
+  /// Name of the ephemeral container.
+  /// 
+  /// This name must be unique among all containers in the pod.
   late String name;
 
+  /// Creates an [EphemeralContainer] instance from a map of data.
+  /// 
+  /// The [data] parameter should contain all the necessary fields to initialize
+  /// the container's properties.
   EphemeralContainer.fromMap(Map<String, dynamic> data) {
     args = data['args'] as List<String>;
     command = data['command'] as List<String>;

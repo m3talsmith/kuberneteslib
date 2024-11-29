@@ -28,39 +28,107 @@ import 'volume/secret_volume_source.dart';
 import 'volume/storage_os_volume_source.dart';
 import 'volume/vsphere_virtual_disk_volume_source.dart';
 
-// https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#volume-v1-core
+/// Represents a volume in Kubernetes that can be mounted by containers in a pod.
+/// 
+/// A Volume specifies how to mount a filesystem inside a Pod. Kubernetes supports various
+/// types of volumes, each with its own configuration parameters.
+/// 
+/// See: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#volume-v1-core
 class Volume {
+  /// AWS EBS volume configuration
   AWSElasticBlockStoreVolumeSource? awsElasticBlockStore;
+  
+  /// Azure Disk volume configuration
   AzureDiskVolumeSource? azureDisk;
+  
+  /// Azure File volume configuration
   AzureFileVolumeSource? azureFile;
+  
+  /// CephFS volume configuration
   CephFSVolumeSource? cephfs;
+  
+  /// Cinder volume configuration (OpenStack)
   CinderVolumeSource? cinder;
+  
+  /// ConfigMap volume configuration
   ConfigMapVolumeSource? configMap;
+  
+  /// Container Storage Interface (CSI) volume configuration
   CSIVolumeSource? csi;
+  
+  /// DownwardAPI volume configuration
   DownwardAPIVolumeSource? downwardAPI;
+  
+  /// EmptyDir volume configuration
   EmptyDirVolumeSource? emptyDir;
+  
+  /// Ephemeral volume configuration
   EphemeralVolumeSource? ephemeral;
+  
+  /// Fibre Channel volume configuration
   FCVolumeSource? fc;
+  
+  /// FlexVolume configuration
   FlexVolumeSource? flexVolume;
+  
+  /// Flocker volume configuration
   FlockerVolumeSource? flocker;
+  
+  /// Google Compute Engine Persistent Disk configuration
   GCEPersistentDiskVolumeSource? gcePersistentDisk;
+  
+  /// GitRepo volume configuration (deprecated)
   GitRepoVolumeSource? gitRepo;
+  
+  /// GlusterFS volume configuration
   GlusterfsVolumeSource? glusterfs;
+  
+  /// HostPath volume configuration
   HostPathVolumeSource? hostPath;
+  
+  /// iSCSI volume configuration
   ISCSIVolumeSource? iscsi;
+  
+  /// Volume name
   String? name;
+  
+  /// NFS volume configuration
   NFSVolumeSource? nfs;
+  
+  /// PersistentVolumeClaim configuration
   PersistentVolumeClaimVolumeSource? persistentVolumeClaim;
+  
+  /// PhotonController persistent disk configuration
   PhotonPersistentDiskVolumeSource? photonPersistentDisk;
+  
+  /// Portworx volume configuration
   PortworxVolumeSource? portworxVolume;
+  
+  /// Projected volume configuration
   ProjectedVolumeSource? projected;
+  
+  /// Quobyte volume configuration
   QuobyteVolumeSource? quobyte;
+  
+  /// Rados Block Device (RBD) volume configuration
   RBDVolumeSource? rbd;
+  
+  /// ScaleIO volume configuration
   ScaleIOVolumeSource? scaleIO;
+  
+  /// Secret volume configuration
   SecretVolumeSource? secret;
+  
+  /// StorageOS volume configuration
   StorageOSVolumeSource? storageos;
+  
+  /// VMware vSphere volume configuration
   VsphereVirtualDiskVolumeSource? vsphereVolume;
 
+  /// Creates a Volume instance from a map of data.
+  /// 
+  /// The map should contain volume configuration data as received from the Kubernetes API.
+  /// Each supported volume type is conditionally parsed from its corresponding map entry.
   Volume.fromMap(Map<String, dynamic> data) {
     if (data['awsElasticBlockStore'] != null) {
       awsElasticBlockStore = AWSElasticBlockStoreVolumeSource.fromMap(

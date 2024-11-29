@@ -1,3 +1,4 @@
+/// Represents Linux capabilities that can be added to a container.
 class Capabilities {
   List<String>? add;
   List<String>? drop;

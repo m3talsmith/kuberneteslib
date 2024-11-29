@@ -9,33 +9,88 @@ import 'security_context.dart';
 import 'volume_device.dart';
 import 'volume_mount.dart';
 
-// https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#container-v1-core
+/// Represents a Container specification in Kubernetes.
+/// 
+/// This class maps to the Container object in the Kubernetes API (v1 Core).
+/// See: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#container-v1-core
 class Container {
+  /// The arguments to pass to the container command
   List<String>? args;
+
+  /// The command to run inside the container
   List<String>? command;
+
+  /// List of environment variables to set in the container
   List<EnvVar>? env;
+
+  /// List of sources to populate environment variables in the container
   List<EnvFromSource>? envFrom;
+
+  /// Container image name
   String? image;
+
+  /// Image pull policy: Always, Never, or IfNotPresent
   String? imagePullPolicy;
+
+  /// Actions that the management system should take in response to container lifecycle events
   Lifecycle? lifecycle;
+
+  /// Periodic probe of container liveness
   Probe? livenessProbe;
+
+  /// Name of the container
   String? name;
+
+  /// List of ports to expose from the container
   List<ContainerPort>? ports;
+
+  /// Periodic probe of container service readiness
   Probe? readinessProbe;
+
+  /// ResizePolicy defines the set of conditions that control how resize operations are handled
   List<ContainerResizePolicy>? resizePolicy;
+
+  /// Compute resource requirements
   ResourceRequirements? resources;
+
+  /// Restart policy for the container
   String? restartPolicy;
+
+  /// Security context settings for the container
   SecurityContext? securityContext;
+
+  /// Probe to check if the container has started
   Probe? startupProbe;
+
+  /// Whether this container should allocate a buffer for stdin
   bool? stdin;
+
+  /// Whether the container runtime should close the stdin channel after it has been opened by a single attach
   bool? stdinOnce;
+
+  /// Path at which to write termination messages
   String? terminationMessagePath;
+
+  /// Policy for handling termination messages
   String? terminationMessagePolicy;
+
+  /// Whether this container should allocate a TTY
   bool? tty;
+
+  /// List of block devices to be used by the container
   List<VolumeDevice>? volumeDevices;
+
+  /// Pod volumes to mount into the container's filesystem
   List<VolumeMount>? volumeMounts;
+
+  /// Container's working directory
   String? workingDir;
 
+  /// Creates a Container instance from a Map representation.
+  /// 
+  /// This constructor is typically used when deserializing Kubernetes YAML/JSON configurations.
+  /// Each field is carefully mapped from the input data, with proper type conversion
+  /// and nested object creation where necessary.
   Container.fromMap(Map<String, dynamic> data) {
     if (data['args'] != null) {
       args = [];

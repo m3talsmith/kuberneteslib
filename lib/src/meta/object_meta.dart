@@ -7,20 +7,55 @@ import 'owner_reference.dart';
 ///
 /// [Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)
 class ObjectMeta {
+  /// Annotations is an unstructured key value map stored with a resource that may be
+  /// set by external tools to store and retrieve arbitrary metadata.
   Map<String, dynamic>? annotations;
+
+  /// CreationTimestamp is a timestamp representing the server time when this object
+  /// was created.
   DateTime? creationTimestamp;
+
+  /// Number of seconds allowed for this object to gracefully terminate before
+  /// it will be removed from the system.
   int? deletionGracePeriodSeconds;
+
+  /// DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted.
   DateTime? deletionTimestamp;
+
+  /// List of finalizers that must be executed before the object is deleted.
   List<String>? finalizers;
+
+  /// GenerateName is an optional prefix, used by the server, to generate a unique
+  /// name for the object if [name] is not specified.
   String? generateName;
+
+  /// A sequence number representing a specific generation of the desired state.
   int? generation;
+
+  /// Map of string keys and values that can be used to organize and categorize objects.
   Map<String, dynamic>? labels;
+
+  /// List of objects that manage this object's fields.
   List<ManagedFieldEntry>? managedFields;
+
+  /// Name must be unique within a namespace. Required when creating resources.
   late String name;
+
+  /// Namespace defines the space within which each name must be unique.
   String? namespace;
+
+  /// List of objects that own this object.
   List<OwnerReference>? ownerReferences;
+
+  /// An opaque value that represents the internal version of this object.
   String? resourceVersion;
+
+  /// SelfLink is a URL representing this object.
+  /// Populated by the system. Read-only.
   String? selfLink;
+
+  /// UID is a unique identifier in time and space for this object.
+  /// Populated by the system. Read-only.
   String? uid;
 
   /// Takes a [Map] and pulls out the necessary information.

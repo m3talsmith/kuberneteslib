@@ -1,5 +1,9 @@
 import 'package:kuberneteslib/kuberneteslib.dart';
 
-/// MissingAuthException can be thrown when a function that needs a
-/// [ClusterAuth] instance, but is missing it.
+/// Exception thrown when authentication details are missing.
+///
+/// This exception is thrown when a function requires a [ClusterAuth] instance
+/// but none was provided. This typically occurs when attempting to make
+/// authenticated requests without proper initialization of the authentication
+/// system.
 class MissingAuthException implements Exception {}

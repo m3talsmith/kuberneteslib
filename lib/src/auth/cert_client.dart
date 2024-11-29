@@ -6,26 +6,36 @@ import 'package:http/io_client.dart';
 
 import 'cluster_auth_client.dart';
 
-/// CertClient implements a [ClusterAuthClient]. It uses the
-/// [client certification process](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#x509-client-certificates)
-/// to authenticate against a Kubernetes API.
+/// A client that implements certificate-based authentication for Kubernetes.
+///
+/// This client uses X.509 client certificates to authenticate requests to
+/// the Kubernetes API.
 class CertClient extends BaseClient implements ClusterAuthClient {
+  /// Creates a new certificate client.
+  ///
+  /// [clientCertificateAuthority] - The CA certificate data
+  /// [clientCertificateData] - The client certificate data
+  /// [clientKeyData] - The client private key data
   CertClient({
     required this.clientCertificateAuthority,
     required this.clientCertificateData,
     required this.clientKeyData,
   });
 
+  /// The certificate authority data
   final Uint8List clientCertificateAuthority;
+  
+  /// The client certificate data
   final Uint8List clientCertificateData;
+  
+  /// The client private key data  
   final Uint8List clientKeyData;
 
-  /// Modifies a [BaseRequest] and creates a [SecurityContext] for an http call
-  /// to the Kubernetes API; then sends it, using certification details,
-  /// returning a [StreamedResponse].
+  /// Sends an HTTP request with certificate authentication.
   ///
-  /// By default, [badCertificateCallback] is set to ignore bad certificates
-  /// (such as self signed certificates).
+  /// Configures the SSL/TLS context with the certificate data and handles
+  /// certificate validation. The [badCertificateCallback] can be used to
+  /// customize certificate validation behavior.
   @override
   Future<StreamedResponse> send(
     BaseRequest request, {
