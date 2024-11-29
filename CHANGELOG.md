@@ -1,3 +1,8 @@
+## 0.3.5
+
+- Updated all documentation
+- Updated example code
+
 ## 0.3.4
 
 - Added example code
