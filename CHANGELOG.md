@@ -1,3 +1,8 @@
+## 0.3.6
+
+- Added documentation for GCEPersistentDiskVolumeSource
+- Fixed bug in GCEPersistentDiskVolumeSource
+
 ## 0.3.5
 
 - Updated all documentation
