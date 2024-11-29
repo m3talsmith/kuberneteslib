@@ -1,14 +1,19 @@
-A library that implements the Kubernetes API natively. It is written using the direct specs and currently covers most of the V1 Core, Apps, and Batch resources.
+# KubernetesLib
 
-Reference: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/
+A Dart library that implements the Kubernetes API natively. Built using official Kubernetes specifications, it currently supports most V1 Core, Apps, and Batch resources.
+
+[![Pub Version](https://img.shields.io/pub/v/kuberneteslib)](https://pub.dev/packages/kuberneteslib)
 
 ## Features
 
-- List Resources
-- Show Resources
-- Delete Resources
+- Native Kubernetes API implementation
+- Support for V1 Core Resources
+- Support for V1 Apps Resources
+- Support for V1 Batch Resources
+- List, Show, and Delete operations
+- Type-safe resource handling
 
-## Getting started
+## Installation
 
 Install with `dart pub add kuberneteslib`.
 
