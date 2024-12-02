@@ -20,7 +20,7 @@ class HTTPGetAction {
   String? scheme;
 
   /// Creates a new HTTPGetAction instance from a map structure.
-  /// 
+  ///
   /// [data] should contain the following keys:
   /// - host: String (optional)
   /// - httpHeaders: List of header objects (optional)
@@ -39,4 +39,18 @@ class HTTPGetAction {
     port = data['port'];
     scheme = data['scheme'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'host': host,
+        'httpHeaders': (httpHeaders != null)
+            ? httpHeaders!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'path': path,
+        'port': port,
+        'scheme': scheme,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

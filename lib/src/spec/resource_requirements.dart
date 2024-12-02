@@ -52,4 +52,16 @@ class ResourceRequirements {
       }
     }
   }
+
+  Map<String, dynamic> toMap() => {
+        'claims': (claims != null)
+            ? claims!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'limits': limits,
+        'requests': requests,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

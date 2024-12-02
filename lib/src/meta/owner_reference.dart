@@ -45,4 +45,15 @@ class OwnerReference {
     name = data['name'];
     uid = data['uid'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'apiVersion': apiVersion,
+        'blockOwnerDeletion': blockOwnerDeletion,
+        'controller': controller,
+        'kind': kind,
+        'name': name,
+        'uid': uid,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

@@ -21,4 +21,9 @@ class ContainerResizePolicy {
     resourceName = data['resourceName'];
     restartPolicy = data['restartPolicy'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'resourceName': resourceName,
+        'restartPolicy': restartPolicy,
+      };
 }

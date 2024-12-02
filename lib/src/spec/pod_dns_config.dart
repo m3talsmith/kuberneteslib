@@ -37,4 +37,12 @@ class PodDNSConfig {
         .toList();
     searches = data['searches'] as List<String>;
   }
+
+  Map<String, dynamic> toMap() => {
+        'nameservers': nameservers,
+        'options': options.map(
+          (e) => e.toMap(),
+        ),
+        'searches': searches,
+      };
 }

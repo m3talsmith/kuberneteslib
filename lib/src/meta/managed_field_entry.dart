@@ -47,4 +47,16 @@ class ManagedFieldEntry {
     subresource = data['subresource'];
     time = DateTime.parse(data['time']);
   }
+
+  Map<String, dynamic> toMap() => {
+        'apiVersion': apiVersion,
+        'fieldsType': fieldsType,
+        'fieldsV1': fieldsV1,
+        'manager': manager,
+        'operation': operation,
+        'subresource': subresource,
+        'time': time,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

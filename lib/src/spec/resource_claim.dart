@@ -12,11 +12,11 @@ class ResourceClaim {
   /// Creates a [ResourceClaim] instance from a map representation.
   ///
   /// The [data] map must contain a 'name' key with a string value.
-  /// 
+  ///
   /// Parameters:
   ///   data: A map containing the resource claim configuration.
   ///         Must include a 'name' key with a string value.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final claim = ResourceClaim.fromMap({
@@ -26,4 +26,6 @@ class ResourceClaim {
   ResourceClaim.fromMap(Map<String, dynamic> data) {
     name = data['name'];
   }
+
+  Map<String, dynamic> toMap() => {'name': name};
 }

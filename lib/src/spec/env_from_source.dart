@@ -20,10 +20,20 @@ class EnvFromSource {
   /// - 'prefix': String to prepend to environment variable names (optional)
   /// - 'secretRef': Map containing Secret reference details
   EnvFromSource.fromMap(Map<String, dynamic> data) {
-    if (data['configMapRef'] != null)
+    if (data['configMapRef'] != null) {
       configMapRef = ConfigMapEnvSource.fromMap(data['configMapRef']);
+    }
     prefix = data['prefix'];
-    if (data['secretRef'] != null)
+    if (data['secretRef'] != null) {
       secretRef = SecretEnvSource.fromMap(data['secretRef']);
+    }
   }
+
+  Map<String, dynamic> toMap() => {
+        'configMapRef': (configMapRef != null) ? configMapRef!.toMap() : null,
+        'prefix': prefix,
+        'secretRef': (secretRef != null) ? secretRef!.toMap() : null,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

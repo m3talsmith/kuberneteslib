@@ -28,4 +28,11 @@ class WindowsSecurityContextOptions {
     hostProcess = data['hostProcess'];
     runAsUserName = data['runAsUserName'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'gmsaCredentialSpec': gmsaCredentialSpec,
+        'gmsaCredentialSpecName': gmsaCredentialSpecName,
+        'hostProcess': hostProcess,
+        'runAsUserName': runAsUserName,
+      };
 }

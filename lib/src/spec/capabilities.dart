@@ -17,4 +17,11 @@ class Capabilities {
       }
     }
   }
+
+  Map<String, dynamic> toMap() => {
+        'add': add,
+        'drop': drop,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

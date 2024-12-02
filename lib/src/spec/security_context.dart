@@ -16,7 +16,7 @@ class SecurityContext {
   Capabilities? capabilities;
 
   /// Runs the container in privileged mode.
-  /// 
+  ///
   /// Privileged mode grants the container nearly all the capabilities of the host system.
   bool? privileged;
 
@@ -45,7 +45,7 @@ class SecurityContext {
   WindowsSecurityContextOptions? windowsOptions;
 
   /// Creates a SecurityContext instance from a map of values.
-  /// 
+  ///
   /// The map should contain string keys corresponding to the field names
   /// and appropriate values for each security setting.
   SecurityContext.fromMap(Map<String, dynamic> data) {
@@ -70,4 +70,23 @@ class SecurityContext {
           WindowsSecurityContextOptions.fromMap(data['windowsOptions']);
     }
   }
+
+  Map<String, dynamic> toMap() => {
+        'allowPrivilegeEscalation': allowPrivilegeEscalation,
+        'capabilities': (capabilities != null) ? capabilities!.toMap() : null,
+        'privileged': privileged,
+        'procMount': procMount,
+        'readOnlyRootFilesystem': readOnlyRootFilesystem,
+        'runAsGroup': runAsGroup,
+        'runAsNonRoot': runAsNonRoot,
+        'runAsUser': runAsUser,
+        'seLinuxOptions':
+            (seLinuxOptions != null) ? seLinuxOptions!.toMap() : null,
+        'seccompProfile':
+            (seccompProfile != null) ? seccompProfile!.toMap() : null,
+        'windowsOptions':
+            (windowsOptions != null) ? windowsOptions!.toMap() : null,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

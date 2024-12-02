@@ -4,7 +4,7 @@ import 'lifecycle.dart';
 import 'probe.dart';
 
 /// Represents an ephemeral container in Kubernetes.
-/// 
+///
 /// Ephemeral containers are temporary containers that may be added to an existing pod
 /// for user-initiated activities such as debugging.
 class EphemeralContainer {
@@ -24,7 +24,7 @@ class EphemeralContainer {
   late String image;
 
   /// Image pull policy for the container.
-  /// 
+  ///
   /// Can be one of: 'Always', 'Never', 'IfNotPresent'
   late String imagePullPolicy;
 
@@ -32,17 +32,17 @@ class EphemeralContainer {
   late Lifecycle lifecycle;
 
   /// Periodic probe of container liveness.
-  /// 
+  ///
   /// Container will be restarted if the probe fails.
   late Probe livenessProbe;
 
   /// Name of the ephemeral container.
-  /// 
+  ///
   /// This name must be unique among all containers in the pod.
   late String name;
 
   /// Creates an [EphemeralContainer] instance from a map of data.
-  /// 
+  ///
   /// The [data] parameter should contain all the necessary fields to initialize
   /// the container's properties.
   EphemeralContainer.fromMap(Map<String, dynamic> data) {
@@ -64,4 +64,20 @@ class EphemeralContainer {
     livenessProbe = Probe.fromMap(data['livenessProbe']);
     name = data['name'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'args': args,
+        'command': command,
+        'env': env.map(
+          (e) => e.toMap(),
+        ),
+        'envFrom': envFrom.map(
+          (e) => e.toMap(),
+        ),
+        'image': image,
+        'imagePullPolicy': imagePullPolicy,
+        'lifecycle': lifecycle.toMap(),
+        'livenessProbe': livenessProbe.toMap(),
+        'name': name,
+      };
 }

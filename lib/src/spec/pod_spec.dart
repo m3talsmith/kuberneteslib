@@ -15,11 +15,11 @@ import 'topology_spread_constraint.dart';
 import 'volume.dart';
 
 /// Represents the specification of a Kubernetes Pod.
-/// 
+///
 /// A Pod is the smallest deployable unit in Kubernetes that can be created and managed.
 /// This class defines all possible configuration options for a Pod's specification,
 /// including its containers, volumes, scheduling rules, and runtime behavior.
-class PodSpec extends Spec {
+class PodSpec extends Spec implements ObjectSpec {
   /// Maximum time in seconds for a pod to complete its execution.
   /// After this deadline, the pod may be terminated.
   int? activeDeadlineSeconds;
@@ -153,10 +153,11 @@ class PodSpec extends Spec {
   List<Volume>? volumes;
 
   /// Creates a new PodSpec instance from a Map representation.
-  /// 
+  ///
   /// [data] should be a Map containing the pod specification fields as defined
   /// in the Kubernetes API. This constructor handles the deserialization of
   /// all nested objects and lists.
+  @override
   PodSpec.fromMap(Map<String, dynamic> data) {
     activeDeadlineSeconds = data['activeDeadlineSeconds'];
     if (data['affinity'] != null) affinity = Affinity.fromMap(data['affinity']);
@@ -268,4 +269,92 @@ class PodSpec extends Spec {
       }
     }
   }
+
+  @override
+  Map<String, dynamic> toMap() => {
+        'activeDeadlineSeconds': activeDeadlineSeconds,
+        'affinity': (affinity != null) ? affinity!.toMap() : null,
+        'automountServiceAccountToken': automountServiceAccountToken,
+        'containers': (containers != null)
+            ? containers!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'dnsConfig': (dnsConfig != null) ? dnsConfig!.toMap() : null,
+        'dnsPolicy': dnsPolicy,
+        'enableServiceLinks': enableServiceLinks,
+        'ephemeralContainers': (ephemeralContainers != null)
+            ? ephemeralContainers!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'hostAliases': (hostAliases != null)
+            ? hostAliases!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'hostIPC': hostIPC,
+        'hostNetwork': hostNetwork,
+        'hostUsers': hostUsers,
+        'hostname': hostname,
+        'imagePullSecrets': (imagePullSecrets != null)
+            ? imagePullSecrets!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'initContainers': (initContainers != null)
+            ? initContainers!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'nodeName': nodeName,
+        'nodeSelector': nodeSelector,
+        'os': (os != null) ? os!.toMap() : null,
+        'overhead': overhead,
+        'preemptionPolicy': preemptionPolicy,
+        'priority': priority,
+        'priorityClassName': priorityClassName,
+        'readinessGates': (readinessGates != null)
+            ? readinessGates!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'resourceClaims': (resourceClaims != null)
+            ? resourceClaims!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'resourcePolicy': resourcePolicy,
+        'schedulerName': schedulerName,
+        'schedulingGates': (schedulingGates != null)
+            ? schedulingGates!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'securityContext':
+            (securityContext != null) ? securityContext!.toMap() : null,
+        'serviceAccount': serviceAccount,
+        'serviceAccountName': serviceAccountName,
+        'setHostnameAsFQDN': setHostnameAsFQDN,
+        'shareProcessNamespace': shareProcessNamespace,
+        'subdomain': subdomain,
+        'terminationGracePeriodSeconds': terminationGracePeriodSeconds,
+        'tolerations': (tolerations != null)
+            ? tolerations!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'topologySpreadConstraints': (topologySpreadConstraints != null)
+            ? topologySpreadConstraints!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'volumes': (volumes != null)
+            ? volumes!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

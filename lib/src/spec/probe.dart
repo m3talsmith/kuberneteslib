@@ -4,8 +4,8 @@ import 'http_get_action.dart';
 import 'tcp_socket_action.dart';
 
 /// Represents a probe that can be used to check the status of a container.
-/// 
-/// A probe is a diagnostic performed periodically by the kubelet on a container. 
+///
+/// A probe is a diagnostic performed periodically by the kubelet on a container.
 /// It can be used for liveness, readiness, or startup checks.
 class Probe {
   /// Action to execute within the container.
@@ -39,7 +39,7 @@ class Probe {
   int? timeoutSeconds;
 
   /// Creates a [Probe] instance from a map of data.
-  /// 
+  ///
   /// The map should contain keys corresponding to the probe's properties.
   /// Each action type (exec, grpc, httpGet, tcpSocket) will be converted
   /// to its respective object if present in the data.
@@ -63,4 +63,19 @@ class Probe {
     terminationGracePeriodSeconds = data['terminationGracePeriodSeconds'];
     timeoutSeconds = data['timeoutSeconds'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'exec': (exec != null) ? exec!.toMap() : null,
+        'failureThreshold': failureThreshold,
+        'grpc': (grpc != null) ? grpc!.toMap() : null,
+        'httpGet': (httpGet != null) ? httpGet!.toMap() : null,
+        'initialDelaySeconds': initialDelaySeconds,
+        'periodSeconds': periodSeconds,
+        'successThreshold': successThreshold,
+        'tcpSocket': (tcpSocket != null) ? tcpSocket!.toMap() : null,
+        'terminationGracePeriodSeconds': terminationGracePeriodSeconds,
+        'timeoutSeconds': timeoutSeconds,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

@@ -90,4 +90,32 @@ class ObjectMeta {
     selfLink = data['selfLink'];
     uid = data['uid'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'annotations': annotations,
+        'creationTimestamp': creationTimestamp,
+        'deletionGracePeriodSeconds': deletionGracePeriodSeconds,
+        'deletionTimestamp': deletionTimestamp,
+        'finalizers': finalizers,
+        'generateName': generateName,
+        'generation': generation,
+        'labels': labels,
+        'managedFields': (managedFields != null)
+            ? managedFields!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'name': name,
+        'namespace': namespace,
+        'ownerReferences': (ownerReferences != null)
+            ? ownerReferences!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'resourceVersion': resourceVersion,
+        'selfLink': selfLink,
+        'uid': uid,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

@@ -11,7 +11,7 @@ class PreferredSchedulingTerm {
   late int weight;
 
   /// Creates a [PreferredSchedulingTerm] from a map structure.
-  /// 
+  ///
   /// The map must contain:
   /// * 'preference': A map that can be converted to a [NodeSelectorTerm]
   /// * 'weight': An integer value representing the weight of this preference
@@ -19,4 +19,9 @@ class PreferredSchedulingTerm {
     preference = NodeSelectorTerm.fromMap(data['preference']);
     weight = data['weight'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'preference': preference.toMap(),
+        'weight': weight,
+      };
 }

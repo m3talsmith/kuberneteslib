@@ -43,4 +43,11 @@ class ConfigMapEnvSource {
     name = data['name'];
     optional = data['optional'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'optional': optional,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

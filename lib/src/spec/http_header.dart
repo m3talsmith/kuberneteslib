@@ -7,9 +7,9 @@ class HTTPHeader {
   late String value;
 
   /// Creates a new [HTTPHeader] instance from a Map.
-  /// 
+  ///
   /// The map must contain 'name' and 'value' keys with their corresponding string values.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final header = HTTPHeader.fromMap({
@@ -21,4 +21,9 @@ class HTTPHeader {
     name = data['name'];
     value = data['value'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'value': value,
+      };
 }

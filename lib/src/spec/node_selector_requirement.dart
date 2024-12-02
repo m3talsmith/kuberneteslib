@@ -1,5 +1,5 @@
 /// Represents a node selector requirement in Kubernetes.
-/// 
+///
 /// A node selector requirement is a selector that contains values, an operator,
 /// and a key. It is used to select nodes based on their labels.
 class NodeSelectorRequirement {
@@ -15,7 +15,7 @@ class NodeSelectorRequirement {
   late List<String> values;
 
   /// Creates a [NodeSelectorRequirement] from a map structure.
-  /// 
+  ///
   /// The map must contain the following keys:
   /// * 'key': The label key
   /// * 'operator': The selection operator
@@ -25,4 +25,10 @@ class NodeSelectorRequirement {
     operator = data['operator'];
     values = data['values'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'key': key,
+        'operator': operator,
+        'values': values,
+      };
 }

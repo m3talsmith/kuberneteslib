@@ -10,7 +10,7 @@ import 'volume_device.dart';
 import 'volume_mount.dart';
 
 /// Represents a Container specification in Kubernetes.
-/// 
+///
 /// This class maps to the Container object in the Kubernetes API (v1 Core).
 /// See: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#container-v1-core
 class Container {
@@ -87,7 +87,7 @@ class Container {
   String? workingDir;
 
   /// Creates a Container instance from a Map representation.
-  /// 
+  ///
   /// This constructor is typically used when deserializing Kubernetes YAML/JSON configurations.
   /// Each field is carefully mapped from the input data, with proper type conversion
   /// and nested object creation where necessary.
@@ -169,4 +169,60 @@ class Container {
     }
     workingDir = data['workingDir'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'args': args,
+        'command': command,
+        'env': (env != null && env!.isNotEmpty)
+            ? env!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'envFrom': (envFrom != null)
+            ? envFrom!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'image': image,
+        'imagePullPolicy': imagePullPolicy,
+        'lifecycle': (lifecycle != null) ? lifecycle!.toMap() : null,
+        'livenessProbe':
+            (livenessProbe != null) ? livenessProbe!.toMap() : null,
+        'name': name,
+        'ports': (ports != null)
+            ? ports!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'readinessProbe':
+            (readinessProbe != null) ? readinessProbe!.toMap() : null,
+        'resizePolicy': (resizePolicy != null)
+            ? resizePolicy!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'resources': (resources != null) ? resources!.toMap() : null,
+        'restartPolicy': restartPolicy,
+        'securityContext':
+            (securityContext != null) ? securityContext!.toMap() : null,
+        'startupProbe': (startupProbe != null) ? startupProbe!.toMap() : null,
+        'stdin': stdin,
+        'stdinOnce': stdinOnce,
+        'terminationMessagePath': terminationMessagePath,
+        'terminationMessagePolicy': terminationMessagePolicy,
+        'tty': tty,
+        'volumeDevices': (volumeDevices != null)
+            ? volumeDevices!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'volumeMounts': (volumeMounts != null)
+            ? volumeMounts!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'workingDir': workingDir,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }
