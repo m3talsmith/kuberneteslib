@@ -14,7 +14,7 @@ class SecretKeySelector {
   bool? optional;
 
   /// Creates a new [SecretKeySelector] instance from a map structure.
-  /// 
+  ///
   /// The map should contain the following keys:
   /// - 'key': The key within the Secret
   /// - 'name': The name of the Secret
@@ -24,4 +24,12 @@ class SecretKeySelector {
     name = data['name'];
     optional = data['optional'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'key': key,
+        'name': name,
+        'optional': optional,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

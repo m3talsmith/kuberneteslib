@@ -11,7 +11,7 @@ class WeightedPodAffinityTerm {
   /// A weighted pod affinity term for pod scheduling rules.
   ///
   /// Combines a pod affinity term with a weight to influence pod scheduling decisions.
-  /// The weight field is used to compute the sum of weights of all of the matched 
+  /// The weight field is used to compute the sum of weights of all of the matched
   /// pod affinity terms, which is then used to prioritize node selection.
   ///
   /// Example:
@@ -33,4 +33,9 @@ class WeightedPodAffinityTerm {
     podAffinityTerm = PodAffinityTerm.fromMap(data['podAffinityTerm']);
     weight = data['weight'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'podAffinityTerm': podAffinityTerm.toMap(),
+        'weight': weight,
+      };
 }

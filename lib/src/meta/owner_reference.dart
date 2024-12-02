@@ -53,5 +53,7 @@ class OwnerReference {
         'kind': kind,
         'name': name,
         'uid': uid,
-      };
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

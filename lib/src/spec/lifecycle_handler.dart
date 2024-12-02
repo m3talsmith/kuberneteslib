@@ -19,7 +19,7 @@ class LifecycleHandler {
   TCPSocketAction? tcpSocket;
 
   /// Creates a [LifecycleHandler] from a JSON map structure.
-  /// 
+  ///
   /// The map should contain one of the following keys:
   /// * `exec` - For executing commands
   /// * `httpGet` - For HTTP GET requests
@@ -35,4 +35,12 @@ class LifecycleHandler {
       tcpSocket = TCPSocketAction.fromMap(data['tcpSocket']);
     }
   }
+
+  Map<String, dynamic> toMap() => {
+        'exec': (exec != null) ? exec!.toMap() : null,
+        'httpGet': (httpGet != null) ? httpGet!.toMap() : null,
+        'tcpSocket': (tcpSocket != null) ? tcpSocket!.toMap() : null,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

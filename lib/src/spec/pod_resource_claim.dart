@@ -1,7 +1,7 @@
 import 'claim_source.dart';
 
 /// Represents a resource claim within a Pod specification.
-/// 
+///
 /// A PodResourceClaim defines a request for a specific resource that a Pod needs,
 /// consisting of a name and a source for the claim.
 class PodResourceClaim {
@@ -12,7 +12,7 @@ class PodResourceClaim {
   late ClaimSource source;
 
   /// Creates a [PodResourceClaim] instance from a map structure.
-  /// 
+  ///
   /// [data] should contain:
   /// * 'name': String - the name of the resource claim
   /// * 'source': Map - the source configuration for the claim
@@ -20,4 +20,9 @@ class PodResourceClaim {
     name = data['name'];
     source = ClaimSource.fromMap(data['source']);
   }
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'source': source,
+      };
 }

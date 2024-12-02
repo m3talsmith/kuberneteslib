@@ -4,9 +4,9 @@ class PodOS {
   late String name;
 
   /// Creates a [PodOS] instance from a map of data.
-  /// 
+  ///
   /// The map must contain a 'name' key with the operating system name as its value.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final podOS = PodOS.fromMap({'name': 'linux'});
@@ -14,4 +14,6 @@ class PodOS {
   PodOS.fromMap(Map<String, dynamic> data) {
     name = data['name'];
   }
+
+  Map<String, dynamic> toMap() => {'name': name};
 }

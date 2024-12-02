@@ -9,6 +9,5 @@ class Status {
   ///   * [data] - A map containing the status data where keys are strings and
   ///              values can be of any type.
   Status.fromMap(Map<String, dynamic> data);
-
   Map<String, dynamic> toMap() => {};
 }

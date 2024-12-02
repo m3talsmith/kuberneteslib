@@ -18,7 +18,7 @@ class PodAffinityTerm {
   late String topologyKey;
 
   /// Creates a [PodAffinityTerm] from a map structure.
-  /// 
+  ///
   /// The [data] parameter should contain the following keys:
   /// - 'labelSelector': Map defining the label selector
   /// - 'namespaceSelector': Map defining the namespace selector
@@ -30,4 +30,11 @@ class PodAffinityTerm {
     namespaces = data['namespaces'] as List<String>;
     topologyKey = data['topologyKey'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'labelSelector': labelSelector.toMap(),
+        'namespaceSelector': namespaceSelector.toMap(),
+        'namespaces': namespaces.isNotEmpty ? namespaces : null,
+        'topologyKey': topologyKey.isNotEmpty ? topologyKey : null,
+      };
 }

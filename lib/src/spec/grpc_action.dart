@@ -7,7 +7,7 @@ class GRPCAction {
   late String service;
 
   /// Creates a new [GRPCAction] instance from a map of data.
-  /// 
+  ///
   /// The map must contain:
   /// - 'port': An integer representing the port number
   /// - 'service': A string representing the service name
@@ -15,4 +15,9 @@ class GRPCAction {
     port = data['port'];
     service = data['service'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'port': port,
+        'service': service,
+      };
 }

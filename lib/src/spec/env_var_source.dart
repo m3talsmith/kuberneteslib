@@ -20,7 +20,7 @@ class EnvVarSource {
   SecretKeySelector? secretKeyRef;
 
   /// Creates an [EnvVarSource] instance from a map structure.
-  /// 
+  ///
   /// The map should contain one of the following keys:
   /// - 'configMapKeyRef': References a ConfigMap key
   /// - 'fieldRef': References a pod field
@@ -41,4 +41,15 @@ class EnvVarSource {
       secretKeyRef = SecretKeySelector.fromMap(data['secretKeyRef']);
     }
   }
+
+  Map<String, dynamic> toMap() => {
+        'configMapKeyRef':
+            (configMapKeyRef != null) ? configMapKeyRef!.toMap() : null,
+        'fieldRef': (fieldRef != null) ? fieldRef!.toMap() : null,
+        'resourceFieldRef':
+            (resourceFieldRef != null) ? resourceFieldRef!.toMap() : null,
+        'secretKeyRef': (secretKeyRef != null) ? secretKeyRef!.toMap() : null,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

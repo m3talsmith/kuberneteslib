@@ -30,4 +30,11 @@ class Lifecycle {
       preStop = LifecycleHandler.fromMap(data['preStop']);
     }
   }
+
+  Map<String, dynamic> toMap() => {
+        'postStart': (postStart != null) ? postStart!.toMap() : null,
+        'preStop': (preStop != null) ? preStop!.toMap() : null,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

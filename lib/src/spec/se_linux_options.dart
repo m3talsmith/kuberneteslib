@@ -1,5 +1,5 @@
 /// Represents SELinux security options for containers.
-/// 
+///
 /// SELinux (Security-Enhanced Linux) is a Linux kernel security module that provides
 /// a mechanism for supporting access control security policies.
 class SELinuxOptions {
@@ -16,7 +16,7 @@ class SELinuxOptions {
   String? user;
 
   /// Creates a new [SELinuxOptions] instance from a map of data.
-  /// 
+  ///
   /// The map should contain string keys corresponding to the SELinux labels:
   /// 'level', 'role', 'type', and 'user'.
   SELinuxOptions.fromMap(Map<String, dynamic> data) {
@@ -25,4 +25,13 @@ class SELinuxOptions {
     type = data['type'];
     user = data['user'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'level': level,
+        'role': role,
+        'type': type,
+        'user': user,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

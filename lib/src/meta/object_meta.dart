@@ -95,18 +95,27 @@ class ObjectMeta {
         'annotations': annotations,
         'creationTimestamp': creationTimestamp,
         'deletionGracePeriodSeconds': deletionGracePeriodSeconds,
+        'deletionTimestamp': deletionTimestamp,
         'finalizers': finalizers,
         'generateName': generateName,
         'generation': generation,
         'labels': labels,
-        if (managedFields != null)
-          'managedFields': managedFields!.map((e) => e.toMap()),
+        'managedFields': (managedFields != null)
+            ? managedFields!.map(
+                (e) => e.toMap(),
+              )
+            : null,
         'name': name,
         'namespace': namespace,
-        if (ownerReferences != null)
-          'ownerReferences': ownerReferences!.map((e) => e.toMap()),
+        'ownerReferences': (ownerReferences != null)
+            ? ownerReferences!.map(
+                (e) => e.toMap(),
+              )
+            : null,
         'resourceVersion': resourceVersion,
         'selfLink': selfLink,
         'uid': uid,
-      };
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

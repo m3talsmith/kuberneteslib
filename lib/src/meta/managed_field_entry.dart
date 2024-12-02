@@ -56,5 +56,7 @@ class ManagedFieldEntry {
         'operation': operation,
         'subresource': subresource,
         'time': time,
-      };
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

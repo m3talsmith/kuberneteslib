@@ -30,7 +30,7 @@ class TopologySpreadConstraint {
   String? whenUnsatisfiable;
 
   /// Creates a [TopologySpreadConstraint] from a map of values.
-  /// 
+  ///
   /// The map should contain all the necessary fields to populate the constraint's properties.
   TopologySpreadConstraint.fromMap(Map<String, dynamic> data) {
     if (data['labelSelector'] != null) {
@@ -46,4 +46,18 @@ class TopologySpreadConstraint {
     topologyKey = data['topologyKey'];
     whenUnsatisfiable = data['whenUnsatisfiable'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'labelSelector':
+            (labelSelector != null) ? labelSelector!.toMap() : null,
+        'matchLabelKeys': matchLabelKeys,
+        'maxSkew': maxSkew,
+        'minDomains': minDomains,
+        'nodeAffinityPolicy': nodeAffinityPolicy,
+        'nodeTaintsPolicy': nodeTaintsPolicy,
+        'topologyKey': topologyKey,
+        'whenUnsatisfiable': whenUnsatisfiable,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

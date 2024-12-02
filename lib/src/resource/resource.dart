@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:humanizer/humanizer.dart';
+import 'package:kuberneteslib/src/resource/resource_base.dart';
 
 import '../auth/cluster.dart';
 import '../auth/exceptions.dart';
@@ -12,7 +13,7 @@ import 'resource_kind.dart';
 /// A Resource is the core component of Kubernetes. This gives access to every
 /// resource that the Kubernetes API has.
 ///
-class Resource {
+class Resource implements ResourceBase {
   /// Contains the [ObjectMeta] (metadata) for a [Resource].
   late ObjectMeta metadata;
 
@@ -327,8 +328,19 @@ class Resource {
     }
   }
 
+  /// Converts a [Resource] to a Kubernetes yaml file
+  String toKubernetesYaml() {
+    var template = '''
+    ---
+    apiVersion: v1
+    kind: $kind
+    ''';
+    return template;
+  }
+
   /// [Resource.fromMap] constructs an instance of a [Resource] from a
   /// Kubernetes API result as [data].
+  @override
   Resource.fromMap(Map<String, dynamic> data) {
     if (data.isEmpty) return;
 
@@ -343,9 +355,11 @@ class Resource {
     }
   }
 
+  @override
   Map<String, dynamic> toMap() => {
-        'metatdata': metadata.toMap(),
+        'metadata': metadata.toMap(),
         if (spec != null) 'spec': spec!.toMap(),
         if (status != null) 'status': status!.toMap(),
+        'kind': kind,
       };
 }

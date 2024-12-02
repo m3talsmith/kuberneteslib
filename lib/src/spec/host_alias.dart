@@ -1,5 +1,5 @@
 /// Represents a host alias mapping between IP addresses and hostnames in Kubernetes.
-/// 
+///
 /// A host alias allows adding entries to a Pod's /etc/hosts file to provide custom
 /// host-to-IP mappings.
 class HostAlias {
@@ -10,7 +10,7 @@ class HostAlias {
   late String ip;
 
   /// Creates a [HostAlias] instance from a map representation.
-  /// 
+  ///
   /// The [data] map must contain:
   /// * 'hostnames': List<String> - The hostnames to map
   /// * 'ip': String - The IP address to map the hostnames to
@@ -18,4 +18,9 @@ class HostAlias {
     hostnames = data['hostnames'] as List<String>;
     ip = data['ip'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'hostnames': hostnames,
+        'ip': ip,
+      };
 }

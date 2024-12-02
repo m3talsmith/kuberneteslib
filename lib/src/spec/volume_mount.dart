@@ -37,4 +37,15 @@ class VolumeMount {
     subPath = data['subPath'];
     subPathExpr = data['subPathExpr'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'mountPath': mountPath,
+        'mountPropagation': mountPropagation,
+        'name': name,
+        'readOnly': readOnly,
+        'subPath': subPath,
+        'subPathExpr': subPathExpr,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

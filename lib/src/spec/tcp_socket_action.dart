@@ -9,7 +9,7 @@ class TCPSocketAction {
   late dynamic port;
 
   /// Creates a [TCPSocketAction] instance from a map of data.
-  /// 
+  ///
   /// The map must contain:
   /// - 'host': String representing the host address
   /// - 'port': Port number (can be int or String)
@@ -17,4 +17,9 @@ class TCPSocketAction {
     host = data['host'];
     port = data['port'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'host': host,
+        'port': port,
+      };
 }

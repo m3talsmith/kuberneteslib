@@ -8,9 +8,11 @@ class PodReadinessGate {
   late String conditionType;
 
   /// Creates a new PodReadinessGate instance from a map structure.
-  /// 
+  ///
   /// [data] is expected to be a map containing a 'conditionType' key with a string value.
   PodReadinessGate.fromMap(Map<String, dynamic> data) {
     conditionType = data['conditionType'];
   }
+
+  Map<String, dynamic> toMap() => {'conditionType': conditionType};
 }

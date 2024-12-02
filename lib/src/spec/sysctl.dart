@@ -12,7 +12,7 @@ class Sysctl {
   /// Creates a [Sysctl] instance from a Map representation.
   ///
   /// The map must contain 'name' and 'value' keys with their corresponding values.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final sysctl = Sysctl.fromMap({
@@ -24,4 +24,9 @@ class Sysctl {
     name = data['name'];
     value = data['value'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'value': value,
+      };
 }

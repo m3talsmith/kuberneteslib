@@ -14,7 +14,7 @@ class ResourceFieldSelector {
   String? resource;
 
   /// Creates a [ResourceFieldSelector] from a map representation.
-  /// 
+  ///
   /// The [data] map should contain the following keys:
   /// - 'containerName': String identifying the container
   /// - 'divisor': Either a String or Quantity value used for calculations
@@ -26,4 +26,12 @@ class ResourceFieldSelector {
         : data['divisor'] as Quantity?;
     resource = data['resource'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'containerName': containerName,
+        'divisor': divisor,
+        'resource': resource,
+      }..removeWhere(
+          (key, value) => value == null,
+        );
 }

@@ -39,16 +39,29 @@ class NodeSelectorTerm {
   /// Both fields default to empty lists if not provided or null.
   /// The resulting lists are unmodifiable to prevent accidental modifications.
   NodeSelectorTerm.fromMap(Map<String, dynamic> data)
-      : matchExpressions = List<NodeSelectorRequirement>.unmodifiable(
-          (data['matchExpressions'] as List?)
-                  ?.map((e) => NodeSelectorRequirement.fromMap(e as Map<String, dynamic>))
-                  .toList() ??
-              [],
-        ),
-        matchFields = List<NodeSelectorRequirement>.unmodifiable(
-          (data['matchFields'] as List?)
-                  ?.map((e) => NodeSelectorRequirement.fromMap(e as Map<String, dynamic>))
-                  .toList() ??
-              [],
+      : matchExpressions = (data['matchExpressions'] as List?)
+                ?.map((e) =>
+                    NodeSelectorRequirement.fromMap(e as Map<String, dynamic>))
+                .toList() ??
+            [],
+        matchFields = (data['matchFields'] as List?)
+                ?.map((e) =>
+                    NodeSelectorRequirement.fromMap(e as Map<String, dynamic>))
+                .toList() ??
+            [];
+
+  Map<String, dynamic> toMap() => {
+        'matchExpressions': matchExpressions.isNotEmpty
+            ? matchExpressions.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'matchFields': matchFields.isNotEmpty
+            ? matchFields.map(
+                (e) => e.toMap(),
+              )
+            : null,
+      }..removeWhere(
+          (key, value) => value == null,
         );
 }

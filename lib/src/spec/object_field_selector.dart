@@ -9,7 +9,7 @@ class ObjectFieldSelector {
   late String fieldPath;
 
   /// Creates an [ObjectFieldSelector] instance from a map structure.
-  /// 
+  ///
   /// [data] should contain:
   /// - 'apiVersion': The API version of the target object
   /// - 'fieldPath': The path to the desired field
@@ -17,4 +17,9 @@ class ObjectFieldSelector {
     apiVersion = data['apiVersion'];
     fieldPath = data['fieldPath'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'apiVersion': apiVersion,
+        'fieldPath': fieldPath,
+      };
 }

@@ -24,7 +24,7 @@ class LabelSelector {
           (data['matchExpressions'] as List<Map<String, dynamic>>)
               .map(
                 (e) => LabelSelectorRequirement.fromMap(e),
-          )
+              )
               .toList();
     }
     if (data['matchLabels'] != null) {
@@ -37,4 +37,18 @@ class LabelSelector {
       }
     }
   }
+
+  Map<String, dynamic> toMap() => {
+        'matchExpressions': (matchExpressions != null)
+            ? matchExpressions!.map(
+                (e) => e.toMap(),
+              )
+            : null,
+        'matchLabels': (matchLabels != null && matchLabels!.entries.isNotEmpty)
+            ? matchLabels!.entries.fold(
+                <String, dynamic>{},
+                (previousValue, e) => previousValue[e.key] = e.value.toMap(),
+              )
+            : null,
+      };
 }

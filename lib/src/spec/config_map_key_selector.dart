@@ -11,7 +11,7 @@ class ConfigMapKeySelector {
 
   /// Whether the ConfigMap or key must be defined.
   ///
-  /// If true, the volume mount will fail if the referenced ConfigMap or key 
+  /// If true, the volume mount will fail if the referenced ConfigMap or key
   /// does not exist. If false, the volume mount will succeed but with an empty value.
   late bool optional;
 
@@ -26,4 +26,10 @@ class ConfigMapKeySelector {
     name = data['name'];
     optional = data['optional'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'key': key,
+        'name': name,
+        'optional': optional,
+      };
 }
