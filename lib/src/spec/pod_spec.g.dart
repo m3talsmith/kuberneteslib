@@ -7,85 +7,81 @@ part of 'pod_spec.dart';
 // **************************************************************************
 
 PodSpec _$PodSpecFromJson(Map<String, dynamic> json) => PodSpec(
-      spec: _$JsonConverterFromJson<Map<String, dynamic>, ObjectSpec>(
-          json['spec'], const ObjectSpecConverter().fromJson),
-    )
-      ..activeDeadlineSeconds = (json['activeDeadlineSeconds'] as num?)?.toInt()
-      ..affinity = _$JsonConverterFromJson<String, Affinity>(
-          json['affinity'], const AffinityConverter().fromJson)
-      ..automountServiceAccountToken =
-          json['automountServiceAccountToken'] as bool?
-      ..containers = (json['containers'] as List<dynamic>?)
+      containers: (json['containers'] as List<dynamic>?)
           ?.map((e) => Container.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..dnsConfig = json['dnsConfig'] == null
+          .toList(),
+      activeDeadlineSeconds: (json['activeDeadlineSeconds'] as num?)?.toInt(),
+      affinity: _$JsonConverterFromJson<String, Affinity>(
+          json['affinity'], const AffinityConverter().fromJson),
+      automountServiceAccountToken:
+          json['automountServiceAccountToken'] as bool?,
+      dnsConfig: json['dnsConfig'] == null
           ? null
-          : PodDNSConfig.fromJson(json['dnsConfig'] as Map<String, dynamic>)
-      ..dnsPolicy = json['dnsPolicy'] as String?
-      ..enableServiceLinks = json['enableServiceLinks'] as bool?
-      ..ephemeralContainers = (json['ephemeralContainers'] as List<dynamic>?)
+          : PodDNSConfig.fromJson(json['dnsConfig'] as Map<String, dynamic>),
+      dnsPolicy: json['dnsPolicy'] as String?,
+      enableServiceLinks: json['enableServiceLinks'] as bool?,
+      ephemeralContainers: (json['ephemeralContainers'] as List<dynamic>?)
           ?.map((e) => EphemeralContainer.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..hostAliases = (json['hostAliases'] as List<dynamic>?)
+          .toList(),
+      hostAliases: (json['hostAliases'] as List<dynamic>?)
           ?.map((e) => HostAlias.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..hostIPC = json['hostIPC'] as bool?
-      ..hostNetwork = json['hostNetwork'] as bool?
-      ..hostUsers = json['hostUsers'] as bool?
-      ..hostname = json['hostname'] as String?
-      ..imagePullSecrets = (json['imagePullSecrets'] as List<dynamic>?)
+          .toList(),
+      hostIPC: json['hostIPC'] as bool?,
+      hostNetwork: json['hostNetwork'] as bool?,
+      hostUsers: json['hostUsers'] as bool?,
+      hostname: json['hostname'] as String?,
+      imagePullSecrets: (json['imagePullSecrets'] as List<dynamic>?)
           ?.map((e) => LocalObjectReference.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..initContainers = (json['initContainers'] as List<dynamic>?)
+          .toList(),
+      initContainers: (json['initContainers'] as List<dynamic>?)
           ?.map((e) => Container.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..nodeName = json['nodeName'] as String?
-      ..nodeSelector = json['nodeSelector'] as Map<String, dynamic>?
-      ..os = json['os'] == null
+          .toList(),
+      nodeName: json['nodeName'] as String?,
+      nodeSelector: json['nodeSelector'] as Map<String, dynamic>?,
+      os: json['os'] == null
           ? null
-          : PodOS.fromJson(json['os'] as Map<String, dynamic>)
-      ..overhead = json['overhead'] as Map<String, dynamic>?
-      ..preemptionPolicy = json['preemptionPolicy'] as String?
-      ..priority = (json['priority'] as num?)?.toInt()
-      ..priorityClassName = json['priorityClassName'] as String?
-      ..readinessGates = (json['readinessGates'] as List<dynamic>?)
+          : PodOS.fromJson(json['os'] as Map<String, dynamic>),
+      overhead: json['overhead'] as Map<String, dynamic>?,
+      preemptionPolicy: json['preemptionPolicy'] as String?,
+      priority: (json['priority'] as num?)?.toInt(),
+      priorityClassName: json['priorityClassName'] as String?,
+      readinessGates: (json['readinessGates'] as List<dynamic>?)
           ?.map((e) => PodReadinessGate.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..resourceClaims = (json['resourceClaims'] as List<dynamic>?)
+          .toList(),
+      resourceClaims: (json['resourceClaims'] as List<dynamic>?)
           ?.map((e) => PodResourceClaim.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..resourcePolicy = json['resourcePolicy'] as String?
-      ..runtimeClassName = json['runtimeClassName'] as String?
-      ..schedulerName = json['schedulerName'] as String?
-      ..schedulingGates = (json['schedulingGates'] as List<dynamic>?)
+          .toList(),
+      resourcePolicy: json['resourcePolicy'] as String?,
+      runtimeClassName: json['runtimeClassName'] as String?,
+      schedulerName: json['schedulerName'] as String?,
+      schedulingGates: (json['schedulingGates'] as List<dynamic>?)
           ?.map((e) => PodSchedulingGate.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..securityContext = json['securityContext'] == null
+          .toList(),
+      securityContext: json['securityContext'] == null
           ? null
           : PodSecurityContext.fromJson(
-              json['securityContext'] as Map<String, dynamic>)
-      ..serviceAccount = json['serviceAccount'] as String?
-      ..serviceAccountName = json['serviceAccountName'] as String?
-      ..setHostnameAsFQDN = json['setHostnameAsFQDN'] as bool?
-      ..shareProcessNamespace = json['shareProcessNamespace'] as bool?
-      ..subdomain = json['subdomain'] as String?
-      ..terminationGracePeriodSeconds =
-          (json['terminationGracePeriodSeconds'] as num?)?.toInt()
-      ..tolerations = (json['tolerations'] as List<dynamic>?)
+              json['securityContext'] as Map<String, dynamic>),
+      serviceAccount: json['serviceAccount'] as String?,
+      serviceAccountName: json['serviceAccountName'] as String?,
+      setHostnameAsFQDN: json['setHostnameAsFQDN'] as bool?,
+      shareProcessNamespace: json['shareProcessNamespace'] as bool?,
+      subdomain: json['subdomain'] as String?,
+      terminationGracePeriodSeconds:
+          (json['terminationGracePeriodSeconds'] as num?)?.toInt(),
+      tolerations: (json['tolerations'] as List<dynamic>?)
           ?.map((e) => Toleration.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..topologySpreadConstraints =
+          .toList(),
+      topologySpreadConstraints:
           (json['topologySpreadConstraints'] as List<dynamic>?)
               ?.map((e) =>
                   TopologySpreadConstraint.fromJson(e as Map<String, dynamic>))
-              .toList()
-      ..volumes = (json['volumes'] as List<dynamic>?)
+              .toList(),
+      volumes: (json['volumes'] as List<dynamic>?)
           ?.map((e) => Volume.fromJson(e as Map<String, dynamic>))
-          .toList();
+          .toList(),
+    );
 
 Map<String, dynamic> _$PodSpecToJson(PodSpec instance) => <String, dynamic>{
-      'spec': _$JsonConverterToJson<Map<String, dynamic>, ObjectSpec>(
-          instance.spec, const ObjectSpecConverter().toJson),
       if (instance.activeDeadlineSeconds case final value?)
         'activeDeadlineSeconds': value,
       if (_$JsonConverterToJson<String, Affinity>(

@@ -15,6 +15,7 @@ import 'spec.dart';
 import 'toleration.dart';
 import 'topology_spread_constraint.dart';
 import 'volume.dart';
+import 'object_spec.dart';
 
 part 'pod_spec.g.dart';
 
@@ -55,8 +56,47 @@ part 'pod_spec.g.dart';
 /// See the [Kubernetes documentation](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec)
 /// for more details about Pod specifications.
 @JsonSerializable()
-class PodSpec extends Spec implements ObjectSpec {
-  PodSpec({required super.spec});
+class PodSpec implements ObjectSpec {
+  PodSpec({
+    this.containers,
+    this.activeDeadlineSeconds,
+    this.affinity,
+    this.automountServiceAccountToken,
+    this.dnsConfig,
+    this.dnsPolicy,
+    this.enableServiceLinks,
+    this.ephemeralContainers,
+    this.hostAliases,
+    this.hostIPC,
+    this.hostNetwork,
+    this.hostUsers,
+    this.hostname,
+    this.imagePullSecrets,
+    this.initContainers,
+    this.nodeName,
+    this.nodeSelector,
+    this.os,
+    this.overhead,
+    this.preemptionPolicy,
+    this.priority,
+    this.priorityClassName,
+    this.readinessGates,
+    this.resourceClaims,
+    this.resourcePolicy,
+    this.runtimeClassName,
+    this.schedulerName,
+    this.schedulingGates,
+    this.securityContext,
+    this.serviceAccount,
+    this.serviceAccountName,
+    this.setHostnameAsFQDN,
+    this.shareProcessNamespace,
+    this.subdomain,
+    this.terminationGracePeriodSeconds,
+    this.tolerations,
+    this.topologySpreadConstraints,
+    this.volumes,
+  });
 
   /// Maximum time in seconds for a pod to complete its execution.
   /// After this deadline, the pod may be terminated.
