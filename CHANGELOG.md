@@ -1,5 +1,10 @@
 # KubernetesLib
 
+## 0.3.10
+
+- Improved documentation for many classes
+
+
 ## 0.3.9
 
 - Removed late clause and made fields nullable
