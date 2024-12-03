@@ -1,40 +1,69 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'label_selector.dart';
 
-/// Defines a pod affinity term, used to specify rules for pod placement
-/// in relation to other pods in the Kubernetes cluster.
+part 'pod_affinity_term.g.dart';
+
+/// Represents a pod affinity term in Kubernetes.
+///
+/// PodAffinityTerm defines rules for pod placement based on the location of other pods.
+/// Key features include:
+/// - Label-based pod selection
+/// - Namespace filtering
+/// - Topology domain awareness
+/// - Cross-namespace scheduling
+///
+/// Common use cases:
+/// - Co-locating related pods
+/// - Spreading across failure domains
+/// - Service proximity rules
+/// - Multi-tenant isolation
+///
+/// Example:
+/// ```dart
+/// final term = PodAffinityTerm()
+///   ..labelSelector = (LabelSelector()
+///     ..matchLabels = {'app': 'cache'})
+///   ..topologyKey = 'kubernetes.io/hostname'
+///   ..namespaces = ['prod']
+///   ..namespaceSelector = (LabelSelector()
+///     ..matchLabels = {'environment': 'production'});
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
+/// for more details about pod affinity.
+@JsonSerializable()
 class PodAffinityTerm {
-  /// A label query over a set of resources that the pod should match.
-  late LabelSelector labelSelector;
+  PodAffinityTerm(): labelSelector = LabelSelector(), namespaceSelector = LabelSelector(), namespaces = [], topologyKey = '';
+  /// Label selector for identifying target pods.
+  /// 
+  /// Defines which pods this affinity term applies to based on their labels.
+  /// Must match for the affinity rule to take effect.
+  final LabelSelector labelSelector;
 
-  /// A label selector used to identify the namespaces to search for pods.
-  late LabelSelector namespaceSelector;
+  /// Label selector for filtering namespaces to search in.
+  /// 
+  /// When specified, only namespaces matching these labels will be considered
+  /// when looking for matching pods. Works in conjunction with [namespaces].
+  final LabelSelector namespaceSelector;
 
-  /// List of namespace names to which this pod affinity term applies.
-  late List<String> namespaces;
+  /// List of specific namespaces to search for matching pods.
+  /// 
+  /// When specified, only these namespaces will be considered.
+  /// If empty and namespaceSelector is null, defaults to the pod's namespace.
+  final List<String> namespaces;
 
-  /// The key of node labels that the system uses to denote topology domains.
-  /// Pods that match the affinity rules will be scheduled onto nodes that
-  /// share the same topology key value.
-  late String topologyKey;
+  /// The node topology key used for pod distribution.
+  /// 
+  /// Pods matching the affinity rules will be scheduled relative to each other
+  /// based on this topology domain. Common values:
+  /// - kubernetes.io/hostname
+  /// - topology.kubernetes.io/zone
+  /// - topology.kubernetes.io/region
+  final String topologyKey;
+  
+  factory PodAffinityTerm.fromJson(Map<String, dynamic> json) =>
+      _$PodAffinityTermFromJson(json);
 
-  /// Creates a [PodAffinityTerm] from a map structure.
-  ///
-  /// The [data] parameter should contain the following keys:
-  /// - 'labelSelector': Map defining the label selector
-  /// - 'namespaceSelector': Map defining the namespace selector
-  /// - 'namespaces': List of namespace strings
-  /// - 'topologyKey': String representing the topology key
-  PodAffinityTerm.fromMap(Map<String, dynamic> data) {
-    labelSelector = LabelSelector.fromMap(data['labelSelector']);
-    namespaceSelector = LabelSelector.fromMap(data['namespaceSelector']);
-    namespaces = data['namespaces'] as List<String>;
-    topologyKey = data['topologyKey'];
-  }
-
-  Map<String, dynamic> toMap() => {
-        'labelSelector': labelSelector.toMap(),
-        'namespaceSelector': namespaceSelector.toMap(),
-        'namespaces': namespaces.isNotEmpty ? namespaces : null,
-        'topologyKey': topologyKey.isNotEmpty ? topologyKey : null,
-      };
+  Map<String, dynamic> toJson() => _$PodAffinityTermToJson(this);
 }

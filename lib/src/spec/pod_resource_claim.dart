@@ -1,28 +1,52 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'claim_source.dart';
 
-/// Represents a resource claim within a Pod specification.
+part 'pod_resource_claim.g.dart';
+
+/// Represents a resource claim for a Pod in Kubernetes.
 ///
-/// A PodResourceClaim defines a request for a specific resource that a Pod needs,
-/// consisting of a name and a source for the claim.
+/// PodResourceClaim enables pods to request specific resources that are managed
+/// through the ResourceClaim API. Key features include:
+/// - Dynamic resource allocation
+/// - Resource lifecycle management
+/// - Pod-level resource requests
+/// - Resource sharing configuration
+///
+/// Common use cases:
+/// - GPU allocation
+/// - FPGA resources
+/// - Custom device claims
+/// - Specialized hardware access
+///
+/// Example:
+/// ```dart
+/// final resourceClaim = PodResourceClaim()
+///   ..name = 'gpu-claim'
+///   ..source = (ClaimSource()
+///     ..resourceClaimName = 'shared-gpu');
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/workloads/pods/pod-resource-claims/)
+/// for more details about Pod resource claims.
+@JsonSerializable()
 class PodResourceClaim {
-  /// The name of the resource claim.
+  PodResourceClaim();
+
+  /// The name that uniquely identifies this resource claim within the pod.
+  /// 
+  /// This name is used to reference the claim from container specifications
+  /// and must be unique within the pod.
   late String name;
 
-  /// The source configuration for this resource claim.
+  /// The source configuration for obtaining this resource.
+  /// 
+  /// Specifies how the resource should be allocated or referenced,
+  /// such as from an existing ResourceClaim or created dynamically.
   late ClaimSource source;
 
-  /// Creates a [PodResourceClaim] instance from a map structure.
-  ///
-  /// [data] should contain:
-  /// * 'name': String - the name of the resource claim
-  /// * 'source': Map - the source configuration for the claim
-  PodResourceClaim.fromMap(Map<String, dynamic> data) {
-    name = data['name'];
-    source = ClaimSource.fromMap(data['source']);
-  }
+  factory PodResourceClaim.fromJson(Map<String, dynamic> json) =>
+      _$PodResourceClaimFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'name': name,
-        'source': source,
-      };
+  Map<String, dynamic> toJson() => _$PodResourceClaimToJson(this);
 }

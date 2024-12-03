@@ -1,3 +1,5 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'affinity.dart';
 import 'container.dart';
 import 'ephemeral_container.dart';
@@ -14,142 +16,217 @@ import 'toleration.dart';
 import 'topology_spread_constraint.dart';
 import 'volume.dart';
 
+part 'pod_spec.g.dart';
+
 /// Represents the specification of a Kubernetes Pod.
 ///
-/// A Pod is the smallest deployable unit in Kubernetes that can be created and managed.
-/// This class defines all possible configuration options for a Pod's specification,
-/// including its containers, volumes, scheduling rules, and runtime behavior.
+/// PodSpec defines the desired state of a Pod, which is the smallest deployable
+/// unit in Kubernetes. Key features include:
+/// - Container configuration
+/// - Resource requirements
+/// - Scheduling preferences
+/// - Security settings
+/// - Network configuration
+/// - Storage configuration
+///
+/// Common use cases:
+/// - Application deployment
+/// - Batch processing
+/// - Stateful workloads
+/// - System services
+///
+/// Example:
+/// ```dart
+/// final podSpec = PodSpec(spec: {})
+///   ..containers = [
+///     Container()
+///       ..name = 'web'
+///       ..image = 'nginx:1.14.2'
+///       ..ports = [
+///         ContainerPort()..containerPort = 80
+///       ]
+///   ]
+///   ..securityContext = (PodSecurityContext()
+///     ..runAsNonRoot = true)
+///   ..dnsConfig = (PodDNSConfig()
+///     ..nameservers = ['8.8.8.8']);
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec)
+/// for more details about Pod specifications.
+@JsonSerializable()
 class PodSpec extends Spec implements ObjectSpec {
+  PodSpec({required super.spec});
+
   /// Maximum time in seconds for a pod to complete its execution.
   /// After this deadline, the pod may be terminated.
+  @JsonKey(includeIfNull: false)
   int? activeDeadlineSeconds;
 
   /// Scheduling directives that control pod placement based on node characteristics
   /// and relationships with other pods.
+  @JsonKey(includeIfNull: false)
+  @AffinityConverter()
   Affinity? affinity;
 
   /// Whether to automatically mount the service account token.
   /// If null, defaults to true.
+  @JsonKey(includeIfNull: false)
   bool? automountServiceAccountToken;
 
   /// The list of containers that will run in this pod.
   /// At least one container is required.
+  @JsonKey(includeIfNull: false)
   List<Container>? containers;
 
   /// Custom DNS settings for the pod.
   /// Allows fine-grained control over DNS resolution.
+  @JsonKey(includeIfNull: false)
   PodDNSConfig? dnsConfig;
 
   /// DNS resolution policy for the pod.
   /// Common values: "Default", "ClusterFirst", "None"
+  @JsonKey(includeIfNull: false)
   String? dnsPolicy;
 
   /// Whether to inject information about services into pod's environment variables.
   /// If null, defaults to true.
+  @JsonKey(includeIfNull: false)
   bool? enableServiceLinks;
 
   /// Temporary containers that may be added to an existing pod for user-initiated activities.
   /// Commonly used for debugging purposes.
+  @JsonKey(includeIfNull: false)
   List<EphemeralContainer>? ephemeralContainers;
 
   /// Additional entries to add to the pod's /etc/hosts file.
+  @JsonKey(includeIfNull: false)
   List<HostAlias>? hostAliases;
 
   /// Use the host's IPC namespace.
   /// Controls whether containers within the pod can communicate via IPC.
+  @JsonKey(includeIfNull: false)
   bool? hostIPC;
 
   /// Use the host's network namespace.
   /// If true, containers see the network interfaces of the host.
+  @JsonKey(includeIfNull: false)
   bool? hostNetwork;
 
   /// Use the host's user namespace.
   /// Controls whether containers run with host OS user contexts.
+  @JsonKey(includeIfNull: false)
   bool? hostUsers;
 
   /// The hostname of the pod.
   /// If not specified, defaults to pod's name.
+  @JsonKey(includeIfNull: false)
   String? hostname;
 
   /// References to secrets used for pulling container images.
+  @JsonKey(includeIfNull: false)
   List<LocalObjectReference>? imagePullSecrets;
 
   /// Containers that run to completion before the main containers start.
   /// Used for setup or initialization tasks.
+  @JsonKey(includeIfNull: false)
   List<Container>? initContainers;
 
   /// Request to schedule this pod onto a specific node.
+  @JsonKey(includeIfNull: false)
   String? nodeName;
 
   /// Key-value pairs used for node selection.
   /// Pod will only run on nodes matching these criteria.
+  @JsonKey(includeIfNull: false)
   Map<String, dynamic>? nodeSelector;
 
   /// Operating system configuration for the pod.
+  @JsonKey(includeIfNull: false)
   PodOS? os;
 
   /// Resources consumed by the pod infrastructure, not directly by its containers.
+  @JsonKey(includeIfNull: false)
   Map<String, dynamic>? overhead;
 
   /// Defines whether this pod can be preempted by other pods.
+  @JsonKey(includeIfNull: false)
   String? preemptionPolicy;
 
   /// The priority value for this pod.
   /// Higher values indicate higher priority.
+  @JsonKey(includeIfNull: false)
   int? priority;
 
   /// Reference to a PriorityClass object that defines the pod's priority.
+  @JsonKey(includeIfNull: false)
   String? priorityClassName;
 
   /// Additional conditions that must be met for pod readiness.
+  @JsonKey(includeIfNull: false)
   List<PodReadinessGate>? readinessGates;
 
   /// Claims for resources that the pod requires.
+  @JsonKey(includeIfNull: false)
   List<PodResourceClaim>? resourceClaims;
 
   /// Resource management policy for the pod.
+  @JsonKey(includeIfNull: false)
   String? resourcePolicy;
 
   /// The runtime class to use for this pod.
   /// Defines the container runtime configuration.
+  @JsonKey(includeIfNull: false)
   String? runtimeClassName;
 
   /// Name of the scheduler to use for pod scheduling.
   /// Defaults to default scheduler if not specified.
+  @JsonKey(includeIfNull: false)
   String? schedulerName;
 
   /// Gates that must be satisfied before the pod can be scheduled.
+  @JsonKey(includeIfNull: false)
   List<PodSchedulingGate>? schedulingGates;
 
   /// Security context settings that apply to the entire pod.
+  @JsonKey(includeIfNull: false)
   PodSecurityContext? securityContext;
 
   /// @deprecated Use serviceAccountName instead.
   /// The service account to use for this pod.
+  @JsonKey(includeIfNull: false)
   String? serviceAccount;
 
   /// Name of the service account to use for this pod.
+  @JsonKey(includeIfNull: false)
   String? serviceAccountName;
 
   /// Whether the pod's hostname will be configured as the pod's FQDN.
+  @JsonKey(includeIfNull: false)
   bool? setHostnameAsFQDN;
 
   /// Enable sharing of process namespace between containers in the pod.
+  @JsonKey(includeIfNull: false)
   bool? shareProcessNamespace;
 
   /// Subdomain for the pod, used in conjunction with hostname.
+  @JsonKey(includeIfNull: false)
   String? subdomain;
 
   /// Duration in seconds the pod needs to terminate gracefully.
+  @JsonKey(includeIfNull: false)
   int? terminationGracePeriodSeconds;
 
   /// Pod scheduling rules that allow it to tolerate specific node taints.
+  @JsonKey(includeIfNull: false)
   List<Toleration>? tolerations;
 
   /// Rules for how pods ought to spread across topology domains.
+  @JsonKey(includeIfNull: false)
   List<TopologySpreadConstraint>? topologySpreadConstraints;
 
   /// List of volumes that can be mounted by containers in the pod.
+  @JsonKey(includeIfNull: false)
   List<Volume>? volumes;
 
   /// Creates a new PodSpec instance from a Map representation.
@@ -157,204 +234,8 @@ class PodSpec extends Spec implements ObjectSpec {
   /// [data] should be a Map containing the pod specification fields as defined
   /// in the Kubernetes API. This constructor handles the deserialization of
   /// all nested objects and lists.
-  @override
-  PodSpec.fromMap(Map<String, dynamic> data) {
-    activeDeadlineSeconds = data['activeDeadlineSeconds'];
-    if (data['affinity'] != null) affinity = Affinity.fromMap(data['affinity']);
-    automountServiceAccountToken = data['automountServiceAccountToken'];
-    if (data['containers'] != null) {
-      containers = [];
-      for (var e in data['containers']) {
-        containers!.add(Container.fromMap(e));
-      }
-    }
-    if (data['dnsConfig'] != null) {
-      dnsConfig = PodDNSConfig.fromMap(data['dnsConfig']);
-    }
-    dnsPolicy = data['dnsPolicy'];
-    enableServiceLinks = data['enableServiceLinks'];
-    if (data['ephemeralContainers'] != null) {
-      ephemeralContainers = [];
-      for (var e in data['ephemeralContainers']) {
-        ephemeralContainers!.add(EphemeralContainer.fromMap(e));
-      }
-    }
-    if (data['hostAliases'] != null) {
-      hostAliases = [];
-      for (var e in data['hostAliases']) {
-        hostAliases!.add(HostAlias.fromMap(e));
-      }
-    }
-    hostIPC = data['hostIPC'];
-    hostNetwork = data['hostNetwork'];
-    hostUsers = data['hostUsers'];
-    hostname = data['hostname'];
-    if (data['imagePullSecrets'] != null) {
-      imagePullSecrets = [];
-      for (var e in data['imagePullSecrets']) {
-        imagePullSecrets!.add(LocalObjectReference.fromMap(e));
-      }
-    }
-    if (data['initContainers'] != null) {
-      initContainers = [];
-      for (var e in data['initContainers']) {
-        initContainers!.add(Container.fromMap(e));
-      }
-    }
-    nodeName = data['nodeName'];
-    if (data['nodeSelector'] != null) {
-      nodeSelector = {};
-      for (var e in (data['nodeSelector'] as Map<String, dynamic>).entries) {
-        nodeSelector![e.key] = e.value;
-      }
-    }
-    if (data['os'] != null) {
-      os = PodOS.fromMap(data['os']);
-    }
-    if (data['overhead'] != null) {
-      overhead = {};
-      for (var e in (data['overhead'] as Map<String, dynamic>).entries) {
-        overhead![e.key] = e.value;
-      }
-    }
-    preemptionPolicy = data['preemptionPolicy'];
-    priority = data['priority'];
-    priorityClassName = data['priorityClassName'];
-    if (data['readinessGates'] != null) {
-      readinessGates = [];
-      for (var e in data['readinessGates']) {
-        readinessGates!.add(PodReadinessGate.fromMap(e));
-      }
-    }
-    if (data['resourceClaims'] != null) {
-      resourceClaims = [];
-      for (var e in data['resourceClaims']) {
-        resourceClaims!.add(PodResourceClaim.fromMap(e));
-      }
-    }
-    resourcePolicy = data['resourcePolicy'];
-    runtimeClassName = data['runtimeClassName'];
-    schedulerName = data['schedulerName'];
-    if (data['schedulingGates'] != null) {
-      schedulingGates = [];
-      for (var e in data['schedulingGates']) {
-        schedulingGates!.add(PodSchedulingGate.fromMap(e));
-      }
-    }
-    if (data['securityContext'] != null) {
-      securityContext = PodSecurityContext.fromMap(data['securityContext']);
-    }
-    serviceAccount = data['serviceAccount'];
-    serviceAccountName = data['serviceAccountName'];
-    setHostnameAsFQDN = data['setHostnameAsFQDN'];
-    shareProcessNamespace = data['shareProcessNamespace'];
-    subdomain = data['subdomain'];
-    terminationGracePeriodSeconds = data['terminationGracePeriodSeconds'];
-    if (data['tolerations'] != null) {
-      tolerations = [];
-      for (var e in data['tolerations']) {
-        tolerations!.add(Toleration.fromMap(e));
-      }
-    }
-    if (data['topologySpreadConstraints'] != null) {
-      topologySpreadConstraints = [];
-      for (var e in data['topologySpreadConstraints']) {
-        topologySpreadConstraints!.add(TopologySpreadConstraint.fromMap(e));
-      }
-    }
-    if (data['volumes'] != null) {
-      volumes = [];
-      for (var e in data['volumes']) {
-        volumes!.add(Volume.fromMap(e));
-      }
-    }
-  }
+  factory PodSpec.fromJson(Map<String, dynamic> json) =>
+      _$PodSpecFromJson(json);
 
-  @override
-  Map<String, dynamic> toMap() => {
-        'activeDeadlineSeconds': activeDeadlineSeconds,
-        'affinity': (affinity != null) ? affinity!.toMap() : null,
-        'automountServiceAccountToken': automountServiceAccountToken,
-        'containers': (containers != null)
-            ? containers!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'dnsConfig': (dnsConfig != null) ? dnsConfig!.toMap() : null,
-        'dnsPolicy': dnsPolicy,
-        'enableServiceLinks': enableServiceLinks,
-        'ephemeralContainers': (ephemeralContainers != null)
-            ? ephemeralContainers!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'hostAliases': (hostAliases != null)
-            ? hostAliases!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'hostIPC': hostIPC,
-        'hostNetwork': hostNetwork,
-        'hostUsers': hostUsers,
-        'hostname': hostname,
-        'imagePullSecrets': (imagePullSecrets != null)
-            ? imagePullSecrets!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'initContainers': (initContainers != null)
-            ? initContainers!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'nodeName': nodeName,
-        'nodeSelector': nodeSelector,
-        'os': (os != null) ? os!.toMap() : null,
-        'overhead': overhead,
-        'preemptionPolicy': preemptionPolicy,
-        'priority': priority,
-        'priorityClassName': priorityClassName,
-        'readinessGates': (readinessGates != null)
-            ? readinessGates!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'resourceClaims': (resourceClaims != null)
-            ? resourceClaims!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'resourcePolicy': resourcePolicy,
-        'schedulerName': schedulerName,
-        'schedulingGates': (schedulingGates != null)
-            ? schedulingGates!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'securityContext':
-            (securityContext != null) ? securityContext!.toMap() : null,
-        'serviceAccount': serviceAccount,
-        'serviceAccountName': serviceAccountName,
-        'setHostnameAsFQDN': setHostnameAsFQDN,
-        'shareProcessNamespace': shareProcessNamespace,
-        'subdomain': subdomain,
-        'terminationGracePeriodSeconds': terminationGracePeriodSeconds,
-        'tolerations': (tolerations != null)
-            ? tolerations!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'topologySpreadConstraints': (topologySpreadConstraints != null)
-            ? topologySpreadConstraints!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'volumes': (volumes != null)
-            ? volumes!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$PodSpecToJson(this);
 }

@@ -1,29 +1,61 @@
-/// Represents a projected service account token volume source.
-/// 
-/// ServiceAccountTokenProjection represents a projected service account token 
-/// volume. This projection can be used to insert a service account token into 
-/// the pods running with specified path and expiration.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'service_account_token_projection.g.dart';
+
+/// Projects a Kubernetes service account token into a volume.
+///
+/// ServiceAccountTokenProjection enables pods to obtain service account tokens
+/// with specific configurations:
+/// - Custom audience targeting
+/// - Configurable expiration times
+/// - Flexible file path mounting
+///
+/// Common use cases:
+/// - Authenticating with external services
+/// - Accessing Kubernetes API with custom settings
+/// - Implementing token rotation mechanisms
+///
+/// Example:
+/// ```dart
+/// final projection = ServiceAccountTokenProjection()
+///   ..audience = 'https://my-service.example.com'
+///   ..expirationSeconds = 3600
+///   ..path = 'tokens/service-account.jwt';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/projected-volumes/#serviceaccounttoken)
+/// for more details about service account token projections.
+@JsonSerializable()
 class ServiceAccountTokenProjection {
-  /// Optional: Audience is the intended audience of the token.
-  /// If not provided, the audience defaults to the API server.
+  ServiceAccountTokenProjection();
+
+  /// The intended audience of the token.
+  /// 
+  /// Identifies who should accept this token. If not specified,
+  /// the token's audience will default to the Kubernetes API server.
+  @JsonKey(includeIfNull: false)
   String? audience;
 
-  /// Optional: Validity duration of the token in seconds.
-  /// Defaults to 1 hour if not specified.
+  /// Token validity duration in seconds.
+  /// 
+  /// Controls how long the projected token will remain valid.
+  /// If not specified, defaults to 1 hour (3600 seconds).
+  @JsonKey(includeIfNull: false)
   int? expirationSeconds;
 
-  /// Required: The relative path of the file to map the token into.
+  /// The relative path where the token will be mounted.
+  /// 
+  /// Required field that specifies where in the projected volume
+  /// the token file should be created.
+  @JsonKey(includeIfNull: false)
   String? path;
 
-  /// Creates a new [ServiceAccountTokenProjection] instance from a map structure.
-  /// 
-  /// [data] is expected to be a map containing the following optional keys:
-  /// - 'audience': String value for the token audience
-  /// - 'expirationSeconds': Integer value for token expiration time
-  /// - 'path': String value for the mount path
-  ServiceAccountTokenProjection.fromMap(Map<String, dynamic> data) {
-    audience = data['audience'];
-    expirationSeconds = data['expirationSeconds'];
-    path = data['path'];
-  }
+  /// Creates a new [ServiceAccountTokenProjection] from a map structure.
+  factory ServiceAccountTokenProjection.fromMap(Map<String, dynamic> data) =>
+      ServiceAccountTokenProjection.fromJson(data);
+
+  factory ServiceAccountTokenProjection.fromJson(Map<String, dynamic> json) =>
+      _$ServiceAccountTokenProjectionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ServiceAccountTokenProjectionToJson(this);
 }

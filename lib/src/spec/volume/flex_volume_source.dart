@@ -1,44 +1,74 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import '../../spec/local_object_reference.dart';
 
-/// Represents a FlexVolume source in Kubernetes.
-/// FlexVolume is a volume plugin that allows users to mount vendor-specific
-/// storage to their pods.
+part 'flex_volume_source.g.dart';
+
+/// Represents a FlexVolume in Kubernetes for vendor-specific storage integration.
+///
+/// FlexVolumeSource enables pods to use storage solutions that don't have built-in
+/// plugins. Key features include:
+/// - Custom driver integration
+/// - Flexible mount options
+/// - Secret management
+/// - Driver-specific configuration
+///
+/// Common use cases:
+/// - Legacy storage systems
+/// - Custom storage solutions
+/// - Specialized storage requirements
+///
+/// Example:
+/// ```dart
+/// final flexVolume = FlexVolumeSource()
+///   ..driver = 'vendor/storage-driver'
+///   ..fsType = 'ext4'
+///   ..options = {
+///     'volumeID': 'vol123',
+///     'size': '100Gi'
+///   }
+///   ..readOnly = false
+///   ..secretRef = LocalObjectReference()..name = 'storage-secret';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#flexvolume)
+/// for more details about FlexVolume.
+@JsonSerializable()
 class FlexVolumeSource {
-  /// The driver to use for this flex volume, as registered with Kubernetes.
+  FlexVolumeSource();
+
+  /// The name of the FlexVolume driver to use.
+  /// 
+  /// Must be pre-installed on the nodes and registered with
+  /// the kubelet. Example: "vendor/storage-driver"
   late String driver;
 
-  /// Filesystem type to mount. Must be a filesystem type supported by the host
-  /// operating system.
+  /// The filesystem type to mount.
+  /// 
+  /// Must be a filesystem type supported by the host operating system.
+  /// Examples: "ext4", "xfs", "ntfs"
   late String fsType;
 
-  /// Optional: Extra command options to pass to the flex volume driver when
-  /// mounting.
+  /// Additional options for the FlexVolume driver.
+  /// 
+  /// These are passed directly to the FlexVolume driver when mounting
+  /// the volume. The available options depend on the specific driver.
   late Map<String, dynamic> options;
 
-  /// Optional: Defaults to false (read/write). ReadOnly here will force
-  /// the ReadOnly setting in VolumeMounts.
+  /// Controls read-only access to the volume.
+  /// 
+  /// When true, the volume will be mounted read-only.
+  /// Defaults to false (read/write).
   late bool readOnly;
 
-  /// Optional: SecretRef is a reference to the secret object containing
-  /// sensitive information to pass to the flex volume driver for the mount.
+  /// Reference to a secret containing sensitive information.
+  /// 
+  /// The secret will be passed to the FlexVolume driver during mount
+  /// operations. Used for credentials or other sensitive data.
   late LocalObjectReference secretRef;
 
-  /// Creates a new FlexVolumeSource instance from a map structure.
-  /// 
-  /// [data] should contain the following keys:
-  /// - driver: String identifying the flex volume driver
-  /// - fsType: String identifying the filesystem type
-  /// - options: Map of string keys and values for driver options
-  /// - readOnly: Boolean indicating if volume is read-only
-  /// - secretRef: Map containing secret reference details
-  FlexVolumeSource.fromMap(Map<String, dynamic> data) {
-    driver = data['driver'];
-    fsType = data['fsType'];
-    options = {};
-    for (var e in (data['options'] as Map<String, dynamic>).entries) {
-      options[e.key] = e.value;
-    }
-    readOnly = data['readOnly'];
-    secretRef = LocalObjectReference.fromMap(data['secretRef']);
-  }
+  factory FlexVolumeSource.fromJson(Map<String, dynamic> json) =>
+      _$FlexVolumeSourceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FlexVolumeSourceToJson(this);
 }

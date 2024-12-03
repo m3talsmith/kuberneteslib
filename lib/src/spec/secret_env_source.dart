@@ -1,27 +1,55 @@
-/// A class that represents a secret environment source configuration.
-/// This is typically used to reference secrets stored in Kubernetes secrets.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'secret_env_source.g.dart';
+
+/// Represents a reference to a Kubernetes Secret for environment variable population.
+///
+/// SecretEnvSource enables containers to load environment variables from Secrets.
+/// Key features include:
+/// - Secret reference configuration
+/// - Optional secret handling
+/// - Environment variable population
+/// - Secret data access control
+///
+/// Common use cases:
+/// - Application credentials
+/// - API keys management
+/// - Configuration secrets
+/// - Service authentication
+///
+/// Example:
+/// ```dart
+/// final secretEnv = SecretEnvSource()
+///   ..name = 'app-secrets'
+///   ..optional = true;
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables)
+/// for more details about using secrets as environment variables.
+@JsonSerializable()
 class SecretEnvSource {
-  /// The name of the secret in the pod's namespace to select from.
+  SecretEnvSource();
+
+  /// Name of the secret in the pod's namespace.
+  /// 
+  /// The secret being referenced must exist in the same namespace as the pod.
+  /// All key-value pairs in the secret will be exposed as environment variables.
+  @JsonKey(includeIfNull: false)
   String? name;
 
-  /// Specify whether the Secret must be defined.
-  /// When true, the secret is optional and a secret not found in the pod's namespace will not cause an error.
+  /// Controls whether the secret must exist.
+  /// 
+  /// When true:
+  /// - Missing secrets won't cause an error
+  /// - Pod startup continues if secret is not found
+  /// When false:
+  /// - Missing secrets will prevent pod startup
+  /// - Default behavior if not specified
+  @JsonKey(includeIfNull: false)
   bool? optional;
 
-  /// Creates a [SecretEnvSource] instance from a map structure.
-  ///
-  /// [data] should contain:
-  /// - 'name': String representing the secret name
-  /// - 'optional': bool indicating if the secret is optional
-  SecretEnvSource.fromMap(Map<String, dynamic> data) {
-    name = data['name'];
-    optional = data['optional'];
-  }
+  factory SecretEnvSource.fromJson(Map<String, dynamic> json) =>
+      _$SecretEnvSourceFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'name': name,
-        'optional': optional,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$SecretEnvSourceToJson(this);
 }

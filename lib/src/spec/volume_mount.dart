@@ -1,51 +1,83 @@
-/// Represents a volume mount configuration in a container.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'volume_mount.g.dart';
+
+/// Represents a volume mount configuration in Kubernetes containers.
 ///
-/// VolumeMount describes a mounting of a Volume within a container.
-/// It specifies the path where the volume should be mounted, along with
-/// various mounting options and configurations.
+/// VolumeMount defines how a Volume is mounted into a container's filesystem.
+/// Key features include:
+/// - Path specification
+/// - Mount propagation control
+/// - Read/write access management
+/// - Subpath mounting
+/// - Environment variable expansion
+///
+/// Common use cases:
+/// - Configuration files
+/// - Shared data volumes
+/// - Persistent storage
+/// - Secret mounting
+///
+/// Example:
+/// ```dart
+/// final mount = VolumeMount()
+///   ..name = 'config-volume'
+///   ..mountPath = '/etc/config'
+///   ..readOnly = true
+///   ..mountPropagation = 'None';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#using-volumes)
+/// for more details about volume mounts.
+@JsonSerializable()
 class VolumeMount {
+  VolumeMount();
+
   /// Path within the container at which the volume should be mounted.
+  /// 
+  /// Examples:
+  /// - '/etc/config'
+  /// - '/var/data'
+  /// - '/mnt/shared'
+  @JsonKey(includeIfNull: false)
   String? mountPath;
 
   /// Determines how mounts are propagated from the host to container and vice versa.
-  /// Can be one of: None, HostToContainer, Bidirectional.
+  /// 
+  /// Values:
+  /// - 'None': No propagation (default)
+  /// - 'HostToContainer': Host changes visible to container
+  /// - 'Bidirectional': Changes visible in both directions
+  @JsonKey(includeIfNull: false)
   String? mountPropagation;
 
   /// The name of the volume to mount.
-  /// This must match the name of a volume defined in the pod's volumes list.
+  /// 
+  /// Must match a volume name defined in the pod specification.
+  @JsonKey(includeIfNull: false)
   String? name;
 
-  /// Mounted read-only if true, read-write otherwise (false or unspecified).
+  /// Controls read/write access to the mounted volume.
+  /// 
+  /// - true: Read-only access
+  /// - false: Read-write access (default)
+  @JsonKey(includeIfNull: false)
   bool? readOnly;
 
-  /// Path within the volume from which the container's volume should be mounted.
+  /// Optional relative path within the volume to mount.
+  /// 
+  /// Allows mounting a specific directory from the volume.
+  @JsonKey(includeIfNull: false)
   String? subPath;
 
-  /// Expanded path within the volume from which the container's volume should be mounted.
-  /// Behaves similarly to subPath but environment variable references are expanded.
+  /// Like subPath, but with environment variable expansion.
+  /// 
+  /// Example: '$(POD_NAME)/config' will expand POD_NAME variable
+  @JsonKey(includeIfNull: false)
   String? subPathExpr;
 
-  /// Creates a new [VolumeMount] instance from a map of data.
-  ///
-  /// The map should contain string keys corresponding to the field names
-  /// and appropriate values for each field.
-  VolumeMount.fromMap(Map<String, dynamic> data) {
-    mountPath = data['mountPath'];
-    mountPropagation = data['mountPropagation'];
-    name = data['name'];
-    readOnly = data['readOnly'];
-    subPath = data['subPath'];
-    subPathExpr = data['subPathExpr'];
-  }
+  factory VolumeMount.fromJson(Map<String, dynamic> json) =>
+      _$VolumeMountFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'mountPath': mountPath,
-        'mountPropagation': mountPropagation,
-        'name': name,
-        'readOnly': readOnly,
-        'subPath': subPath,
-        'subPathExpr': subPathExpr,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$VolumeMountToJson(this);
 }

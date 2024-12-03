@@ -1,41 +1,95 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import '../resource/resource_kind.dart';
 import 'pod_spec.dart';
 
+/// Base interface for all Kubernetes resource specifications.
+///
+/// Defines the common contract that all resource specifications must implement
+/// for JSON serialization.
 abstract class ObjectSpec {
-  ObjectSpec.fromMap(Map<String, dynamic> data, {required ResourceKind kind});
-  Map<String, dynamic> toMap();
+  Map<String, dynamic> toJson();
 }
 
-/// A factory class for creating specific resource specifications based on their kind.
+/// JSON converter for Kubernetes resource specifications.
+///
+/// Enables automatic conversion between JSON and specific resource spec types
+/// based on the resource kind. Used in conjunction with @JsonSerializable.
+///
+/// Example:
+/// ```dart
+/// @ObjectSpecConverter()
+/// ObjectSpec? spec;
+/// ```
+class ObjectSpecConverter implements JsonConverter<ObjectSpec, Map<String, dynamic>> {
+  const ObjectSpecConverter();
+  
+  @override
+  ObjectSpec fromJson(Map<String, dynamic> json) {
+    return Spec.fromJson(json, kind: ResourceKind.values.firstWhere(
+      (k) => k.name == json['kind'],
+      orElse: () => ResourceKind.pod,
+    )).spec!;
+  }
+
+  @override
+  Map<String, dynamic> toJson(ObjectSpec object) => object.toJson();
+}
+
+/// Factory for creating Kubernetes resource specifications.
+///
+/// Spec provides a centralized way to create and manage different types of
+/// Kubernetes resource specifications. Key features include:
+/// - Resource kind-based instantiation
+/// - JSON serialization support
+/// - Type-safe specification handling
+///
+/// Common use cases:
+/// - Pod specification creation
+/// - Resource definition parsing
+/// - Multi-resource management
+/// - Specification serialization
+///
+/// Example:
+/// ```dart
+/// final podSpec = Spec.fromJson({
+///   'containers': [{
+///     'name': 'web',
+///     'image': 'nginx:1.14.2'
+///   }]
+/// }, kind: ResourceKind.pod);
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)
+/// for more details about resource specifications.
 class Spec {
-  /// Creates a specific Spec instance from a map based on the resource kind.
-  ///
-  /// [data] is the raw map containing the specification data.
-  /// [kind] specifies the type of resource being created.
-  ///
-  /// Returns a specific spec instance (currently only supports [PodSpec]).
-  ///
-  /// Example:
-  /// ```dart
-  /// final podSpec = Spec.fromMap(data, kind: ResourceKind.pod);
-  /// ```
-  static ObjectSpec fromMap(Map<String, dynamic> data,
+  /// The actual resource specification instance.
+  /// 
+  /// Uses [ObjectSpecConverter] for JSON serialization/deserialization.
+  @ObjectSpecConverter()
+  ObjectSpec? spec;
+
+  Spec({required this.spec});
+
+  /// Creates a Spec instance from JSON based on the resource kind.
+  /// 
+  /// Parameters:
+  /// - [data]: Raw JSON map containing the specification
+  /// - [kind]: Type of Kubernetes resource being created
+  /// 
+  /// Currently supports:
+  /// - Pod specifications (ResourceKind.pod)
+  factory Spec.fromJson(Map<String, dynamic> data,
       {required ResourceKind kind}) {
     data['kind'] = kind.name;
     switch (kind) {
       case ResourceKind.pod:
-        return PodSpec.fromMap(data);
+        return Spec(spec: PodSpec.fromJson(data));
       default:
-        return PodSpec.fromMap(data);
+        return Spec(spec: PodSpec.fromJson(data));
     }
   }
 
-  Map<String, dynamic> toMap() {
-    switch (kind) {
-      case ResourceKind.pod:
-        return (this as PodSpec).toMap();
-      default:
-        return (this as PodSpec).toMap();
-    }
-  }
+  /// Converts this Spec to a JSON representation.
+  Map<String, dynamic> toJson() => spec?.toJson() ?? {};
 }

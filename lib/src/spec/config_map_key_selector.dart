@@ -1,35 +1,57 @@
-/// A selector for retrieving a specific key from a ConfigMap in Kubernetes.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'config_map_key_selector.g.dart';
+
+/// Represents a selector for a specific key within a ConfigMap in Kubernetes.
 ///
-/// This class represents a reference to a specific key within a ConfigMap resource,
-/// allowing you to specify which ConfigMap and which key within it should be accessed.
+/// ConfigMapKeySelector enables precise selection of individual keys from ConfigMaps.
+/// Key features include:
+/// - Single key selection
+/// - Optional ConfigMap validation
+/// - Environment variable mapping
+/// - Volume key mapping
+///
+/// Common use cases:
+/// - Individual configuration values
+/// - Selective environment variables
+/// - Specific file mounting
+/// - Credential injection
+///
+/// Example:
+/// ```dart
+/// final selector = ConfigMapKeySelector()
+///   ..name = 'app-config'
+///   ..key = 'database-url'
+///   ..optional = false;
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/configmap/#using-configmaps)
+/// for more details about ConfigMap key selection.
+@JsonSerializable()
 class ConfigMapKeySelector {
+  ConfigMapKeySelector();
+
   /// The key to select from the ConfigMap.
+  /// 
+  /// Required: Specifies which key from the ConfigMap to select.
+  /// The value of this key will be used in the context where the selector is defined.
   late String key;
 
-  /// The name of the ConfigMap resource.
+  /// The name of the ConfigMap to select from.
+  /// 
+  /// Required: References the ConfigMap in the same namespace as the pod
+  /// that contains the desired key.
   late String name;
 
-  /// Whether the ConfigMap or key must be defined.
-  ///
-  /// If true, the volume mount will fail if the referenced ConfigMap or key
-  /// does not exist. If false, the volume mount will succeed but with an empty value.
+  /// Whether the ConfigMap or key must exist.
+  /// 
+  /// Required: When true, the pod will start even if the ConfigMap or key
+  /// doesn't exist. When false, the pod will fail to start if the ConfigMap
+  /// or key is missing.
   late bool optional;
 
-  /// Creates a [ConfigMapKeySelector] from a Map representation.
-  ///
-  /// [data] should contain the following keys:
-  /// - 'key': The key to select from the ConfigMap
-  /// - 'name': The name of the ConfigMap
-  /// - 'optional': Whether the ConfigMap or key is optional
-  ConfigMapKeySelector.fromMap(Map<String, dynamic> data) {
-    key = data['key'];
-    name = data['name'];
-    optional = data['optional'];
-  }
+  factory ConfigMapKeySelector.fromJson(Map<String, dynamic> json) =>
+      _$ConfigMapKeySelectorFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'key': key,
-        'name': name,
-        'optional': optional,
-      };
+  Map<String, dynamic> toJson() => _$ConfigMapKeySelectorToJson(this);
 }

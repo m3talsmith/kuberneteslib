@@ -1,67 +1,70 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'node_selector_requirement.dart';
 
-/// A node selector term represents a set of node selection criteria.
+part 'node_selector_term.g.dart';
+
+/// Represents a node selector term in Kubernetes.
 ///
-/// This class combines label-based and field-based selector requirements that can be used
-/// to select nodes in a Kubernetes cluster. Both [matchExpressions] and [matchFields]
-/// must be satisfied for a node to be selected.
+/// NodeSelectorTerm combines multiple node selection requirements into a single term.
+/// Key features include:
+/// - Label-based node selection
+/// - Field-based node selection
+/// - AND logic between requirements
+/// - Support for multiple selection criteria
+///
+/// Common use cases:
+/// - Node affinity rules
+/// - Topology constraints
+/// - Hardware requirements
+/// - Zone selection
 ///
 /// Example:
 /// ```dart
-/// final term = NodeSelectorTerm.fromMap({
-///   'matchExpressions': [
-///     {'key': 'environment', 'operator': 'In', 'values': ['production']}
-///   ],
-///   'matchFields': [
-///     {'key': 'metadata.name', 'operator': 'Exists'}
+/// final term = NodeSelectorTerm()
+///   ..matchExpressions = [
+///     NodeSelectorRequirement()
+///       ..key = 'kubernetes.io/os'
+///       ..operator = 'In'
+///       ..values = ['linux'],
+///     NodeSelectorRequirement()
+///       ..key = 'node.kubernetes.io/instance-type'
+///       ..operator = 'In'
+///       ..values = ['c5.xlarge', 'c5.2xlarge']
 ///   ]
-/// });
+///   ..matchFields = [
+///     NodeSelectorRequirement()
+///       ..key = 'metadata.name'
+///       ..operator = 'NotIn'
+///       ..values = ['node-maintenance']
+///   ];
 /// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+/// for more details about node selection.
+@JsonSerializable()
 class NodeSelectorTerm {
-  /// A list of label selector requirements that must be met.
-  ///
+  NodeSelectorTerm()
+      : matchExpressions = [],
+        matchFields = [];
+
+  /// A list of node label selector requirements.
+  /// 
   /// These requirements are based on node labels and are evaluated as a logical AND.
+  /// Each requirement specifies a key, operator, and values for matching node labels.
   /// If empty, this criterion is ignored.
-  final List<NodeSelectorRequirement> matchExpressions;
+  List<NodeSelectorRequirement> matchExpressions;
 
-  /// A list of node field selector requirements that must be met.
-  ///
-  /// These requirements are based on node fields (e.g., metadata.name) and are
-  /// evaluated as a logical AND. If empty, this criterion is ignored.
-  final List<NodeSelectorRequirement> matchFields;
+  /// A list of node field selector requirements.
+  /// 
+  /// These requirements are based on node fields (e.g., metadata.name,
+  /// metadata.namespace) and are evaluated as a logical AND. Each requirement
+  /// specifies a key, operator, and values for matching node fields.
+  /// If empty, this criterion is ignored.
+  List<NodeSelectorRequirement> matchFields;
 
-  /// Creates a [NodeSelectorTerm] from a JSON-like map structure.
-  ///
-  /// The [data] map should contain:
-  /// * 'matchExpressions': Optional list of label selector requirements
-  /// * 'matchFields': Optional list of field selector requirements
-  ///
-  /// Both fields default to empty lists if not provided or null.
-  /// The resulting lists are unmodifiable to prevent accidental modifications.
-  NodeSelectorTerm.fromMap(Map<String, dynamic> data)
-      : matchExpressions = (data['matchExpressions'] as List?)
-                ?.map((e) =>
-                    NodeSelectorRequirement.fromMap(e as Map<String, dynamic>))
-                .toList() ??
-            [],
-        matchFields = (data['matchFields'] as List?)
-                ?.map((e) =>
-                    NodeSelectorRequirement.fromMap(e as Map<String, dynamic>))
-                .toList() ??
-            [];
+  factory NodeSelectorTerm.fromJson(Map<String, dynamic> json) =>
+      _$NodeSelectorTermFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'matchExpressions': matchExpressions.isNotEmpty
-            ? matchExpressions.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'matchFields': matchFields.isNotEmpty
-            ? matchFields.map(
-                (e) => e.toMap(),
-              )
-            : null,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$NodeSelectorTermToJson(this);
 }

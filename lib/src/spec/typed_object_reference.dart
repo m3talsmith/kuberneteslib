@@ -1,34 +1,67 @@
-/// A reference to a specific object type within a Kubernetes-like API.
-///
-/// This class holds information about the API group, kind, name, and namespace
-/// of the object being referenced.
-class TypedObjectReference {
-  late String apiGroup;
-  late String kind;
-  late String name;
-  late String namespace;
+import 'package:json_annotation/json_annotation.dart';
 
-  /// Creates a [TypedObjectReference] from a map of data.
-  ///
-  /// The [data] map should contain the following keys:
-  /// - `apiGroup`: The API group of the object.
-  /// - `kind`: The kind of the object.
-  /// - `name`: The name of the object.
-  /// - `namespace`: The namespace of the object.
-  ///
-  /// Example:
-  /// ```dart
-  /// var reference = TypedObjectReference.fromMap({
-  ///   'apiGroup': 'apps',
-  ///   'kind': 'Deployment',
-  ///   'name': 'nginx-deployment',
-  ///   'namespace': 'default'
-  /// });
-  /// ```
-  TypedObjectReference.fromMap(Map<String, dynamic> data) {
-    apiGroup = data['apiGroup'];
-    kind = data['kind'];
-    name = data['name'];
-    namespace = data['namespace'];
-  }
+part 'typed_object_reference.g.dart';
+
+/// Represents a reference to a Kubernetes object across namespaces.
+///
+/// TypedObjectReference enables referencing Kubernetes resources with
+/// complete type and location information. Key features include:
+/// - API group specification
+/// - Resource kind identification
+/// - Cross-namespace references
+/// - Type-safe object references
+///
+/// Common use cases:
+/// - Cross-namespace resource binding
+/// - Cluster-wide resource references
+/// - Multi-tenant resource access
+/// - Service mesh configuration
+///
+/// Example:
+/// ```dart
+/// final reference = TypedObjectReference()
+///   ..apiGroup = 'apps'
+///   ..kind = 'Deployment'
+///   ..name = 'web-server'
+///   ..namespace = 'production';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+/// for more details about cross-namespace references.
+@JsonSerializable()
+class TypedObjectReference {
+  /// The API group of the referenced resource.
+  /// 
+  /// Examples:
+  /// - 'apps' for Deployments
+  /// - 'batch' for Jobs
+  /// - 'networking.k8s.io' for Ingresses
+  String apiGroup;
+
+  /// The kind of resource being referenced.
+  /// 
+  /// Examples:
+  /// - 'Deployment'
+  /// - 'StatefulSet'
+  /// - 'Service'
+  String kind;
+
+  /// The name of the referenced resource.
+  String name;
+
+  /// The namespace where the referenced resource exists.
+  /// 
+  /// If empty, defaults to the namespace of the referring object.
+  String namespace;
+
+  TypedObjectReference()
+      : apiGroup = '',
+        kind = '',
+        name = '',
+        namespace = '';
+
+  factory TypedObjectReference.fromJson(Map<String, dynamic> json) =>
+      _$TypedObjectReferenceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TypedObjectReferenceToJson(this);
 }

@@ -1,42 +1,75 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import '../object_field_selector.dart';
 import '../resource_field_selector.dart';
 
-/// Represents a file to be created in a volume from downward API information.
-/// DownwardAPIVolumeFile enables pods to consume information about themselves
-/// or the cluster and expose it to containers through files.
+part 'downward_api_volume_file.g.dart';
+
+/// Represents a file that exposes pod or container information in Kubernetes volumes.
+///
+/// DownwardAPIVolumeFile enables containers to access information about themselves
+/// or their environment through files. Key features include:
+/// - Access to pod metadata (name, namespace, labels, annotations)
+/// - Container resource information (CPU, memory limits/requests)
+/// - Custom file permissions
+/// - Flexible path mounting
+///
+/// Common use cases:
+/// - Exposing pod metadata to applications
+/// - Resource monitoring and logging
+/// - Dynamic configuration based on pod attributes
+///
+/// Example:
+/// ```dart
+/// final volumeFile = DownwardAPIVolumeFile()
+///   ..path = 'labels'
+///   ..fieldRef = ObjectFieldSelector()
+///     ..fieldPath = 'metadata.labels'
+///   ..mode = 0644;
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#downwardapi)
+/// for more details about Downward API volumes.
+@JsonSerializable()
 class DownwardAPIVolumeFile {
-  /// Selects a field of the pod to populate the volume file with.
-  /// Supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations, etc.
+  DownwardAPIVolumeFile();
+
+  /// Selects a field from the pod's metadata.
+  /// 
+  /// Supports various pod metadata fields including:
+  /// - metadata.name: Pod name
+  /// - metadata.namespace: Pod namespace
+  /// - metadata.labels: Pod labels
+  /// - metadata.annotations: Pod annotations
+  @JsonKey(includeIfNull: false)
   ObjectFieldSelector? fieldRef;
 
-  /// Optional: mode bits used to set permissions on the file.
-  /// Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511.
+  /// Unix permission mode for the created file.
+  /// 
+  /// Must be an octal value between 0000 and 0777 or
+  /// a decimal value between 0 and 511.
+  /// Example: 0644 (rw-r--r--)
+  @JsonKey(includeIfNull: false)
   int? mode;
 
-  /// Required: the relative path of the file to create in the volume.
-  /// Must not be absolute or contain the '..' path.
+  /// Path where the file will be created in the volume.
+  /// 
+  /// Must be a relative path, cannot contain '..' or
+  /// start with '/'. Example: "pod/labels"
+  @JsonKey(includeIfNull: false)
   String? path;
 
-  /// Selects a resource of the container to populate the volume file with.
-  /// Supports container resources (CPU and memory) and their limits/requests.
+  /// Selects a container resource metric to expose.
+  /// 
+  /// Can reference:
+  /// - CPU limits and requests
+  /// - Memory limits and requests
+  /// - Storage limits and requests
+  @JsonKey(includeIfNull: false)
   ResourceFieldSelector? resourceFieldRef;
 
-  /// Creates a new [DownwardAPIVolumeFile] instance from a map structure.
-  /// 
-  /// The [data] parameter may contain the following keys:
-  /// - 'fieldRef': Map containing field selector configuration
-  /// - 'mode': Integer representing file permissions
-  /// - 'path': String specifying the file path
-  /// - 'resourceFieldRef': Map containing resource field selector configuration
-  DownwardAPIVolumeFile.fromMap(Map<String, dynamic> data) {
-    if (data['fieldRef'] != null) {
-      fieldRef = ObjectFieldSelector.fromMap(data['fieldRef']);
-    }
-    mode = data['mode'];
-    path = data['path'];
-    if (data['resourceFieldRef'] != null) {
-      resourceFieldRef =
-          ResourceFieldSelector.fromMap(data['resourceFieldRef']);
-    }
-  }
+  factory DownwardAPIVolumeFile.fromJson(Map<String, dynamic> json) =>
+      _$DownwardAPIVolumeFileFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DownwardAPIVolumeFileToJson(this);
 }

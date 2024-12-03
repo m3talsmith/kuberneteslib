@@ -1,53 +1,52 @@
-/// Represents a ConfigMap environment source configuration in Kubernetes.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'config_map_env_source.g.dart';
+
+/// Represents a ConfigMap environment source in Kubernetes.
 ///
-/// A ConfigMap allows you to decouple configuration artifacts from image content
-/// to keep containerized applications portable. This class specifically handles
-/// the configuration for loading environment variables from a ConfigMap.
+/// ConfigMapEnvSource enables pods to load environment variables from ConfigMaps.
+/// Key features include:
+/// - Environment variable injection
+/// - Configuration decoupling
+/// - Optional ConfigMap validation
+/// - Dynamic configuration updates
+///
+/// Common use cases:
+/// - Application configuration
+/// - Environment-specific settings
+/// - Feature flags
+/// - Service endpoints
 ///
 /// Example:
 /// ```dart
-/// final configMapEnvSource = ConfigMapEnvSource.fromMap({
-///   'name': 'my-config',
-///   'optional': true
-/// });
+/// final envSource = ConfigMapEnvSource()
+///   ..name = 'app-config'
+///   ..optional = false;
 /// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables)
+/// for more details about ConfigMap environment variables.
+@JsonSerializable()
 class ConfigMapEnvSource {
-  /// The name of the ConfigMap in the Kubernetes cluster.
-  ///
-  /// This must match the name of an existing ConfigMap in the same namespace
-  /// as the Pod (unless [optional] is true).
+  ConfigMapEnvSource();
+
+  /// The name of the ConfigMap in the pod's namespace.
+  /// 
+  /// Required: References an existing ConfigMap to load environment variables from.
+  /// The ConfigMap must exist in the same namespace as the pod.
+  @JsonKey(includeIfNull: false)
   String? name;
 
-  /// Specifies whether the referenced ConfigMap is optional.
-  ///
-  /// If set to `true`:
-  /// - The container will start even if the ConfigMap doesn't exist
-  /// - Missing values will be ignored
-  ///
-  /// If set to `false`:
-  /// - The container will fail to start if the ConfigMap is missing
-  /// - This is the default behavior if not specified
+  /// Whether the ConfigMap must exist.
+  /// 
+  /// Optional: Defaults to false. When true, the pod will start even if the
+  /// ConfigMap doesn't exist or has missing keys. When false, the container
+  /// will fail to start if the ConfigMap is missing or has missing keys.
+  @JsonKey(includeIfNull: false)
   bool? optional;
 
-  /// Creates a new [ConfigMapEnvSource] instance from a map of values.
-  ///
-  /// Parameters:
-  ///   - [data]: A map containing the configuration values with the following keys:
-  ///     - 'name': (String) The name of the ConfigMap
-  ///     - 'optional': (bool) Whether the ConfigMap is optional
-  ///
-  /// Throws:
-  ///   - [TypeError] if the provided values are of incorrect type
-  ///   - [ArgumentError] if required fields are missing
-  ConfigMapEnvSource.fromMap(Map<String, dynamic> data) {
-    name = data['name'];
-    optional = data['optional'];
-  }
+  factory ConfigMapEnvSource.fromJson(Map<String, dynamic> json) =>
+      _$ConfigMapEnvSourceFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'name': name,
-        'optional': optional,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$ConfigMapEnvSourceToJson(this);
 }

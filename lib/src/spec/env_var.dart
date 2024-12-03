@@ -1,43 +1,68 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'env_var_source.dart';
 
-/// Represents an environment variable in a Kubernetes context.
+part 'env_var.g.dart';
+
+/// Represents an environment variable in a Kubernetes container.
 ///
-/// An [EnvVar] can either have a direct [value] or reference a value from
-/// another source via [valueFrom].
+/// EnvVar defines individual environment variables that can be set in containers.
+/// Key features include:
+/// - Direct value assignment
+/// - Dynamic value sourcing
+/// - ConfigMap references
+/// - Secret references
+///
+/// Common use cases:
+/// - Application configuration
+/// - API endpoints
+/// - Credentials
+/// - Runtime parameters
+///
+/// Example:
+/// ```dart
+/// // Direct value
+/// final directEnvVar = EnvVar()
+///   ..name = 'DATABASE_HOST'
+///   ..value = 'postgres.default.svc.cluster.local';
+///
+/// // ConfigMap reference
+/// final configMapEnvVar = EnvVar()
+///   ..name = 'API_KEY'
+///   ..valueFrom = EnvVarSource()
+///     ..configMapKeyRef = ConfigMapKeySelector()
+///       ..name = 'api-config'
+///       ..key = 'api-key';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/)
+/// for more details about environment variables in containers.
+@JsonSerializable()
 class EnvVar {
-  /// The name of the environment variable.
+  EnvVar();
+
+  /// Name of the environment variable.
+  /// 
+  /// Required: Must be a C_IDENTIFIER (consisting of alphanumeric characters 
+  /// or '_' and must start with an alphabetic character or '_').
   late String name;
 
-  /// The direct value of the environment variable.
-  ///
-  /// If [valueFrom] is specified, this should be null.
+  /// Direct string value for the environment variable.
+  /// 
+  /// Optional: Cannot be used if valueFrom is specified.
+  /// The value will be used as-is for the environment variable.
+  @JsonKey(includeIfNull: false)
   String? value;
 
-  /// Reference to the source where the environment variable's value should be taken from.
-  ///
-  /// This could be from a ConfigMap, Secret, or other sources supported by Kubernetes.
-  /// If [value] is specified, this should be null.
+  /// Source for the environment variable's value.
+  /// 
+  /// Optional: Cannot be used if value is specified.
+  /// Allows referencing values from ConfigMaps, Secrets, and other sources.
+  @JsonKey(includeIfNull: false)
   EnvVarSource? valueFrom;
 
-  /// Creates an [EnvVar] instance from a map structure.
-  ///
-  /// The map should contain the following keys:
-  /// - 'name': String (required) - name of the environment variable
-  /// - 'value': String (optional) - direct value of the environment variable
-  /// - 'valueFrom': Map (optional) - source reference for the environment variable value
-  EnvVar.fromMap(Map<String, dynamic> data) {
-    name = data['name'];
-    value = data['value'];
-    if (data['valueFrom'] != null) {
-      valueFrom = EnvVarSource.fromMap(data['valueFrom']);
-    }
-  }
+  factory EnvVar.fromJson(Map<String, dynamic> json) =>
+      _$EnvVarFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'name': name,
-        'value': value,
-        'valueFrom': (valueFrom != null) ? valueFrom!.toMap() : null,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$EnvVarToJson(this);
 }

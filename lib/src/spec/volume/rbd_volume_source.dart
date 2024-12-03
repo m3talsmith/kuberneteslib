@@ -1,53 +1,93 @@
 import '../../spec/local_object_reference.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-/// Represents a Rados Block Device (RBD) volume source in Kubernetes.
-/// 
-/// RBD volumes are network block devices that allow mounting of Ceph RBD (Rados Block Device)
-/// images as volumes in Kubernetes pods.
+part 'rbd_volume_source.g.dart';
+
+/// Represents a Rados Block Device (RBD) volume in Kubernetes.
+///
+/// RBDVolumeSource enables pods to use Ceph RBD (Rados Block Device) storage.
+/// Key features include:
+/// - Network block storage
+/// - High availability
+/// - Snapshot support
+/// - Multi-node access
+/// - RADOS cluster integration
+///
+/// Common use cases:
+/// - Database storage
+/// - Distributed applications
+/// - High-performance workloads
+/// - Cloud-native storage
+///
+/// Example:
+/// ```dart
+/// final rbdVolume = RBDVolumeSource()
+///   ..monitors = ['10.16.154.78:6789', '10.16.154.82:6789']
+///   ..image = 'foo-image'
+///   ..pool = 'rbd'
+///   ..user = 'admin'
+///   ..fsType = 'ext4'
+///   ..readOnly = false
+///   ..keyring = '/etc/ceph/keyring'
+///   ..secretRef = LocalObjectReference()..name = 'ceph-secret';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#rbd)
+/// for more details about RBD volumes.
+@JsonSerializable()
 class RBDVolumeSource {
+  RBDVolumeSource();
+
   /// The filesystem type to mount.
+  /// 
+  /// Required: Must be a filesystem type supported by the host operating system.
   /// Examples: "ext4", "xfs", "ntfs"
   late String fsType;
 
   /// The rados image name.
+  /// 
+  /// Required: Name of the RBD image in the pool.
   /// Example: "foo-image"
   late String image;
 
-  /// Keyring is the path to key ring for RBDUser.
-  /// Default is /etc/ceph/keyring.
+  /// Path to key ring for RBDUser authentication.
+  /// 
+  /// Optional: Defaults to /etc/ceph/keyring.
+  /// Contains authentication keys for the Ceph cluster.
   late String keyring;
 
   /// A collection of Ceph monitors.
-  /// These are the addresses through which the Ceph network can be accessed.
+  /// 
+  /// Required: List of Ceph monitor addresses for accessing the RADOS cluster.
+  /// Format: ["<ip>:<port>", ...]
   late List<String> monitors;
 
   /// The rados pool name.
-  /// Default is 'rbd'.
+  /// 
+  /// Optional: Name of the RADOS pool containing the RBD image.
+  /// Defaults to 'rbd'.
   late String pool;
 
-  /// Whether to mount the volume as read-only.
+  /// Controls read-only access to the volume.
+  /// 
+  /// Optional: When true, the volume will be mounted read-only.
+  /// Defaults to false.
   late bool readOnly;
 
   /// Reference to the authentication secret for RBD user.
-  /// More details can be found in secrets and ConfigMaps documentation.
+  /// 
+  /// Optional: References a Kubernetes secret containing Ceph authentication credentials.
+  /// The secret must exist in the same namespace as the pod.
   late LocalObjectReference secretRef;
 
   /// The rados user name.
-  /// Default is admin.
+  /// 
+  /// Optional: Name of the RADOS user for authentication.
+  /// Defaults to 'admin'.
   late String user;
 
-  /// Creates a new [RBDVolumeSource] instance from a map structure.
-  /// 
-  /// The [data] parameter should contain all the necessary fields to initialize
-  /// the RBD volume source configuration.
-  RBDVolumeSource.fromMap(Map<String, dynamic> data) {
-    fsType = data['fsType'];
-    image = data['image'];
-    keyring = data['keyring'];
-    monitors = data['monitors'] as List<String>;
-    pool = data['pool'];
-    readOnly = data['readOnly'];
-    secretRef = LocalObjectReference.fromMap(data['secretRef']);
-    user = data['user'];
-  }
+  factory RBDVolumeSource.fromJson(Map<String, dynamic> json) =>
+      _$RBDVolumeSourceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RBDVolumeSourceToJson(this);
 }

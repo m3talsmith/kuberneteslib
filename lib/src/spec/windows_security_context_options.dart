@@ -1,38 +1,61 @@
-/// Configuration options for Windows-specific security context in Kubernetes.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'windows_security_context_options.g.dart';
+
+/// Represents Windows-specific security configuration for containers in Kubernetes.
 ///
-/// This class represents security configuration options specific to Windows-based
-/// containers in Kubernetes, including GMSA credentials and user context settings.
+/// WindowsSecurityContextOptions enables configuring Windows-specific security settings
+/// for containers. Key features include:
+/// - GMSA credential specification
+/// - Host process containers
+/// - User context configuration
+/// - Windows-specific security policies
+///
+/// Common use cases:
+/// - Active Directory integration
+/// - Windows authentication
+/// - Privileged Windows containers
+/// - Domain-joined containers
+///
+/// Example:
+/// ```dart
+/// final windowsSecurity = WindowsSecurityContextOptions()
+///   ..gmsaCredentialSpecName = 'webapp-gmsa'
+///   ..runAsUserName = 'NT AUTHORITY\\SYSTEM'
+///   ..hostProcess = false;
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/windows/user-guide/#configuring-gmsa-for-windows-pods-and-containers)
+/// for more details about Windows container security options.
+@JsonSerializable()
 class WindowsSecurityContextOptions {
-  /// The GMSA credential spec containing the YAML formatted credential specification.
-  late String gmsaCredentialSpec;
+  WindowsSecurityContextOptions(): gmsaCredentialSpec = '', gmsaCredentialSpecName = '', hostProcess = false, runAsUserName = '';
 
-  /// The name of the GMSA credential spec to use.
-  late String gmsaCredentialSpecName;
+  /// GMSA credential spec in JSON format.
+  /// 
+  /// Contains the YAML/JSON formatted credential specification for Windows GMSA.
+  final String gmsaCredentialSpec;
 
-  /// Indicates if this container should be run as a HostProcess container.
-  late bool hostProcess;
+  /// Name of the GMSA credential spec custom resource.
+  /// 
+  /// References a GMSACredentialSpec resource in the cluster.
+  final String gmsaCredentialSpecName;
 
-  /// The username to run the entry point of the container process as.
-  late String runAsUserName;
+  /// Indicates if this container should be a Windows HostProcess container.
+  /// 
+  /// When true, runs with elevated privileges on the host Windows node.
+  final bool hostProcess;
 
-  /// Creates a new [WindowsSecurityContextOptions] instance from a map.
-  ///
-  /// [data] should contain the following keys:
-  /// - 'gmsaCredentialSpec': YAML formatted credential specification
-  /// - 'gmsaCredentialSpecName': Name of the GMSA credential spec
-  /// - 'hostProcess': Boolean indicating if this is a HostProcess container
-  /// - 'runAsUserName': Username for the container process
-  WindowsSecurityContextOptions.fromMap(Map<String, dynamic> data) {
-    gmsaCredentialSpec = data['gmsaCredentialSpec'];
-    gmsaCredentialSpecName = data['gmsaCredentialSpecName'];
-    hostProcess = data['hostProcess'];
-    runAsUserName = data['runAsUserName'];
-  }
+  /// Windows user account to run the container process as.
+  /// 
+  /// Examples:
+  /// - 'NT AUTHORITY\\SYSTEM'
+  /// - 'NT AUTHORITY\\LOCAL SERVICE'
+  /// - 'NT AUTHORITY\\NETWORK SERVICE'
+  final String runAsUserName;
 
-  Map<String, dynamic> toMap() => {
-        'gmsaCredentialSpec': gmsaCredentialSpec,
-        'gmsaCredentialSpecName': gmsaCredentialSpecName,
-        'hostProcess': hostProcess,
-        'runAsUserName': runAsUserName,
-      };
+  factory WindowsSecurityContextOptions.fromJson(Map<String, dynamic> json) =>
+      _$WindowsSecurityContextOptionsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WindowsSecurityContextOptionsToJson(this);
 }

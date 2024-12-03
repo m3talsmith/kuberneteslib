@@ -1,24 +1,45 @@
 import 'downward_api_volume_file.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-/// Represents a volume source that exposes pod information as files using a downward API.
-/// 
-/// The DownwardAPIVolumeSource allows containers to consume pod-level information
-/// by mounting them into a volume at specified paths.
+part 'downward_api_volume_source.g.dart';
+
+/// Represents a volume that exposes pod information as files using Kubernetes Downward API.
 ///
-/// Example usage:
+/// DownwardAPIVolumeSource enables pods to access their own information without
+/// coupling to the Kubernetes API. Key features include:
+/// - Pod metadata exposure (labels, annotations)
+/// - Container resource information
+/// - Customizable file permissions
+/// - Multiple file configurations
+///
+/// Common use cases:
+/// - Application configuration from pod metadata
+/// - Resource monitoring and limits
+/// - Dynamic service discovery
+///
+/// Example:
 /// ```dart
-/// var volumeSource = DownwardAPIVolumeSource.fromMap({
-///   'defaultMode': 420,  // Equivalent to Unix file mode 0644
-///   'items': [
-///     {
-///       'path': 'labels',
-///       'fieldRef': {'fieldPath': 'metadata.labels'}
-///     }
-///   ]
-/// });
+/// final downwardAPI = DownwardAPIVolumeSource()
+///   ..defaultMode = 0644
+///   ..items = [
+///     DownwardAPIVolumeFile()
+///       ..path = 'labels'
+///       ..fieldRef = ObjectFieldSelector()
+///         ..fieldPath = 'metadata.labels',
+///     DownwardAPIVolumeFile()
+///       ..path = 'cpu_limit'
+///       ..resourceFieldRef = ResourceFieldSelector()
+///         ..resource = 'limits.cpu'
+///   ];
 /// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#downwardapi)
+/// for more details about Downward API volumes.
+@JsonSerializable()
 class DownwardAPIVolumeSource {
-  /// The default mode bits to use for created files.
+  DownwardAPIVolumeSource();
+
+  /// Default Unix permission mode for created files.
   /// 
   /// Optional: mode bits used to set permissions on created files by default.
   /// Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511.
@@ -34,21 +55,8 @@ class DownwardAPIVolumeSource {
   /// Each item specifies a file path and the source of data to be exposed.
   late List<DownwardAPIVolumeFile> items;
 
-  /// Creates a new [DownwardAPIVolumeSource] instance from a map structure.
-  /// 
-  /// Parameters:
-  ///   [data] - Map containing the downward API volume source configuration:
-  ///     - 'defaultMode': Integer representing the default permission mode for files
-  ///     - 'items': List of downward API volume file configurations
-  /// 
-  /// Throws:
-  ///   [ArgumentError] if required fields are missing or have invalid values
-  DownwardAPIVolumeSource.fromMap(Map<String, dynamic> data) {
-    defaultMode = data['defaultMode'];
-    items = (data['items'] as List<Map<String, dynamic>>)
-        .map(
-          (e) => DownwardAPIVolumeFile.fromMap(e),
-        )
-        .toList();
-  }
+  factory DownwardAPIVolumeSource.fromJson(Map<String, dynamic> json) =>
+      _$DownwardAPIVolumeSourceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DownwardAPIVolumeSourceToJson(this);
 }

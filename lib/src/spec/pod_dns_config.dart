@@ -1,48 +1,66 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'pod_dns_config_option.dart';
 
-/// Represents DNS configuration for a Pod.
+part 'pod_dns_config.g.dart';
+
+/// Represents DNS configuration for a Pod in Kubernetes.
 ///
-/// This class defines DNS settings including nameservers, search domains,
-/// and additional DNS options for a Kubernetes Pod.
+/// PodDNSConfig enables customization of DNS settings for pods. Key features include:
+/// - Custom nameserver configuration
+/// - DNS search domain management
+/// - DNS resolver options
+/// - Pod-level DNS customization
+///
+/// Common use cases:
+/// - Custom DNS servers
+/// - Domain search order
+/// - DNS resolution settings
+/// - Cross-namespace service discovery
+///
+/// Example:
+/// ```dart
+/// final dnsConfig = PodDNSConfig()
+///   ..nameservers = ['8.8.8.8', '8.8.4.4']
+///   ..searches = ['ns1.svc.cluster.local', 'svc.cluster.local']
+///   ..options = [
+///     PodDNSConfigOption()
+///       ..name = 'ndots'
+///       ..value = '5'
+///   ];
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+/// for more details about Pod DNS configuration.
+@JsonSerializable()
 class PodDNSConfig {
-  /// List of DNS server IP addresses.
-  ///
-  /// For example: `['8.8.8.8', '8.8.4.4']`
+  PodDNSConfig();
+
+  /// List of DNS server IP addresses for the pod.
+  /// 
+  /// These nameservers are used in the order specified. If this field is empty,
+  /// the pod inherits the name server settings from the node.
+  /// Example: ['8.8.8.8', '8.8.4.4']
   late List<String> nameservers;
 
-  /// List of DNS resolver options.
-  ///
-  /// These options allow for specific DNS configurations through
-  /// [PodDNSConfigOption] objects.
+  /// List of DNS resolver options for the pod.
+  /// 
+  /// Allows fine-grained control over DNS resolution behavior through
+  /// name-value pairs. Common options include:
+  /// - ndots: minimum number of dots in name for absolute lookup
+  /// - timeout: DNS query timeout
+  /// - attempts: number of DNS query attempts
   late List<PodDNSConfigOption> options;
 
-  /// List of DNS search domains.
-  ///
-  /// Search domains are used to expand short hostnames into fully qualified
-  /// domain names. For example: `['ns1.svc.cluster.local', 'my.dns.search.suffix']`
+  /// List of DNS search domains for hostname lookup in the pod.
+  /// 
+  /// These search domains are used to expand short names into fully qualified
+  /// domain names. They are tried in the order specified.
+  /// Example: ['ns1.svc.cluster.local', 'svc.cluster.local', 'cluster.local']
   late List<String> searches;
 
-  /// Creates a [PodDNSConfig] instance from a map structure.
-  ///
-  /// [data] should contain the following keys:
-  /// - 'nameservers': List of DNS server IP addresses
-  /// - 'options': List of DNS configuration options
-  /// - 'searches': List of DNS search domains
-  PodDNSConfig.fromMap(Map<String, dynamic> data) {
-    nameservers = data['nameservers'] as List<String>;
-    options = (data['options'] as List<Map<String, dynamic>>)
-        .map(
-          (e) => PodDNSConfigOption.fromMap(e),
-        )
-        .toList();
-    searches = data['searches'] as List<String>;
-  }
+  factory PodDNSConfig.fromJson(Map<String, dynamic> json) =>
+      _$PodDNSConfigFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'nameservers': nameservers,
-        'options': options.map(
-          (e) => e.toMap(),
-        ),
-        'searches': searches,
-      };
+  Map<String, dynamic> toJson() => _$PodDNSConfigToJson(this);
 }

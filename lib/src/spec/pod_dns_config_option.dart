@@ -1,39 +1,55 @@
-/// Represents a DNS configuration option for a Pod.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'pod_dns_config_option.g.dart';
+
+/// Represents a DNS configuration option for a Pod in Kubernetes.
 ///
-/// This class defines a name-value pair for DNS configuration options that can be
-/// used in a Pod's DNS configuration.
+/// PodDNSConfigOption allows customization of DNS settings for a pod through
+/// name-value pairs. Key features include:
+/// - Custom DNS options
+/// - Nameserver configuration
+/// - Search domain settings
+/// - Resolution parameters
+///
+/// Common use cases:
+/// - Custom DNS timeouts
+/// - Search domain configuration
+/// - DNS ndots settings
+/// - Resolver options
+///
+/// Example:
+/// ```dart
+/// final dnsOption = PodDNSConfigOption()
+///   ..name = 'ndots'
+///   ..value = '5';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+/// for more details about Pod DNS configuration.
+@JsonSerializable()
 class PodDNSConfigOption {
+  PodDNSConfigOption();
+
   /// The name of the DNS configuration option.
-  ///
-  /// This field is required and must not be null.
+  /// 
+  /// Common option names include:
+  /// - 'ndots': Number of dots in name to trigger absolute lookup
+  /// - 'timeout': DNS query timeout
+  /// - 'attempts': Number of DNS query attempts
+  /// - 'rotate': Enable round-robin selection of nameservers
   late String name;
 
-  /// The value associated with the DNS configuration option.
-  ///
-  /// This field is optional and can be null.
+  /// The value for the DNS configuration option.
+  /// 
+  /// The interpretation depends on the option name. Examples:
+  /// - For 'ndots': A number like "5"
+  /// - For 'timeout': Time in seconds
+  /// - For 'attempts': Number of retries
+  @JsonKey(includeIfNull: false)
   String? value;
 
-  /// Creates a [PodDNSConfigOption] instance from a Map representation.
-  ///
-  /// The [data] parameter must be a Map containing at least a 'name' key, and
-  /// optionally a 'value' key.
-  ///
-  /// Example:
-  /// ```dart
-  /// final option = PodDNSConfigOption.fromMap({
-  ///   'name': 'ndots',
-  ///   'value': '5'
-  /// });
-  /// ```
-  PodDNSConfigOption.fromMap(Map<String, dynamic> data) {
-    name = data['name'];
-    value = data['value'];
-  }
+  factory PodDNSConfigOption.fromJson(Map<String, dynamic> json) =>
+      _$PodDNSConfigOptionFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'name': name,
-        'value': value,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$PodDNSConfigOptionToJson(this);
 }

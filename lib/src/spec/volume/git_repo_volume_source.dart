@@ -1,37 +1,59 @@
-/// Represents a volume source from a Git repository in Kubernetes.
-/// 
-/// This class defines the configuration needed to mount a Git repository
-/// as a volume in a Kubernetes pod.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'git_repo_volume_source.g.dart';
+
+/// Represents a Git repository volume source in Kubernetes (deprecated).
+///
+/// GitRepoVolumeSource enables pods to use Git repositories as volumes.
+/// Key features include:
+/// - Automatic repository cloning
+/// - Branch/tag/commit checkout
+/// - Custom target directory
+///
+/// Note: This volume type is deprecated. Instead, consider using:
+/// - EmptyDir + Init Container with git
+/// - ConfigMap
+/// - Custom volume plugins
+///
+/// Common use cases:
+/// - Configuration files from git
+/// - Static web content
+/// - Application source code
+///
+/// Example:
+/// ```dart
+/// final gitVolume = GitRepoVolumeSource()
+///   ..repository = 'https://github.com/kubernetes/kubernetes.git'
+///   ..revision = 'main'
+///   ..directory = '/src';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#gitrepo)
+/// for more details about GitRepo volumes.
+@JsonSerializable()
 class GitRepoVolumeSource {
-  /// The directory where the repository will be cloned into.
+  GitRepoVolumeSource();
+
+  /// Target directory for the Git repository.
   /// 
-  /// This path specifies the target directory within the container
-  /// where the Git repository contents will be available.
+  /// Optional: If omitted, the repository will be cloned into the root directory.
+  /// The directory will be created if it doesn't exist.
   late String directory;
 
-  /// The URL of the Git repository to clone.
+  /// Git repository URL to clone.
   /// 
-  /// This should be a valid Git repository URL that is accessible
-  /// from the cluster (e.g., 'https://github.com/org/repo.git').
+  /// Required: Must be a valid Git repository URL that is accessible from
+  /// the Kubernetes cluster.
   late String repository;
 
-  /// The specific revision (commit hash, branch, or tag) to check out.
+  /// Git commit hash, branch, or tag to check out.
   /// 
-  /// Examples:
-  /// - Commit hash: '1234abc...'
-  /// - Branch: 'main'
-  /// - Tag: 'v1.0.0'
+  /// Optional: If omitted, defaults to 'master'.
+  /// Can be any valid Git reference (commit SHA, branch name, tag).
   late String revision;
 
-  /// Creates a [GitRepoVolumeSource] from a map structure.
-  /// 
-  /// [data] should contain the following keys:
-  /// - 'directory': target directory for the clone
-  /// - 'repository': Git repository URL
-  /// - 'revision': Git revision to check out
-  GitRepoVolumeSource.fromMap(Map<String, dynamic> data) {
-    directory = data['directory'];
-    repository = data['repository'];
-    revision = data['revision'];
-  }
+  factory GitRepoVolumeSource.fromJson(Map<String, dynamic> json) =>
+      _$GitRepoVolumeSourceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GitRepoVolumeSourceToJson(this);
 }

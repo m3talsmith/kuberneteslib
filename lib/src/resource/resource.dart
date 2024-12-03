@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:humanizer/humanizer.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:kuberneteslib/src/resource/resource_base.dart';
 
 import '../auth/cluster.dart';
@@ -10,27 +11,77 @@ import '../spec/spec.dart';
 import '../status/status.dart';
 import 'resource_kind.dart';
 
-/// A Resource is the core component of Kubernetes. This gives access to every
-/// resource that the Kubernetes API has.
+/// Represents a Kubernetes resource with full API interaction capabilities.
 ///
+/// The Resource class is the core component for interacting with Kubernetes resources,
+/// providing:
+/// - CRUD operations (Create, Read, Update, Delete)
+/// - Resource listing and filtering
+/// - API path management
+/// - Serialization/deserialization
+///
+/// Resources are organized by API groups:
+/// - Core API (/api/v1)
+/// - Apps API (/apis/apps/v1)
+/// - Batch API (/apis/batch/v1)
+///
+/// Example usage:
+/// ```dart
+/// // List all pods in the default namespace
+/// final pods = await Resource.list(
+///   auth: clusterAuth,
+///   resourceKind: 'pod',
+///   namespace: 'default',
+/// );
+///
+/// // Get a specific deployment
+/// final deployment = await Resource.show(
+///   auth: clusterAuth,
+///   resourceKind: 'deployment',
+///   resourceName: 'nginx-deploy',
+///   namespace: 'default',
+/// );
+/// ```
+///
+/// This class implements [ResourceBase] and works with [ObjectMeta], [Spec],
+/// and [Status] to provide a complete representation of Kubernetes resources.
+/// See the [Kubernetes API documentation](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/)
+/// for more details about specific resource types.
 class Resource implements ResourceBase {
-  /// Contains the [ObjectMeta] (metadata) for a [Resource].
-  late ObjectMeta metadata;
+  /// Creates a new Resource instance.
+  /// 
+  /// All fields are optional to support different resource types and use cases.
+  Resource({
+    this.metadata,
+    this.kind,
+    this.namespace,
+    this.auth,
+  });
 
-  /// Contains an optional [Spec] for a [Resource].
+  /// Resource metadata including name, labels, annotations, etc.
+  @JsonKey(includeIfNull: false)
+  ObjectMeta? metadata;
+
+  /// Resource specification defining desired state.
+  @JsonKey(includeIfNull: false)
+  @ObjectSpecConverter()
   Spec? spec;
 
-  /// Contains an optional [Status] for a [Resource].
+  /// Current status of the resource.
+  @JsonKey(includeIfNull: false)
   Status? status;
 
-  /// Used for internal tracking purposes.
-  late String kind;
+  /// The type of resource (e.g., 'Pod', 'Deployment').
+  @JsonKey(includeIfNull: false)
+  String? kind;
 
-  /// Used for internal tracking purposes.
-  late String namespace;
+  /// The namespace where this resource exists.
+  @JsonKey(includeIfNull: false)
+  String? namespace;
 
-  /// Used for internal tracking purposes.
-  late ClusterAuth auth;
+  /// Authentication configuration for API operations.
+  @JsonKey(includeIfNull: false)
+  ClusterAuth? auth;
 
   /// The API path for V1 Core resource types.
   static const coreAPI = '/api/v1';
@@ -82,7 +133,10 @@ class Resource implements ResourceBase {
   /// - [appsAPI]
   /// - [batchAPI]
   static String? getApi({required String resourceKind}) {
-    switch (ResourceKind.fromString(resourceKind)) {
+    switch (ResourceKind.values.firstWhere(
+      (e) => e.name.toLowerCase() == resourceKind.toLowerCase(),
+      orElse: () => ResourceKind.unknown,
+    )) {
       case ResourceKind.unknown:
         return coreAPI;
       case ResourceKind.daemonSet:
@@ -92,7 +146,7 @@ class Resource implements ResourceBase {
       case ResourceKind.controllerRevision:
         return appsAPI;
       case ResourceKind.cronJob:
-      case ResourceKind.job:
+      case ResourceKind.pod:
         return batchAPI;
       default:
         return coreAPI;
@@ -168,7 +222,7 @@ class Resource implements ResourceBase {
       /// Adds additional internal tracking for the [auth] instance used
       item['auth'] = auth;
 
-      final resource = Resource.fromMap(item);
+      final resource = Resource.fromJson(item);
       resources.add(resource);
     }
 
@@ -247,7 +301,7 @@ class Resource implements ResourceBase {
     /// Adds additional internal tracking for the [auth] instance used
     data['auth'] = auth;
 
-    return Resource.fromMap(data);
+    return Resource.fromJson(data);
   }
 
   static Future<Resource?> create({
@@ -286,7 +340,7 @@ class Resource implements ResourceBase {
     /// Adds additional internal tracking for the [auth] instance used
     data['auth'] = auth;
 
-    return Resource.fromMap(data);
+    return Resource.fromJson(data);
   }
 
   /// [delete] queries the Kubernetes API to remove an instance of a resource
@@ -314,15 +368,15 @@ class Resource implements ResourceBase {
   /// }
   /// ```
   delete() async {
-    final api = Resource.getApi(resourceKind: kind);
+    final api = Resource.getApi(resourceKind: kind!);
 
-    var resourceKindPluralized = kind.toLowerCase().toPluralForm();
+    var resourceKindPluralized = kind!.toLowerCase().toPluralForm();
 
     final resourcePath =
-        '$api/namespaces/$namespace/$resourceKindPluralized/${metadata.name}';
-    final uri = Uri.parse('${auth.cluster!.server!}$resourcePath');
+        '$api/namespaces/$namespace/$resourceKindPluralized/${metadata!.name}';
+    final uri = Uri.parse('${auth!.cluster!.server!}$resourcePath');
 
-    final response = await auth.delete(uri);
+    final response = await auth!.delete(uri);
     if (response.statusCode > 299) {
       return null;
     }
@@ -338,28 +392,32 @@ class Resource implements ResourceBase {
     return template;
   }
 
-  /// [Resource.fromMap] constructs an instance of a [Resource] from a
-  /// Kubernetes API result as [data].
-  @override
-  Resource.fromMap(Map<String, dynamic> data) {
-    if (data.isEmpty) return;
+  factory Resource.fromJson(Map<String, dynamic> json) => Resource(
+      metadata: json['metadata'] == null
+          ? null
+          : ObjectMeta.fromJson(json['metadata'] as Map<String, dynamic>),
+      kind: json['kind'] as String?,
+      namespace: json['namespace'] as String?,
+      auth: json['auth'] == null
+          ? null
+          : ClusterAuth.fromJson(json['auth'] as Map<String, dynamic>),
+    )
+      ..spec = json['spec'] == null
+          ? null
+          : Spec.fromJson(json['spec'] as Map<String, dynamic>,
+              kind: ResourceKind.values.firstWhere(
+                (k) => k.toString().split('.').last == json['kind'] as String,
+                orElse: () => ResourceKind.unknown))
+      ..status = json['status'] == null
+          ? null
+          : Status.fromJson(json['status'] as Map<String, dynamic>);
 
-    kind = data['kind'];
-    metadata = ObjectMeta.fromMap(data['metadata']);
-    namespace = metadata.namespace ?? 'default';
-    if (data.containsKey('spec')) {
-      spec = Spec.fromMap(data['spec'], kind: ResourceKind.fromString(kind));
-    }
-    if (data.containsKey('status')) {
-      status = Status.fromMap(data['status']);
-    }
-  }
-
-  @override
-  Map<String, dynamic> toMap() => {
-        'metadata': metadata.toMap(),
-        if (spec != null) 'spec': spec!.toMap(),
-        if (status != null) 'status': status!.toMap(),
-        'kind': kind,
-      };
+  Map<String, dynamic> toJson() => <String, dynamic>{
+            if (metadata case final value?) 'metadata': value,
+            if (spec case final value?) 'spec': value,
+            if (status case final value?) 'status': value,
+            if (kind case final value?) 'kind': value,
+            if (namespace case final value?) 'namespace': value,
+            if (auth case final value?) 'auth': value,
+          };
 }

@@ -1,81 +1,108 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'exec_action.dart';
 import 'grpc_action.dart';
 import 'http_get_action.dart';
 import 'tcp_socket_action.dart';
 
-/// Represents a probe that can be used to check the status of a container.
+part 'probe.g.dart';
+
+/// Represents a diagnostic probe for container health checking in Kubernetes.
 ///
-/// A probe is a diagnostic performed periodically by the kubelet on a container.
-/// It can be used for liveness, readiness, or startup checks.
+/// Probe enables monitoring container health through various mechanisms. Key features include:
+/// - Multiple probe types (exec, HTTP, TCP, gRPC)
+/// - Configurable timing parameters
+/// - Failure/success thresholds
+/// - Grace period handling
+///
+/// Common use cases:
+/// - Liveness checks: Detect if container needs restart
+/// - Readiness checks: Determine if container can serve traffic
+/// - Startup checks: Verify successful initialization
+/// - Health monitoring: Continuous application health verification
+///
+/// Example:
+/// ```dart
+/// final probe = Probe()
+///   ..httpGet = (HTTPGetAction()
+///     ..path = '/health'
+///     ..port = 8080)
+///   ..initialDelaySeconds = 10
+///   ..periodSeconds = 5
+///   ..failureThreshold = 3;
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+/// for more details about container probes.
+@JsonSerializable()
 class Probe {
-  /// Action to execute within the container.
+  Probe();
+
+  /// Command to execute inside the container for health checking.
+  /// 
+  /// The command's exit status indicates container health:
+  /// - 0: Success
+  /// - Non-zero: Failure
+  @JsonKey(includeIfNull: false)
   ExecAction? exec;
 
-  /// Minimum consecutive failures for the probe to be considered failed.
+  /// Number of consecutive failures needed to consider the probe failed.
+  /// 
+  /// Defaults to 3. Minimum value is 1.
+  @JsonKey(includeIfNull: false)
   int? failureThreshold;
 
-  /// GRPC probe configuration.
+  /// gRPC-based health checking configuration.
+  /// 
+  /// Uses gRPC health checking protocol to determine container health.
+  @JsonKey(includeIfNull: false)
   GRPCAction? grpc;
 
-  /// HTTP GET probe configuration.
+  /// HTTP GET request configuration for health checking.
+  /// 
+  /// Probe succeeds if the HTTP response code is >= 200 and < 400.
+  @JsonKey(includeIfNull: false)
   HTTPGetAction? httpGet;
 
-  /// Number of seconds to wait before performing the first probe.
+  /// Delay before first probe execution after container starts.
+  /// 
+  /// Allows time for container initialization. Defaults to 0 seconds.
+  @JsonKey(includeIfNull: false)
   int? initialDelaySeconds;
 
-  /// How often (in seconds) to perform the probe.
+  /// Frequency of probe execution.
+  /// 
+  /// How often to perform the probe. Defaults to 10 seconds.
+  /// Minimum value is 1.
+  @JsonKey(includeIfNull: false)
   int? periodSeconds;
 
-  /// Minimum consecutive successes for the probe to be considered successful.
+  /// Consecutive successes required to consider the probe successful.
+  /// 
+  /// Defaults to 1. Must be 1 for liveness and startup probes.
+  @JsonKey(includeIfNull: false)
   int? successThreshold;
 
-  /// TCP socket probe configuration.
+  /// TCP socket connection test configuration.
+  /// 
+  /// Probe succeeds if connection can be established.
+  @JsonKey(includeIfNull: false)
   TCPSocketAction? tcpSocket;
 
-  /// Optional grace period in seconds for the container to stop before being killed.
+  /// Grace period for stopping container after failed probe.
+  /// 
+  /// Only applies to liveness probes. Defaults to pod's terminationGracePeriodSeconds.
+  @JsonKey(includeIfNull: false)
   int? terminationGracePeriodSeconds;
 
-  /// Number of seconds after which the probe times out.
+  /// Maximum time allowed for probe execution.
+  /// 
+  /// Probe fails if it exceeds this timeout. Defaults to 1 second.
+  /// Minimum value is 1.
+  @JsonKey(includeIfNull: false)
   int? timeoutSeconds;
 
-  /// Creates a [Probe] instance from a map of data.
-  ///
-  /// The map should contain keys corresponding to the probe's properties.
-  /// Each action type (exec, grpc, httpGet, tcpSocket) will be converted
-  /// to its respective object if present in the data.
-  Probe.fromMap(Map<String, dynamic> data) {
-    if (data['exec'] != null) {
-      exec = ExecAction.fromMap(data['exec']);
-    }
-    failureThreshold = data['failureThreshold'];
-    if (data['grpc'] != null) {
-      grpc = GRPCAction.fromMap(data['grpc']);
-    }
-    if (data['httpGet'] != null) {
-      httpGet = HTTPGetAction.fromMap(data['httpGet']);
-    }
-    initialDelaySeconds = data['initialDelaySeconds'];
-    periodSeconds = data['periodSeconds'];
-    successThreshold = data['successThreshold'];
-    if (data['tcpSocket'] != null) {
-      tcpSocket = TCPSocketAction.fromMap(data['tcpSocket']);
-    }
-    terminationGracePeriodSeconds = data['terminationGracePeriodSeconds'];
-    timeoutSeconds = data['timeoutSeconds'];
-  }
+  factory Probe.fromJson(Map<String, dynamic> json) => _$ProbeFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'exec': (exec != null) ? exec!.toMap() : null,
-        'failureThreshold': failureThreshold,
-        'grpc': (grpc != null) ? grpc!.toMap() : null,
-        'httpGet': (httpGet != null) ? httpGet!.toMap() : null,
-        'initialDelaySeconds': initialDelaySeconds,
-        'periodSeconds': periodSeconds,
-        'successThreshold': successThreshold,
-        'tcpSocket': (tcpSocket != null) ? tcpSocket!.toMap() : null,
-        'terminationGracePeriodSeconds': terminationGracePeriodSeconds,
-        'timeoutSeconds': timeoutSeconds,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$ProbeToJson(this);
 }

@@ -1,55 +1,72 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'config_map_key_selector.dart';
 import 'object_field_selector.dart';
 import 'resource_field_selector.dart';
 import 'secret_key_selector.dart';
 
-/// Represents a source for an environment variable in a Kubernetes container.
-/// This can reference various Kubernetes resources like ConfigMaps, Secrets,
-/// or resource fields.
+part 'env_var_source.g.dart';
+
+/// Represents a source for individual environment variables in Kubernetes containers.
+///
+/// EnvVarSource enables containers to populate individual environment variables from
+/// various sources. Key features include:
+/// - ConfigMap key references
+/// - Secret key references
+/// - Pod field references
+/// - Container resource references
+///
+/// Common use cases:
+/// - Dynamic configuration values
+/// - Sensitive credentials
+/// - Pod metadata injection
+/// - Resource limit references
+///
+/// Example:
+/// ```dart
+/// final envVarSource = EnvVarSource()
+///   ..configMapKeyRef = ConfigMapKeySelector()
+///     ..name = 'app-config'
+///     ..key = 'database-url'
+///     ..optional = false;
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/)
+/// for more details about environment variable configuration.
+@JsonSerializable()
 class EnvVarSource {
-  /// Reference to a ConfigMap key
+  EnvVarSource();
+
+  /// Reference to a specific key in a ConfigMap.
+  /// 
+  /// Optional: When specified, the environment variable will take its value from
+  /// the referenced key in the ConfigMap.
+  @JsonKey(includeIfNull: false)
   ConfigMapKeySelector? configMapKeyRef;
 
-  /// Selects a field of the pod
+  /// Reference to a field in the pod specification.
+  /// 
+  /// Optional: When specified, the environment variable will take its value from
+  /// the referenced pod field (e.g., metadata.name, status.podIP).
+  @JsonKey(includeIfNull: false)
   ObjectFieldSelector? fieldRef;
 
-  /// Selects a resource of the container
+  /// Reference to a container resource value.
+  /// 
+  /// Optional: When specified, the environment variable will take its value from
+  /// the referenced container resource (e.g., limits.cpu, requests.memory).
+  @JsonKey(includeIfNull: false)
   ResourceFieldSelector? resourceFieldRef;
 
-  /// Reference to a Secret key
+  /// Reference to a specific key in a Secret.
+  /// 
+  /// Optional: When specified, the environment variable will take its value from
+  /// the referenced key in the Secret.
+  @JsonKey(includeIfNull: false)
   SecretKeySelector? secretKeyRef;
 
-  /// Creates an [EnvVarSource] instance from a map structure.
-  ///
-  /// The map should contain one of the following keys:
-  /// - 'configMapKeyRef': References a ConfigMap key
-  /// - 'fieldRef': References a pod field
-  /// - 'resourceFieldRef': References a container resource
-  /// - 'secretKeyRef': References a Secret key
-  EnvVarSource.fromMap(Map<String, dynamic> data) {
-    if (data['configMapKeyRef'] != null) {
-      configMapKeyRef = ConfigMapKeySelector.fromMap(data['configMapKeyRef']);
-    }
-    if (data['fieldRef'] != null) {
-      fieldRef = ObjectFieldSelector.fromMap(data['fieldRef']);
-    }
-    if (data['resourceFieldRef'] != null) {
-      resourceFieldRef =
-          ResourceFieldSelector.fromMap(data['resourceFieldRef']);
-    }
-    if (data['secretKeyRef'] != null) {
-      secretKeyRef = SecretKeySelector.fromMap(data['secretKeyRef']);
-    }
-  }
-
-  Map<String, dynamic> toMap() => {
-        'configMapKeyRef':
-            (configMapKeyRef != null) ? configMapKeyRef!.toMap() : null,
-        'fieldRef': (fieldRef != null) ? fieldRef!.toMap() : null,
-        'resourceFieldRef':
-            (resourceFieldRef != null) ? resourceFieldRef!.toMap() : null,
-        'secretKeyRef': (secretKeyRef != null) ? secretKeyRef!.toMap() : null,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  factory EnvVarSource.fromJson(Map<String, dynamic> json) =>
+      _$EnvVarSourceFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$EnvVarSourceToJson(this);
 }

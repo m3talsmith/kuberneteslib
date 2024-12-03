@@ -1,62 +1,111 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import '../local_object_reference.dart';
 
-/// Represents an iSCSI volume source configuration in Kubernetes.
-/// 
-/// iSCSI (Internet Small Computer Systems Interface) is a protocol that allows
-/// clients (called initiators) to send SCSI commands to SCSI storage devices
-/// (targets) on remote servers.
+part 'iscsi_volume_source.g.dart';
+/// Represents an iSCSI volume in Kubernetes for block storage access.
+///
+/// ISCSIVolumeSource enables pods to use iSCSI (Internet Small Computer Systems
+/// Interface) volumes. Key features include:
+/// - Remote block storage access
+/// - CHAP authentication support
+/// - Multi-path support via portals
+/// - Read-only mount options
+///
+/// Common use cases:
+/// - Enterprise storage integration
+/// - Database storage
+/// - High-performance block storage
+/// - Legacy storage systems
+///
+/// Example:
+/// ```dart
+/// final iscsiVolume = ISCSIVolumeSource()
+///   ..targetPortal = '10.0.0.1:3260'
+///   ..iqn = 'iqn.2000-01.com.synology:data.target-1'
+///   ..lun = 0
+///   ..fsType = 'ext4'
+///   ..readOnly = false
+///   ..chapAuthDiscovery = true
+///   ..chapAuthSession = true
+///   ..initiatorName = 'iqn.1994-05.com.redhat:client'
+///   ..portals = ['10.0.0.2:3260']
+///   ..secretRef = LocalObjectReference()..name = 'chap-secret';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#iscsi)
+/// for more details about iSCSI volumes.
+@JsonSerializable()
 class ISCSIVolumeSource {
-  /// Whether to perform CHAP (Challenge Handshake Authentication Protocol)
-  /// authentication during target discovery.
+  ISCSIVolumeSource();
+
+  /// Whether to perform CHAP authentication during target discovery.
+  /// 
+  /// When true, CHAP authentication will be used during the iSCSI
+  /// discovery session.
   late bool chapAuthDiscovery;
 
   /// Whether to perform CHAP authentication during session establishment.
+  /// 
+  /// When true, CHAP authentication will be used during the iSCSI
+  /// session establishment.
   late bool chapAuthSession;
 
-  /// The filesystem type to mount.
-  /// Examples include 'ext4', 'xfs', 'ntfs'.
+  /// Filesystem type to mount on the volume.
+  /// 
+  /// Must be a filesystem type supported by the host operating system.
+  /// Examples: "ext4", "xfs", "ntfs"
   late String fsType;
 
-  /// The iSCSI initiator name.
+  /// iSCSI initiator name.
+  /// 
+  /// Optional: Defaults to the initiator name configured in the host.
+  /// Example: "iqn.1994-05.com.redhat:client"
   late String initiatorName;
 
-  /// The target iSCSI Qualified Name (IQN).
+  /// iSCSI target portal Qualified Name (IQN).
+  /// 
+  /// Required: The target's IQN identifier.
+  /// Example: "iqn.2000-01.com.synology:data.target-1"
   late String iqn;
 
-  /// The iSCSI interface name that uses an iSCSI transport.
+  /// iSCSI interface name.
+  /// 
+  /// Optional: Defaults to 'default'.
+  /// Specifies which iSCSI interface to use.
   late String iscsiInterface;
 
-  /// The iSCSI Target Lun number.
+  /// iSCSI target logical unit number (LUN).
+  /// 
+  /// Required: The specific LUN to connect to.
+  /// Example: 0
   late int lun;
 
-  /// The iSCSI Target Portal List.
-  /// The Portal is either an IP or ip_addr:port if the port is other than default (typically TCP ports 860 and 3260).
+  /// iSCSI target portal list.
+  /// 
+  /// Optional: Additional portals for multi-path support.
+  /// Format: "<ip>:<port>" (default ports: 860, 3260)
   late List<String> portals;
 
-  /// Whether the volume should be mounted read-only.
+  /// Controls read-only access to the volume.
+  /// 
+  /// When true, the volume will be mounted read-only.
   late bool readOnly;
 
-  /// Reference to the secret containing CHAP authentication credentials.
+  /// Reference to the secret containing CHAP credentials.
+  /// 
+  /// Required if CHAP authentication is enabled.
+  /// Must contain username and password.
   late LocalObjectReference secretRef;
 
-  /// The iSCSI Target Portal.
-  /// The Portal is either an IP or ip_addr:port if the port is other than default (typically TCP ports 860 and 3260).
+  /// Primary iSCSI target portal.
+  /// 
+  /// Required: The main portal to connect to.
+  /// Format: "<ip>:<port>" (default ports: 860, 3260)
   late String targetPortal;
 
-  /// Creates an ISCSIVolumeSource from a map structure.
-  /// 
-  /// The map should contain all the necessary fields to configure the iSCSI volume source.
-  ISCSIVolumeSource.fromMap(Map<String, dynamic> data) {
-    chapAuthDiscovery = data['chapAuthDiscovery'];
-    chapAuthSession = data['chapAuthSession'];
-    fsType = data['fsType'];
-    initiatorName = data['initiatorName'];
-    iqn = data['iqn'];
-    iscsiInterface = data['iscsiInterface'];
-    lun = data['lun'];
-    portals = data['portals'] as List<String>;
-    readOnly = data['readOnly'];
-    secretRef = LocalObjectReference.fromMap(data['secretRef']);
-    targetPortal = data['targetPortal'];
-  }
+  factory ISCSIVolumeSource.fromJson(Map<String, dynamic> json) =>
+      _$ISCSIVolumeSourceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ISCSIVolumeSourceToJson(this);
 }

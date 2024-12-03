@@ -1,121 +1,128 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'managed_field_entry.dart';
 import 'owner_reference.dart';
 
-/// Implements the [ObjectMeta] Kubernetes API specification. All fields (with
-/// the exception of [name]) are optional to support the flexibility of this
-/// structure.
+part 'object_meta.g.dart';
+
+/// Represents Kubernetes object metadata that is common to all Kubernetes objects.
 ///
-/// [Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)
+/// ObjectMeta contains metadata that all persisted Kubernetes resources must have,
+/// including:
+/// - Basic identification (name, namespace, UID)
+/// - Versioning information (resourceVersion, generation)
+/// - Management information (labels, annotations, ownerReferences)
+/// - Lifecycle information (creationTimestamp, deletionTimestamp)
+///
+/// Example:
+/// ```dart
+/// final metadata = ObjectMeta()
+///   ..name = 'my-pod'
+///   ..namespace = 'default'
+///   ..labels = {'app': 'web', 'env': 'prod'}
+///   ..annotations = {'kubernetes.io/created-by': 'controller'};
+/// ```
+///
+/// This class is used extensively throughout the Kubernetes API for resource
+/// identification and management. It's a core component of the
+/// [Resource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)
+/// model.
+@JsonSerializable()
 class ObjectMeta {
-  /// Annotations is an unstructured key value map stored with a resource that may be
-  /// set by external tools to store and retrieve arbitrary metadata.
+  /// Creates a new [ObjectMeta] instance with a required [name].
+  ObjectMeta() : name = '';
+
+  /// Unstructured key-value pairs that can be set by external tools.
+  /// 
+  /// Annotations are not used for selection and cannot be used by kubectl
+  /// or other tools for matching objects. They are purely informational.
+  @JsonKey(includeFromJson: false)
   Map<String, dynamic>? annotations;
 
-  /// CreationTimestamp is a timestamp representing the server time when this object
-  /// was created.
+  /// Server time when this object was created.
+  /// 
+  /// Populated by the system. Read-only.
+  @JsonKey(includeFromJson: false)
   DateTime? creationTimestamp;
 
-  /// Number of seconds allowed for this object to gracefully terminate before
-  /// it will be removed from the system.
+  /// Grace period before the object is forcefully terminated.
+  /// 
+  /// When deleting an object, this value determines how long the system will
+  /// wait for the object to be gracefully terminated before force deleting it.
+  @JsonKey(includeFromJson: false)
   int? deletionGracePeriodSeconds;
 
-  /// DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted.
+  /// Time after which this resource will be deleted.
+  /// 
+  /// Set by the system when a delete request is received.
+  /// Read-only.
+  @JsonKey(includeFromJson: false)
   DateTime? deletionTimestamp;
 
-  /// List of finalizers that must be executed before the object is deleted.
+  /// List of actions that must complete before the object is deleted.
+  /// 
+  /// Populated by the system when deletion is requested.
+  @JsonKey(includeFromJson: false)
   List<String>? finalizers;
 
-  /// GenerateName is an optional prefix, used by the server, to generate a unique
-  /// name for the object if [name] is not specified.
+  /// Optional prefix for generating a unique name.
+  /// 
+  /// If specified, the server will create a unique name based on this prefix
+  /// when the object is created.
+  @JsonKey(includeFromJson: false)
   String? generateName;
 
   /// A sequence number representing a specific generation of the desired state.
+  /// 
+  /// Incremented by the server every time the object is modified.
+  @JsonKey(includeFromJson: false)
   int? generation;
 
-  /// Map of string keys and values that can be used to organize and categorize objects.
+  /// Key-value pairs for organizing and selecting objects.
+  /// 
+  /// Labels can be used with kubectl and API queries to select objects based
+  /// on their characteristics.
+  @JsonKey(includeFromJson: false)
   Map<String, dynamic>? labels;
 
-  /// List of objects that manage this object's fields.
+  /// List of objects managing this object's fields.
+  /// 
+  /// Records which fields are managed by which managers, used for merge
+  /// strategies and validation.
+  @JsonKey(includeFromJson: false)
   List<ManagedFieldEntry>? managedFields;
 
-  /// Name must be unique within a namespace. Required when creating resources.
-  late String name;
+  /// Required: unique identifier within a namespace.
+  String name;
 
-  /// Namespace defines the space within which each name must be unique.
+  /// The namespace this object belongs to.
+  /// 
+  /// Namespaces provide a scope for names. Cannot be updated.
+  @JsonKey(includeFromJson: false)
   String? namespace;
 
-  /// List of objects that own this object.
+  /// References to owning objects.
+  /// 
+  /// Used for garbage collection and cascading deletion.
+  @JsonKey(includeFromJson: false)
   List<OwnerReference>? ownerReferences;
 
-  /// An opaque value that represents the internal version of this object.
+  /// Internal version of this object.
+  /// 
+  /// Used for optimistic concurrency, change detection, and the watch operation.
+  @JsonKey(includeFromJson: false)
   String? resourceVersion;
 
-  /// SelfLink is a URL representing this object.
-  /// Populated by the system. Read-only.
+  /// URL representing this object. Read-only.
+  @JsonKey(includeFromJson: false)
   String? selfLink;
 
-  /// UID is a unique identifier in time and space for this object.
-  /// Populated by the system. Read-only.
+  /// Unique identifier across space and time. Read-only.
+  @JsonKey(includeFromJson: false)
   String? uid;
 
-  /// Takes a [Map] and pulls out the necessary information.
-  ObjectMeta.fromMap(Map<String, dynamic> data) {
-    annotations = data['annotations'];
-    if (data['creationTimestamp'] != null) {
-      creationTimestamp = DateTime.parse(data['creationTimestamp']);
-    }
-    deletionGracePeriodSeconds = data['deletionGracePeriodSeconds'];
-    if (data['deletionTimestamp'] != null) {
-      deletionTimestamp = DateTime.parse(data['deletionTimestamp']);
-    }
-    finalizers = data['finalizers'];
-    generateName = data['generateName'];
-    generation = data['generation'];
-    labels = data['labels'];
-    if (data['managedFields'] != null) {
-      managedFields = [];
-      for (var e in data['managedFields']) {
-        managedFields!.add(ManagedFieldEntry.fromMap(e));
-      }
-    }
-    name = data['name'];
-    namespace = data['namespace'];
-    if (data['ownerReferences'] != null) {
-      ownerReferences = [];
-      for (var e in data['ownerReferences']) {
-        ownerReferences!.add(OwnerReference.fromMap(e));
-      }
-    }
-    resourceVersion = data['resourceVersion'];
-    selfLink = data['selfLink'];
-    uid = data['uid'];
-  }
+  factory ObjectMeta.fromJson(Map<String, dynamic> json) =>
+      _$ObjectMetaFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'annotations': annotations,
-        'creationTimestamp': creationTimestamp,
-        'deletionGracePeriodSeconds': deletionGracePeriodSeconds,
-        'deletionTimestamp': deletionTimestamp,
-        'finalizers': finalizers,
-        'generateName': generateName,
-        'generation': generation,
-        'labels': labels,
-        'managedFields': (managedFields != null)
-            ? managedFields!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'name': name,
-        'namespace': namespace,
-        'ownerReferences': (ownerReferences != null)
-            ? ownerReferences!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'resourceVersion': resourceVersion,
-        'selfLink': selfLink,
-        'uid': uid,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$ObjectMetaToJson(this);
 }

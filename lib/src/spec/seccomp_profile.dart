@@ -1,35 +1,53 @@
-/// Represents a security computing (seccomp) profile configuration.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'seccomp_profile.g.dart';
+
+/// Represents a seccomp (secure computing) profile configuration in Kubernetes.
 ///
-/// Seccomp profiles are used to restrict the system calls that a container can make,
-/// providing an additional layer of security.
+/// SeccompProfile enables kernel-level system call filtering for containers.
+/// Key features include:
+/// - System call restrictions
+/// - Custom profile support
+/// - Runtime default profiles
+/// - Granular security control
+///
+/// Common use cases:
+/// - System call filtering
+/// - Attack surface reduction
+/// - Security policy enforcement
+/// - Container hardening
+///
+/// Example:
+/// ```dart
+/// final profile = SeccompProfile()
+///   ..type = 'RuntimeDefault'
+///   ..localhostProfile = 'profiles/custom-seccomp.json';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/tutorials/security/seccomp/)
+/// for more details about seccomp profiles.
+@JsonSerializable()
 class SeccompProfile {
-  /// The path to a seccomp profile file on the host machine.
-  ///
-  /// When specified, this profile will be used to restrict container system calls.
+  SeccompProfile();
+
+  /// Path to a custom seccomp profile on the host machine.
+  /// 
+  /// Only used when type is 'Localhost'. The profile must be pre-configured
+  /// on each node where the container will run.
+  @JsonKey(includeIfNull: false)
   String? localhostProfile;
 
-  /// The type of seccomp profile to be applied.
-  ///
-  /// Common values include:
-  /// * 'RuntimeDefault' - default profile provided by the container runtime
-  /// * 'Unconfined' - no restrictions on system calls
-  /// * 'Localhost' - uses a custom profile specified by [localhostProfile]
+  /// The type of seccomp profile to apply.
+  /// 
+  /// Values:
+  /// - 'RuntimeDefault': Use runtime's default profile
+  /// - 'Localhost': Use custom profile from localhostProfile
+  /// - 'Unconfined': No system call restrictions
+  @JsonKey(includeIfNull: false)
   String? type;
 
-  /// Creates a [SeccompProfile] instance from a map of values.
-  ///
-  /// The map should contain keys:
-  /// * 'localhostProfile' - path to profile file (optional)
-  /// * 'type' - type of seccomp profile (optional)
-  SeccompProfile.fromMap(Map<String, dynamic> data) {
-    localhostProfile = data['localhostProfile'];
-    type = data['type'];
-  }
+  factory SeccompProfile.fromJson(Map<String, dynamic> json) =>
+      _$SeccompProfileFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'localhostProfile': localhostProfile,
-        'type': type,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$SeccompProfileToJson(this);
 }

@@ -1,25 +1,54 @@
-/// Represents an executable action with a command to be run.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'exec_action.g.dart';
+
+/// Represents an executable action in Kubernetes.
+///
+/// ExecAction defines a command to be executed inside a container.
+/// Key features include:
+/// - Command execution
+/// - Multi-argument support
+/// - Shell command splitting
+/// - Container context execution
+///
+/// Common use cases:
+/// - Health checks
+/// - Lifecycle hooks
+/// - Initialization scripts
+/// - Diagnostic commands
+///
+/// Example:
+/// ```dart
+/// final execAction = ExecAction()
+///   ..command = [
+///     '/bin/sh',
+///     '-c',
+///     'pg_isready -U postgres -h localhost'
+///   ];
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command)
+/// for more details about exec actions in probes and lifecycle hooks.
+@JsonSerializable()
 class ExecAction {
-  /// The command to execute as a list of strings.
-  ///
-  /// Each element in the list represents a part of the command.
-  /// For example: `['ls', '-l']` would represent the command "ls -l"
+  ExecAction();
+
+  /// The command to execute inside the container.
+  /// 
+  /// Required: The command and its arguments as a list of strings.
+  /// Each element is a separate argument, similar to a command-line shell:
+  /// - Element 0: The command to run
+  /// - Elements 1+: Arguments to the command
+  /// 
+  /// Example:
+  /// ```dart
+  /// command = ['ls', '-l', '/var/log']  // Executes "ls -l /var/log"
+  /// ```
+  @JsonKey(includeIfNull: false)
   List<String>? command;
 
-  /// Creates an [ExecAction] instance from a map representation.
-  ///
-  /// [data] should contain a 'command' key with a list of strings.
-  /// If 'command' is not present in the map, [command] will remain null.
-  ExecAction.fromMap(Map<String, dynamic> data) {
-    if (data['command'] != null) {
-      command = [];
-      for (var e in data['command']) {
-        command!.add(e);
-      }
-    }
-  }
+  factory ExecAction.fromJson(Map<String, dynamic> json) =>
+      _$ExecActionFromJson(json);
 
-  Map<String, dynamic> toMap() => {'command': command}..removeWhere(
-      (key, value) => value == null,
-    );
+  Map<String, dynamic> toJson() => _$ExecActionToJson(this);
 }

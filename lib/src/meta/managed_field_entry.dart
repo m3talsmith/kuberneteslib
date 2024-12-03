@@ -1,62 +1,87 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'fields_v1.dart';
 
-/// Implements the [ManagedFieldEntry] portion of the specification.
+part 'managed_field_entry.g.dart';
+
+/// Represents a Kubernetes ManagedFieldsEntry that tracks field ownership and changes.
 ///
-/// [Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#managedfieldsentry-v1-meta)
+/// ManagedFieldsEntry records information about which fields in an object have been
+/// modified by different managers. This is used by the Kubernetes API server to:
+/// - Track ownership of fields
+/// - Validate field modifications
+/// - Prevent conflicts between different controllers or users
+///
+/// Each entry tracks:
+/// - Which manager modified the fields (e.g., controller name, user)
+/// - What operation was performed (Apply, Update, Create)
+/// - When the modification occurred
+/// - Which fields were modified
+///
+/// Example:
+/// ```dart
+/// final entry = ManagedFieldEntry()
+///   ..apiVersion = 'v1'
+///   ..manager = 'kubectl'
+///   ..operation = 'Update'
+///   ..fieldsType = 'FieldsV1'
+///   ..fieldsV1 = FieldsV1()
+///   ..time = DateTime.now();
+/// ```
+///
+/// See the [Kubernetes API documentation](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#managedfieldsentry-v1-meta)
+/// for more details about managed fields.
+@JsonSerializable()
 class ManagedFieldEntry {
-  /// The API version of the resource being managed.
-  late String apiVersion;
+  /// The API version that the manager used when modifying the object.
+  String apiVersion;
 
-  /// The type of fields, typically "FieldsV1".
-  late String fieldsType;
+  /// The format of the fields data structure.
+  /// Currently, this is always "FieldsV1".
+  String fieldsType;
 
-  /// The set of fields that were managed by the manager.
-  late FieldsV1 fieldsV1;
+  /// The set of fields that were modified by this manager.
+  /// Contains a structured description of the fields owned by this manager.
+  FieldsV1 fieldsV1;
 
-  /// The name of the manager that created/modified these fields.
-  /// This could be a controller name, user name, or other identifier.
-  late String manager;
+  /// Identifier of the manager that modified these fields.
+  /// 
+  /// This could be:
+  /// - A controller name (e.g., "kube-controller-manager")
+  /// - A user name (e.g., "admin")
+  /// - A tool identifier (e.g., "kubectl")
+  String manager;
 
-  /// The type of operation that was performed on these fields.
-  /// Common values include "Apply", "Update", "Create".
-  late String operation;
+  /// The type of operation performed by the manager.
+  /// 
+  /// Common values include:
+  /// - "Apply": Fields modified through server-side apply
+  /// - "Update": Direct updates to the object
+  /// - "Create": Initial object creation
+  String operation;
 
-  /// Optional subresource that was modified, if any.
-  /// For example, "status" or "scale".
+  /// The subresource that was modified, if any.
+  /// 
+  /// Examples:
+  /// - "status" for status subresource updates
+  /// - "scale" for scaling operations
+  @JsonKey(includeFromJson: false)
   String? subresource;
 
-  /// The time when these fields were last modified.
-  late DateTime time;
+  /// Timestamp when the fields were last modified by this manager.
+  DateTime time;
 
-  /// Creates a new [ManagedFieldEntry] instance from a JSON map.
-  ///
-  /// The [data] parameter should be a Map containing the following keys:
-  /// - apiVersion: String
-  /// - fieldsType: String
-  /// - fieldsV1: FieldsV1
-  /// - manager: String
-  /// - operation: String
-  /// - subresource: String (optional)
-  /// - time: String (ISO 8601 format)
-  ManagedFieldEntry.fromMap(Map<String, dynamic> data) {
-    apiVersion = data['apiVersion'];
-    fieldsType = data['fieldsType'];
-    fieldsV1 = data['fieldsV1'] as FieldsV1;
-    manager = data['manager'];
-    operation = data['operation'];
-    subresource = data['subresource'];
-    time = DateTime.parse(data['time']);
-  }
+  ManagedFieldEntry()
+      : apiVersion = '',
+        fieldsType = '',
+        fieldsV1 = FieldsV1(),
+        manager = '',
+        operation = '',
+        subresource = '',
+        time = DateTime.now();
 
-  Map<String, dynamic> toMap() => {
-        'apiVersion': apiVersion,
-        'fieldsType': fieldsType,
-        'fieldsV1': fieldsV1,
-        'manager': manager,
-        'operation': operation,
-        'subresource': subresource,
-        'time': time,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  factory ManagedFieldEntry.fromJson(Map<String, dynamic> json) =>
+      _$ManagedFieldEntryFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ManagedFieldEntryToJson(this);
 }

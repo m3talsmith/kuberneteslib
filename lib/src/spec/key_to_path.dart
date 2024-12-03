@@ -1,26 +1,60 @@
-/// A class that represents a mapping between a key, mode, and file path.
-/// 
-/// This class is typically used to store file system related information
-/// where a key is associated with a specific file path and access mode.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'key_to_path.g.dart';
+
+/// Represents a key to file path mapping in Kubernetes.
+///
+/// KeyToPath enables mapping between ConfigMap or Secret keys and their
+/// corresponding file paths in a volume mount. Key features include:
+/// - Key-to-file mapping
+/// - File permissions control
+/// - Path customization
+/// - Volume mount integration
+///
+/// Common use cases:
+/// - ConfigMap file mounting
+/// - Secret file mounting
+/// - Custom file permissions
+/// - Selective key mounting
+///
+/// Example:
+/// ```dart
+/// final keyToPath = KeyToPath()
+///   ..key = 'config.json'
+///   ..path = 'app/config.json'
+///   ..mode = 0644;
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#configmap)
+/// for more details about ConfigMap and Secret volume mounting.
+@JsonSerializable()
 class KeyToPath {
-  /// The key identifier for this mapping.
+  KeyToPath();
+
+  /// The key from the ConfigMap or Secret.
+  /// 
+  /// Required: The key that you want to map to a file path.
+  /// This key must exist in the ConfigMap or Secret being referenced.
+  @JsonKey(includeIfNull: false)
   String? key;
 
-  /// The mode value, typically representing file access permissions or states.
+  /// The file mode bits to use on the file.
+  /// 
+  /// Optional: Defaults to 0644.
+  /// Must be an octal value between 0 and 0777.
+  /// Can be used to set custom permissions on the mounted file.
+  @JsonKey(includeIfNull: false)
   int? mode;
 
-  /// The file system path associated with this key.
+  /// The relative path of the file to create in the volume.
+  /// 
+  /// Required: The path where the file will be created in the volume.
+  /// Must not contain '..' and must not start with '..'.
+  @JsonKey(includeIfNull: false)
   String? path;
 
-  /// Creates a [KeyToPath] instance from a map of values.
-  /// 
-  /// The map should contain the following keys:
-  /// - 'key': String value for the key identifier
-  /// - 'mode': Integer value for the mode
-  /// - 'path': String value for the file path
-  KeyToPath.fromMap(Map<String, dynamic> data) {
-    key = data['key'];
-    mode = data['mode'];
-    path = data['path'];
-  }
+  factory KeyToPath.fromJson(Map<String, dynamic> json) =>
+      _$KeyToPathFromJson(json);
+
+  Map<String, dynamic> toJson() => _$KeyToPathToJson(this);
 }

@@ -1,49 +1,70 @@
-/// A class representing a toleration in Kubernetes, which allows pods to be scheduled
-/// onto nodes with matching taints.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'toleration.g.dart';
+
+/// Represents a pod's toleration of node taints in Kubernetes.
+///
+/// Tolerations enable pods to be scheduled onto nodes with matching taints,
+/// providing fine-grained control over pod placement. Key features include:
+/// - Taint effect handling
+/// - Key-value matching
+/// - Execution time control
+/// - Flexible operator support
+///
+/// Common use cases:
+/// - Node dedication
+/// - Special hardware access
+/// - Zone-based scheduling
+/// - Maintenance handling
+///
+/// Example:
+/// ```dart
+/// final toleration = Toleration()
+///   ..key = 'node-role.kubernetes.io/master'
+///   ..operator = 'Exists'
+///   ..effect = 'NoSchedule';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+/// for more details about taints and tolerations.
+@JsonSerializable()
 class Toleration {
-  /// The taint effect to tolerate. Possible values are: 'NoSchedule',
-  /// 'PreferNoSchedule', and 'NoExecute'.
+  Toleration();
+
+  /// The taint effect to match.
+  /// 
+  /// Values:
+  /// - 'NoSchedule': Prevents scheduling of new pods
+  /// - 'PreferNoSchedule': Tries to avoid scheduling new pods
+  /// - 'NoExecute': Evicts existing pods that don't tolerate the taint
   String? effect;
 
-  /// The taint key that the toleration applies to.
+  /// The taint key that this toleration matches.
+  /// 
+  /// Examples: 'node-role.kubernetes.io/master', 'dedicated', 'gpu'
   String? key;
 
   /// The operator that relates the key to the value.
-  /// Possible values are: 'Exists' and 'Equal'.
+  /// 
+  /// Values:
+  /// - 'Exists': Key must exist (value ignored)
+  /// - 'Equal': Key and value must match exactly
   String? operator;
 
-  /// Indicates how long the pod should stay bound to a node that has a matching taint
-  /// being tolerated. Only applies when effect is 'NoExecute'.
-  /// Specified in seconds.
+  /// Duration in seconds the pod can run on a node with matching NoExecute taint.
+  /// 
+  /// Only applies when effect is 'NoExecute'.
+  /// After this time, pod will be evicted.
   int? tolerationSeconds;
 
-  /// The taint value the toleration matches to.
-  /// Not required if operator is 'Exists'.
+  /// The taint value to match.
+  /// 
+  /// Required if operator is 'Equal'.
+  /// Ignored if operator is 'Exists'.
   String? value;
 
-  /// Creates a new [Toleration] instance from a Map.
-  ///
-  /// The [data] parameter should contain the following keys:
-  /// - 'effect': The taint effect to tolerate
-  /// - 'key': The taint key
-  /// - 'operator': The operator relating key and value
-  /// - 'tolerationSeconds': Duration in seconds for NoExecute effect
-  /// - 'value': The taint value
-  Toleration.fromMap(Map<String, dynamic> data) {
-    effect = data['effect'];
-    key = data['key'];
-    operator = data['operator'];
-    tolerationSeconds = data['tolerationSeconds'];
-    value = data['value'];
-  }
+  factory Toleration.fromJson(Map<String, dynamic> json) =>
+      _$TolerationFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'effect': effect,
-        'key': key,
-        'operator': operator,
-        'tolerationSeconds': tolerationSeconds,
-        'value': value,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$TolerationToJson(this);
 }

@@ -1,29 +1,51 @@
-/// Represents a policy for container resizing operations.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'container_resize_policy.g.dart';
+
+/// Represents a container resize policy in Kubernetes.
 ///
-/// This class defines how a container should be resized and what should happen
-/// after the resize operation, including the resource to be resized and the
-/// restart behavior.
+/// ContainerResizePolicy defines how container resources can be dynamically adjusted.
+/// Key features include:
+/// - Resource-specific resize rules
+/// - Restart behavior control
+/// - Dynamic resource allocation
+/// - Container lifecycle management
+///
+/// Common use cases:
+/// - Vertical scaling of resources
+/// - Memory limit adjustments
+/// - CPU quota modifications
+/// - Dynamic resource optimization
+///
+/// Example:
+/// ```dart
+/// final resizePolicy = ContainerResizePolicy()
+///   ..resourceName = 'memory'
+///   ..restartPolicy = 'NotRequired';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
+/// for more details about container resource management.
+@JsonSerializable()
 class ContainerResizePolicy {
-  /// The name of the resource to be resized.
+  ContainerResizePolicy();
+
+  /// The name of the resource that can be resized.
+  /// 
+  /// Required: Specifies which resource (e.g., 'cpu', 'memory') this policy applies to.
+  /// Must match the resource name in the container's resource requirements.
   late String resourceName;
 
-  /// The policy determining how the container should restart after resizing.
-  ///
-  /// This could include values like "Always", "Never", or "OnFailure".
+  /// The restart policy after a resize operation.
+  /// 
+  /// Required: Defines whether and how the container should restart after resizing.
+  /// Valid values:
+  /// - "NotRequired": No restart needed after resize
+  /// - "RestartContainer": Container will restart after resize
   late String restartPolicy;
 
-  /// Creates a [ContainerResizePolicy] instance from a map of values.
-  ///
-  /// The map must contain the following keys:
-  /// * 'resourceName': String identifying the resource to be resized
-  /// * 'restartPolicy': String specifying the restart behavior
-  ContainerResizePolicy.fromMap(Map<String, dynamic> data) {
-    resourceName = data['resourceName'];
-    restartPolicy = data['restartPolicy'];
-  }
+  factory ContainerResizePolicy.fromJson(Map<String, dynamic> json) =>
+      _$ContainerResizePolicyFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'resourceName': resourceName,
-        'restartPolicy': restartPolicy,
-      };
+  Map<String, dynamic> toJson() => _$ContainerResizePolicyToJson(this);
 }

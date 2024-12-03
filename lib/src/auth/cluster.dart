@@ -3,7 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
-
+import 'package:json_annotation/json_annotation.dart';
+import 'package:kuberneteslib/src/helpers/uint8list_converter.dart';
 import '../cluster/cluster.dart';
 import '../cluster/config.dart';
 import '../cluster/exec.dart';
@@ -11,6 +12,8 @@ import '../cluster/user.dart';
 import 'bearer_client.dart';
 import 'cert_client.dart';
 import 'cluster_auth_client.dart';
+
+part 'cluster.g.dart';
 
 /// [ClusterAuth] is a core class for Kubernetes API authentication. It handles
 /// authentication to the Kubernetes API calls and acts as an HTTP client wrapper.
@@ -34,29 +37,43 @@ import 'cluster_auth_client.dart';
 ///   final response = await auth.get(Uri.parse('https://api.example.com/v1/pods'));
 /// }
 /// ```
+@JsonSerializable()
 class ClusterAuth {
+  ClusterAuth();
+
   /// The cluster configuration containing server and certificate information
+  @JsonKey(includeIfNull: false)
   Cluster? cluster;
 
   /// The user configuration containing authentication details
+  @JsonKey(includeIfNull: false)
   User? user;
 
   /// Bearer token for token-based authentication
+  @JsonKey(includeIfNull: false)
   String? token;
 
   /// Expiration timestamp for the bearer token
+  @JsonKey(includeIfNull: false)
   DateTime? expirationTimestamp;
 
   /// Certificate authority data for validating the server's certificate
+  @JsonKey(includeIfNull: false)
+  @Uint8ListConverter()
   Uint8List? clientCertificateAuthority;
 
   /// Client certificate data for certificate-based authentication
+  @JsonKey(includeIfNull: false)
+  @Uint8ListConverter()
   Uint8List? clientCertificateData;
 
   /// Client private key data for certificate-based authentication
+  @JsonKey(includeIfNull: false)
+  @Uint8ListConverter()
   Uint8List? clientKeyData;
 
   /// The authenticated HTTP client instance
+  @JsonKey(includeIfNull: false)
   ClusterAuthClient? client;
 
   /// Creates a new [ClusterAuth] instance from a Kubernetes [Config].
@@ -97,7 +114,7 @@ class ClusterAuth {
 
           if (output.isNotEmpty) {
             final data = jsonDecode(output);
-            final result = ExecResult.fromMap(data);
+            final result = ExecResult.fromJson(data);
             token = result.status.token;
             expirationTimestamp = result.status.expirationTimestamp;
           }
@@ -210,4 +227,9 @@ class ClusterAuth {
       clientKeyData: clientKeyData ?? Uint8List(0),
     );
   }
+
+  factory ClusterAuth.fromJson(Map<String, dynamic> json) =>
+      _$ClusterAuthFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ClusterAuthToJson(this);
 }

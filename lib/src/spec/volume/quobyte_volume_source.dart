@@ -1,43 +1,75 @@
-/// Represents a Quobyte volume source configuration for Kubernetes volumes.
-/// 
-/// Quobyte is a software-defined storage solution that can be used as a
-/// persistent volume in Kubernetes.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'quobyte_volume_source.g.dart';
+
+/// Represents a Quobyte volume in Kubernetes for software-defined storage.
+///
+/// QuobyteVolumeSource enables pods to use Quobyte distributed storage.
+/// Key features include:
+/// - Software-defined storage
+/// - Multi-tenant support
+/// - Access control
+/// - High availability
+/// - Scale-out architecture
+///
+/// Common use cases:
+/// - Enterprise storage
+/// - Multi-user environments
+/// - High-performance workloads
+/// - Cloud-native applications
+///
+/// Example:
+/// ```dart
+/// final quobyteVolume = QuobyteVolumeSource()
+///   ..registry = 'registry.example.com:7861'
+///   ..volume = 'testVolume'
+///   ..user = 'admin'
+///   ..group = 'admin'
+///   ..tenant = 'development'
+///   ..readOnly = false;
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#quobyte)
+/// for more details about Quobyte volumes.
+@JsonSerializable()
 class QuobyteVolumeSource {
+  QuobyteVolumeSource();
+
   /// The group to map volume access to.
+  /// 
+  /// Required: Specifies the group name or GID for volume access control.
   late String group;
 
-  /// Whether the volume should be mounted read-only.
+  /// Controls read-only access to the volume.
+  /// 
+  /// When true, the volume will be mounted read-only.
+  /// When false, the volume will be mounted with read-write permissions.
   late bool readOnly;
 
-  /// The Quobyte registry address(es) for volume management.
-  /// Format: "host:port" or multiple entries comma separated.
+  /// The Quobyte registry addresses for volume management.
+  /// 
+  /// Required: Format is "host:port" or multiple entries comma separated.
+  /// Example: "registry-1:7861,registry-2:7861"
   late String registry;
 
-  /// The tenant to use for the volume access.
+  /// The tenant for volume access.
+  /// 
+  /// Optional: Specifies the tenant for multi-tenant environments.
   /// If not specified, the default tenant will be used.
   late String tenant;
 
   /// The user to map volume access to.
+  /// 
+  /// Required: Specifies the username or UID for volume access control.
   late String user;
 
   /// The name of the Quobyte volume to mount.
+  /// 
+  /// Required: Must be a valid volume name in the Quobyte storage system.
   late String volume;
 
-  /// Creates a new [QuobyteVolumeSource] instance from a map structure.
-  /// 
-  /// The map should contain the following keys:
-  /// - group: String
-  /// - readOnly: bool
-  /// - registry: String
-  /// - tenant: String
-  /// - user: String
-  /// - volume: String
-  QuobyteVolumeSource.fromMap(Map<String, dynamic> data) {
-    group = data['group'];
-    readOnly = data['readOnly'];
-    registry = data['registry'];
-    tenant = data['tenant'];
-    user = data['user'];
-    volume = data['volume'];
-  }
+  factory QuobyteVolumeSource.fromJson(Map<String, dynamic> json) =>
+      _$QuobyteVolumeSourceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$QuobyteVolumeSourceToJson(this);
 }

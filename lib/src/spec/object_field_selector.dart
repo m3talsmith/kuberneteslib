@@ -1,25 +1,61 @@
-/// Represents an ObjectFieldSelector that selects a field of an object in Kubernetes.
-/// This is commonly used in downward API volume sources and environment variables.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'object_field_selector.g.dart';
+
+/// Represents an ObjectFieldSelector in Kubernetes.
+///
+/// ObjectFieldSelector enables accessing fields of the pod and container through
+/// the Downward API. Key features include:
+/// - Pod metadata access
+/// - Container information
+/// - Status field selection
+/// - Version-aware field paths
+///
+/// Common use cases:
+/// - Pod name injection
+/// - Namespace access
+/// - Node name retrieval
+/// - Pod IP address access
+///
+/// Example:
+/// ```dart
+/// final selector = ObjectFieldSelector()
+///   ..apiVersion = 'v1'
+///   ..fieldPath = 'metadata.namespace';
+/// ```
+///
+/// Common field paths:
+/// - `metadata.name`: Pod name
+/// - `metadata.namespace`: Pod namespace
+/// - `metadata.uid`: Pod UID
+/// - `spec.nodeName`: Node name
+/// - `status.podIP`: Pod IP address
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/workloads/pods/downward-api/)
+/// for more details about the Downward API.
+@JsonSerializable()
 class ObjectFieldSelector {
-  /// The API version of the target object.
-  late String apiVersion;
+  ObjectFieldSelector()
+      : apiVersion = '',
+        fieldPath = '';
 
-  /// Path of the field to select in the specified API version.
-  /// For example: "metadata.name", "metadata.namespace", etc.
-  late String fieldPath;
+  /// API version of the referenced object.
+  /// 
+  /// Typically 'v1' for core Kubernetes resources.
+  /// Must match the API version of the referenced resource.
+  String apiVersion;
 
-  /// Creates an [ObjectFieldSelector] instance from a map structure.
-  ///
-  /// [data] should contain:
-  /// - 'apiVersion': The API version of the target object
-  /// - 'fieldPath': The path to the desired field
-  ObjectFieldSelector.fromMap(Map<String, dynamic> data) {
-    apiVersion = data['apiVersion'];
-    fieldPath = data['fieldPath'];
-  }
+  /// Path to the desired field in the specified API version.
+  /// 
+  /// Examples:
+  /// - 'metadata.name': Pod name
+  /// - 'metadata.namespace': Pod namespace
+  /// - 'spec.nodeName': Node name
+  /// - 'status.podIP': Pod IP address
+  String fieldPath;
 
-  Map<String, dynamic> toMap() => {
-        'apiVersion': apiVersion,
-        'fieldPath': fieldPath,
-      };
+  factory ObjectFieldSelector.fromJson(Map<String, dynamic> json) =>
+      _$ObjectFieldSelectorFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ObjectFieldSelectorToJson(this);
 }

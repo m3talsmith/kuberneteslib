@@ -1,54 +1,60 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'label_selector_requirement.dart';
 
-/// A selector that matches labels based on expressions and direct label matches.
+part 'label_selector.g.dart';
+
+/// Represents a label selector in Kubernetes.
 ///
-/// LabelSelector is used to filter objects based on their labels. It supports two types
-/// of selection criteria:
-/// * matchExpressions: A list of label selector requirements
-/// * matchLabels: A map of key-value pairs for direct label matching
+/// LabelSelector enables filtering Kubernetes resources based on their labels using
+/// two complementary selection mechanisms. Key features include:
+/// - Expression-based matching
+/// - Direct label matching
+/// - Complex selection rules
+/// - Multi-label filtering
+///
+/// Common use cases:
+/// - Service pod selection
+/// - Deployment targeting
+/// - NetworkPolicy endpoints
+/// - Resource affinity rules
+///
+/// Example:
+/// ```dart
+/// final selector = LabelSelector()
+///   ..matchLabels = {
+///     'environment': 'production',
+///     'app': 'frontend'
+///   }
+///   ..matchExpressions = [
+///     LabelSelectorRequirement()
+///       ..key = 'tier'
+///       ..operator = 'In'
+///       ..values = ['frontend', 'middleware']
+///   ];
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
+/// for more details about label selectors.
+@JsonSerializable()
 class LabelSelector {
-  /// List of label selector requirements that must be met
-  List<LabelSelectorRequirement>? matchExpressions;
+  LabelSelector(): matchExpressions = [], matchLabels = {};
 
-  /// Map of label key-value pairs that must match exactly
-  Map<String, LabelSelectorRequirement>? matchLabels;
+  /// List of label selector requirements.
+  /// 
+  /// All requirements are ANDed together for filtering.
+  /// Each requirement can specify a set-based selector using operators
+  /// like In, NotIn, Exists, and DoesNotExist.
+  final List<LabelSelectorRequirement>? matchExpressions;
 
-  /// Creates a LabelSelector from a map structure
-  ///
-  /// [data] should contain:
-  /// * 'matchExpressions': List of maps defining label selector requirements
-  /// * 'matchLabels': Map of label key-value pairs
-  LabelSelector.fromMap(Map<String, dynamic> data) {
-    if (data['matchExpressions'] != null) {
-      matchExpressions =
-          (data['matchExpressions'] as List<Map<String, dynamic>>)
-              .map(
-                (e) => LabelSelectorRequirement.fromMap(e),
-              )
-              .toList();
-    }
-    if (data['matchLabels'] != null) {
-      matchLabels = {};
-      for (var e in (data['matchLabels'] as Map<String, dynamic>).entries) {
-        final req = (e.value is String)
-            ? LabelSelectorRequirement(key: e.key, values: [e.value])
-            : LabelSelectorRequirement.fromMap(e.value);
-        matchLabels![e.key] = req;
-      }
-    }
-  }
+  /// Map of string keys and values that must match exactly.
+  /// 
+  /// All key-value pairs are ANDed together with any matchExpressions.
+  /// Each key must match the value exactly for the selector to match.
+  final Map<String, LabelSelectorRequirement>? matchLabels;
 
-  Map<String, dynamic> toMap() => {
-        'matchExpressions': (matchExpressions != null)
-            ? matchExpressions!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'matchLabels': (matchLabels != null && matchLabels!.entries.isNotEmpty)
-            ? matchLabels!.entries.fold(
-                <String, dynamic>{},
-                (previousValue, e) => previousValue[e.key] = e.value.toMap(),
-              )
-            : null,
-      };
+  factory LabelSelector.fromJson(Map<String, dynamic> json) =>
+      _$LabelSelectorFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LabelSelectorToJson(this);
 }

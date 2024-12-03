@@ -1,53 +1,60 @@
 import '../../spec/local_object_reference.dart';
 
+import 'package:json_annotation/json_annotation.dart';
+
+part 'scale_io_volume_source.g.dart';
+
 /// Represents a ScaleIO persistent volume source in Kubernetes.
 /// ScaleIO is a software-defined storage platform that creates a virtual SAN from server-based storage.
+@JsonSerializable()
 class ScaleIOVolumeSource {
+  ScaleIOVolumeSource({
+    required this.fsType,
+    required this.gateway,
+    required this.protectionDomain,
+    required this.readOnly,
+    required this.secretRef,
+    required this.sslEnabled,
+    required this.storageMode,
+    required this.storagePool,
+    required this.system,
+    required this.volumeName,
+  });
+
   /// The filesystem type to mount.
   /// Must be a filesystem type supported by the host operating system.
-  late String fsType;
+  String fsType;
 
   /// The ScaleIO Gateway endpoint.
-  late String gateway;
+  String gateway;
 
   /// The name of the ScaleIO Protection Domain for the configured storage.
-  late String protectionDomain;
+  String protectionDomain;
 
   /// Specifies whether the volume should be mounted read-only.
-  late bool readOnly;
+  bool readOnly;
 
   /// Reference to the secret object containing sensitive information
   /// such as ScaleIO user credentials.
-  late LocalObjectReference secretRef;
+  LocalObjectReference secretRef;
 
   /// Flag to enable/disable SSL communication with Gateway.
-  late bool sslEnabled;
+  bool sslEnabled;
 
   /// Indicates whether the storage for a volume should be thick or thin.
-  late String storageMode;
+  String storageMode;
 
   /// The ScaleIO Storage Pool associated with the protection domain.
-  late String storagePool;
+  String storagePool;
 
   /// The name of the storage system as configured in ScaleIO.
-  late String system;
+  String system;
 
   /// The name of a volume already created in the ScaleIO system.
-  late String volumeName;
+  String volumeName;
 
-  /// Creates a new [ScaleIOVolumeSource] instance from a map structure.
-  /// 
-  /// The [data] parameter should contain all the necessary fields as key-value pairs.
-  ScaleIOVolumeSource.fromMap(Map<String, dynamic> data) {
-    fsType = data['fsType'];
-    gateway = data['gateway'];
-    protectionDomain = data['protectionDomain'];
-    readOnly = data['readOnly'];
-    secretRef = LocalObjectReference.fromMap(data['secretRef']);
-    sslEnabled = data['sslEnabled'];
-    storageMode = data['storageMode'];
-    storagePool = data['storagePool'];
-    system = data['system'];
-    volumeName = data['volumeName'];
-  }
+  factory ScaleIOVolumeSource.fromJson(Map<String, dynamic> json) =>
+      _$ScaleIOVolumeSourceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ScaleIOVolumeSourceToJson(this);
 }

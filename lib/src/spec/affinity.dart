@@ -1,8 +1,42 @@
+import 'dart:convert';
+
+import 'package:json_annotation/json_annotation.dart';
+
 import 'node_selector.dart';
 import 'pod_affinity_term.dart';
 import 'preferred_scheduling_term.dart';
 import 'weighted_pod_affinity_term.dart';
 
+part 'affinity.g.dart';
+
+/// Represents affinity rules in Kubernetes for pod scheduling.
+///
+/// Affinity enables fine-grained control over pod placement in a cluster.
+/// Key features include:
+/// - Node selection based on labels
+/// - Pod co-location preferences
+/// - Pod anti-co-location rules
+/// - Weighted preferences
+/// - Required vs preferred rules
+///
+/// Example:
+/// ```dart
+/// final nodeAffinity = NodeAffinity()
+///   ..requiredDuringSchedulingIgnoredDuringExecution = NodeSelector()
+///     ..nodeSelectorTerms = [
+///       NodeSelectorTerm()
+///         ..matchExpressions = [
+///           NodeSelectorRequirement()
+///             ..key = 'kubernetes.io/e2e-az-name'
+///             ..operator = 'In'
+///             ..values = ['e2e-az1', 'e2e-az2']
+///         ]
+///     ];
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
+/// for more details about affinity rules.
+@JsonEnum()
 enum AffinityKind {
   nodeAffinity,
   podAffinity,
@@ -19,6 +53,19 @@ enum AffinityKind {
   }
 }
 
+/// JSON converter for Affinity objects.
+///
+/// Handles serialization and deserialization of Affinity instances to/from JSON.
+class AffinityConverter implements JsonConverter<Affinity, String> {
+  const AffinityConverter();
+
+  @override
+  Affinity fromJson(String json) => Affinity.fromJson(jsonDecode(json));
+
+  @override
+  String toJson(Affinity object) => jsonEncode(object.toJson());
+}
+
 /// Base class for Kubernetes affinity configurations.
 ///
 /// Affinity rules control how pods are scheduled onto nodes in a Kubernetes cluster.
@@ -26,62 +73,67 @@ enum AffinityKind {
 /// - Node affinity: Controls pod placement based on node labels
 /// - Pod affinity: Attracts pods to nodes based on existing pod labels
 /// - Pod anti-affinity: Repels pods from nodes based on existing pod labels
-abstract class Affinity {
+///
+/// Example:
+/// ```dart
+/// final affinity = Affinity(
+///   kind: AffinityKind.nodeAffinity,
+///   affinity: NodeAffinity()
+///     ..requiredDuringSchedulingIgnoredDuringExecution = NodeSelector()
+/// );
+/// ```
+class Affinity {
+  Affinity({required this.kind, required this.affinity});
+
+  AffinityKind? kind;
+  Affinity? affinity;
   /// Creates an Affinity instance from a JSON/YAML map representation.
   ///
   /// This is the base factory method that specific affinity types implement.
-  static Affinity fromMap(Map<String, dynamic> data) {
-    final kind = (data['kind'] != null)
-        ? AffinityKind.fromString(data['kind'])
+  factory Affinity.fromJson(Map<String, dynamic> json) {
+    final kind = (json['kind'] != null)
+        ? AffinityKind.fromString(json['kind'])
         : AffinityKind.unknown;
     switch (kind) {
       case AffinityKind.nodeAffinity:
-        return NodeAffinity.fromMap(data);
+        return Affinity(kind: kind, affinity: NodeAffinity.fromJson(json));
       case AffinityKind.podAffinity:
-        return PodAffinity.fromMap(data);
+        return Affinity(kind: kind, affinity: PodAffinity.fromJson(json));
       case AffinityKind.podAntiAffinity:
-        return PodAntiAffinity.fromMap(data);
+        return Affinity(kind: kind, affinity: PodAntiAffinity.fromJson(json));
       default:
         throw Exception('unknown affinity kind');
     }
   }
 
-  Map<String, dynamic> toMap();
+  Map<String, dynamic> toJson() => affinity?.toJson() ?? {};
 }
 
 /// Represents node affinity configuration in Kubernetes
 /// Used to constrain which nodes your pod can be scheduled on based on node labels
+@JsonSerializable()
 class NodeAffinity implements Affinity {
+  NodeAffinity()
+      : preferredDuringSchedulingIgnoredDuringExecution = [],
+        requiredDuringSchedulingIgnoredDuringExecution = NodeSelector();
+
   /// Preferred node scheduling requirements that the scheduler will try to meet
   /// but will not guarantee
-  late List<PreferredSchedulingTerm>
-      preferredDuringSchedulingIgnoredDuringExecution;
+  final List<PreferredSchedulingTerm> preferredDuringSchedulingIgnoredDuringExecution;
 
   /// Required node scheduling requirements that must be met for pod scheduling
-  late NodeSelector requiredDuringSchedulingIgnoredDuringExecution;
+  final NodeSelector requiredDuringSchedulingIgnoredDuringExecution;
 
-  /// Creates a NodeAffinity instance from a map representation
-  NodeAffinity.fromMap(Map<String, dynamic> data) {
-    preferredDuringSchedulingIgnoredDuringExecution =
-        (data['preferredDuringSchedulingIgnoredDuringExecution']
-                as List<Map<String, dynamic>>)
-            .map(
-              (e) => PreferredSchedulingTerm.fromMap(e),
-            )
-            .toList();
-    requiredDuringSchedulingIgnoredDuringExecution = NodeSelector.fromMap(
-        data['requiredDuringSchedulingIgnoredDuringExecution']);
-  }
+  factory NodeAffinity.fromJson(Map<String, dynamic> json) =>
+      _$NodeAffinityFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NodeAffinityToJson(this);
 
   @override
-  Map<String, dynamic> toMap() => {
-        'preferredDuringSchedulingIgnoredDuringExecution':
-            preferredDuringSchedulingIgnoredDuringExecution.map(
-          (e) => e.toMap(),
-        ),
-        'requiredDuringSchedulingIgnoredDuringExecution':
-            requiredDuringSchedulingIgnoredDuringExecution.toMap(),
-      };
+  AffinityKind? kind;
+
+  @override
+  Affinity? affinity;
 }
 
 /// Represents pod affinity configuration in Kubernetes
@@ -94,50 +146,29 @@ class NodeAffinity implements Affinity {
 ///
 /// Example use case: Placing cache pods on the same node as the application pods
 /// that use them to reduce latency.
+@JsonSerializable()
 class PodAffinity implements Affinity {
+  PodAffinity()
+      : preferredDuringSchedulingIgnoredDuringExecution = [],
+        requiredDuringSchedulingIgnoredDuringExecution = [];
+
   /// Preferred pod scheduling requirements that the scheduler will try to meet
   /// but will not guarantee
-  late List<WeightedPodAffinityTerm>
-      preferredDuringSchedulingIgnoredDuringExecution;
+  List<WeightedPodAffinityTerm> preferredDuringSchedulingIgnoredDuringExecution;
 
   /// Required pod scheduling requirements that must be met for pod scheduling
-  late List<PodAffinityTerm> requiredDuringSchedulingIgnoredDuringExecution;
+  List<PodAffinityTerm> requiredDuringSchedulingIgnoredDuringExecution;
 
-  /// Creates a PodAffinity instance from a map representation
-  PodAffinity.fromMap(Map<String, dynamic> data) {
-    preferredDuringSchedulingIgnoredDuringExecution =
-        (data['preferredDuringSchedulingIgnoredDuringExecution']
-                as List<dynamic>)
-            .map(
-              (e) => WeightedPodAffinityTerm.fromMap(e),
-            )
-            .toList();
-    requiredDuringSchedulingIgnoredDuringExecution =
-        (data['requiredDuringSchedulingIgnoredDuringExecution']
-                as List<dynamic>)
-            .map(
-              (e) => PodAffinityTerm.fromMap(e),
-            )
-            .toList();
-  }
+  factory PodAffinity.fromJson(Map<String, dynamic> json) =>
+      _$PodAffinityFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PodAffinityToJson(this);
 
   @override
-  Map<String, dynamic> toMap() => {
-        'preferredDuringSchedulingIgnoredDuringExecution':
-            preferredDuringSchedulingIgnoredDuringExecution.isNotEmpty
-                ? preferredDuringSchedulingIgnoredDuringExecution.map(
-                    (e) => e.toMap(),
-                  )
-                : null,
-        'requiredDuringSchedulingIgnoredDuringExecution':
-            requiredDuringSchedulingIgnoredDuringExecution.isNotEmpty
-                ? requiredDuringSchedulingIgnoredDuringExecution.map(
-                    (e) => e.toMap(),
-                  )
-                : null,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  AffinityKind? kind;
+
+  @override
+  Affinity? affinity;
 }
 
 /// Represents pod anti-affinity configuration in Kubernetes
@@ -149,7 +180,9 @@ class PodAffinity implements Affinity {
 ///
 /// Example use case: Ensuring multiple replicas of a stateless application
 /// are scheduled on different nodes to improve fault tolerance.
+@JsonSerializable()
 class PodAntiAffinity implements Affinity {
+  PodAntiAffinity();
   /// Preferred pod anti-affinity scheduling requirements that the scheduler will try to meet
   /// but will not guarantee
   late List<WeightedPodAffinityTerm>
@@ -158,39 +191,15 @@ class PodAntiAffinity implements Affinity {
   /// Required pod anti-affinity scheduling requirements that must be met for pod scheduling
   late List<PodAffinityTerm> requiredDuringSchedulingIgnoredDuringExecution;
 
-  /// Creates a PodAntiAffinity instance from a map representation
-  PodAntiAffinity.fromMap(Map<String, dynamic> data) {
-    preferredDuringSchedulingIgnoredDuringExecution =
-        (data['preferredDuringSchedulingIgnoredDuringExecution']
-                as List<dynamic>)
-            .map(
-              (e) => WeightedPodAffinityTerm.fromMap(e),
-            )
-            .toList();
-    requiredDuringSchedulingIgnoredDuringExecution =
-        (data['requiredDuringSchedulingIgnoredDuringExecution']
-                as List<dynamic>)
-            .map(
-              (e) => PodAffinityTerm.fromMap(e),
-            )
-            .toList();
-  }
+  factory PodAntiAffinity.fromJson(Map<String, dynamic> json) =>
+      _$PodAntiAffinityFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PodAntiAffinityToJson(this);
 
   @override
-  Map<String, dynamic> toMap() => {
-        'preferredDuringSchedulingIgnoredDuringExecution':
-            preferredDuringSchedulingIgnoredDuringExecution.isNotEmpty
-                ? preferredDuringSchedulingIgnoredDuringExecution.map(
-                    (e) => e.toMap(),
-                  )
-                : null,
-        'requiredDuringSchedulingIgnoredDuringExecution':
-            requiredDuringSchedulingIgnoredDuringExecution.isNotEmpty
-                ? requiredDuringSchedulingIgnoredDuringExecution.map(
-                    (e) => e.toMap(),
-                  )
-                : null,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  AffinityKind? kind;
+
+  @override
+  Affinity? affinity;
 }
+

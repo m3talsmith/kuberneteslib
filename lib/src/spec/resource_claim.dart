@@ -1,31 +1,45 @@
-/// A class representing a resource claim.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'resource_claim.g.dart';
+
+/// Represents a resource claim in Kubernetes.
 ///
-/// Resource claims are used to declare ownership or requirements for specific resources
-/// within the system.
+/// ResourceClaim defines a request for specific resources that a pod requires.
+/// Key features include:
+/// - Resource allocation requests
+/// - Dynamic resource provisioning
+/// - Resource lifecycle management
+/// - Pod resource binding
+///
+/// Common use cases:
+/// - GPU allocation
+/// - Network device requests
+/// - Storage provisioning
+/// - Custom resource claims
+///
+/// Example:
+/// ```dart
+/// final claim = ResourceClaim()
+///   ..name = 'gpu-claim';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/workloads/pods/pod-resources/)
+/// for more details about resource claims.
+@JsonSerializable()
 class ResourceClaim {
-  /// The name identifier of the resource claim.
-  ///
-  /// This field is required and must be specified when creating a resource claim.
-  /// It uniquely identifies the resource being claimed.
+  ResourceClaim();
+
+  /// The name that identifies this resource claim.
+  /// 
+  /// This name is used to reference the claim when:
+  /// - Binding resources to pods
+  /// - Managing resource lifecycle
+  /// - Tracking resource allocation
+  /// - Cleaning up resources
   late String name;
 
-  /// Creates a [ResourceClaim] instance from a map representation.
-  ///
-  /// The [data] map must contain a 'name' key with a string value.
-  ///
-  /// Parameters:
-  ///   data: A map containing the resource claim configuration.
-  ///         Must include a 'name' key with a string value.
-  ///
-  /// Example:
-  /// ```dart
-  /// final claim = ResourceClaim.fromMap({
-  ///   'name': 'my-resource'
-  /// });
-  /// ```
-  ResourceClaim.fromMap(Map<String, dynamic> data) {
-    name = data['name'];
-  }
+  factory ResourceClaim.fromJson(Map<String, dynamic> json) =>
+      _$ResourceClaimFromJson(json);
 
-  Map<String, dynamic> toMap() => {'name': name};
+  Map<String, dynamic> toJson() => _$ResourceClaimToJson(this);
 }

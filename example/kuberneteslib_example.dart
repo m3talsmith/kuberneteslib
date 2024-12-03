@@ -13,7 +13,7 @@ Future<void> main() async {
 
   //Print pod information
   for (final pod in pods) {
-    print('Pod: ${pod.metadata.name}');
+    print('Pod: ${pod.metadata!.name}');
     print('Metadata: ${pod.metadata}');
     print('Spec: ${pod.spec}');
     print('Status: ${pod.status}');

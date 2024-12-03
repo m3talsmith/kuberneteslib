@@ -1,36 +1,75 @@
 import '../local_object_reference.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-/// Represents a CephFS volume mount configuration.
+part 'ceph_fs_volume_source.g.dart';
+
+/// Represents a CephFS volume that can be mounted in Kubernetes pods.
+///
+/// CephFSVolumeSource enables pods to use CephFS volumes for distributed storage.
+/// Key features include:
+/// - Distributed filesystem support
+/// - Multiple monitor configuration
+/// - Custom root directory mounting
+/// - Authentication via keyring or secret
+///
+/// Common use cases:
+/// - Distributed application storage
+/// - Shared file systems across pods
+/// - High-performance storage requirements
+///
+/// Example:
+/// ```dart
+/// final cephfs = CephFSVolumeSource()
+///   ..monitors = ['10.16.154.78:6789', '10.16.154.82:6789']
+///   ..path = '/mysql_data'
+///   ..user = 'admin'
+///   ..secretRef = LocalObjectReference()..name = 'ceph-secret'
+///   ..readOnly = false;
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#cephfs)
+/// for more details about CephFS volumes.
+@JsonSerializable()
 class CephFSVolumeSource {
-  /// List of Ceph monitors.
-  /// More info: https://kubernetes.io/docs/concepts/storage/volumes/#cephfs
+  CephFSVolumeSource();
+
+  /// Required list of CephFS monitors.
+  /// 
+  /// Specifies the Ceph monitors' IP addresses and ports.
+  /// Example: ['10.16.154.78:6789']
   late List<String> monitors;
 
-  /// Used as the mounted root, rather than the full Ceph tree.
-  /// Defaults to "/" if unspecified.
+  /// Root of the CephFS tree to mount.
+  /// 
+  /// Specifies which directory in the CephFS filesystem to mount.
+  /// Defaults to "/" if not specified.
   late String path;
 
-  /// Force the ReadOnly setting in VolumeMounts.
-  /// Defaults to false.
+  /// Controls read-only access to the volume.
+  /// 
+  /// When true, the volume will be mounted read-only.
+  /// Defaults to false (read/write).
   late bool readOnly;
 
-  /// The path to the keyring file.
+  /// Path to the CephFS keyring file.
+  /// 
+  /// Alternative to using secretRef for authentication.
   late String secretFile;
 
-  /// Reference to the authentication secret for user.
-  /// If provided, overrides secretFile.
+  /// Reference to the authentication secret.
+  /// 
+  /// Contains credentials for accessing CephFS.
+  /// Takes precedence over secretFile if both are specified.
   late LocalObjectReference secretRef;
 
-  /// User is the rados user name.
-  /// Default is admin.
+  /// CephFS user for authentication.
+  /// 
+  /// Specifies which Ceph user to authenticate as.
+  /// Defaults to 'admin' if not specified.
   late String user;
 
-  CephFSVolumeSource.fromMap(Map<String, dynamic> data) {
-    monitors = data['monitors'] as List<String>;
-    path = data['path'];
-    readOnly = data['readOnly'];
-    secretFile = data['secretFile'];
-    secretRef = LocalObjectReference.fromMap(data['secretRef']);
-    user = data['user'];
-  }
+  factory CephFSVolumeSource.fromJson(Map<String, dynamic> json) =>
+      _$CephFSVolumeSourceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CephFSVolumeSourceToJson(this);
 }

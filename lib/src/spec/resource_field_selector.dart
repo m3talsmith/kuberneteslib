@@ -1,37 +1,65 @@
-import 'quantity.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-/// A selector for resource fields that can be used to extract resource values
-/// from containers in Kubernetes.
+part 'resource_field_selector.g.dart';
+
+/// Represents a selector for extracting resource values from containers in Kubernetes.
+///
+/// ResourceFieldSelector enables referencing container resource metrics and limits.
+/// Key features include:
+/// - Container resource selection
+/// - Resource value extraction
+/// - Value scaling/division
+/// - Dynamic resource monitoring
+///
+/// Common use cases:
+/// - Environment variable population
+/// - Resource consumption monitoring
+/// - Autoscaling configurations
+/// - Resource quota enforcement
+///
+/// Example:
+/// ```dart
+/// final selector = ResourceFieldSelector()
+///   ..containerName = 'web-server'
+///   ..resource = 'memory'
+///   ..divisor = '1Mi';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-fields-as-environment-variables)
+/// for more details about resource field selectors.
+@JsonSerializable()
 class ResourceFieldSelector {
-  /// The name of the container to extract the resource from.
+  ResourceFieldSelector();
+
+  /// The name of the container to extract the resource value from.
+  /// 
+  /// If omitted, the first container in the pod will be used.
+  @JsonKey(includeIfNull: false)
   String? containerName;
 
-  /// The divisor to be used when calculating the resource value.
-  /// Can be either a String or a Quantity.
+  /// The divisor to apply to the resource value.
+  /// 
+  /// Common formats:
+  /// - Memory: "1Mi", "1Gi"
+  /// - CPU: "1m", "1"
+  /// - Storage: "1Gi", "1Ti"
+  @JsonKey(includeIfNull: false)
   dynamic divisor;
 
-  /// The name of the resource to extract (e.g., 'cpu', 'memory').
+  /// The resource type to extract from the container.
+  /// 
+  /// Common values:
+  /// - 'limits.cpu': CPU limit
+  /// - 'requests.memory': Memory request
+  /// - 'limits.ephemeral-storage': Storage limit
+  @JsonKey(includeIfNull: false)
   String? resource;
 
-  /// Creates a [ResourceFieldSelector] from a map representation.
-  ///
-  /// The [data] map should contain the following keys:
-  /// - 'containerName': String identifying the container
-  /// - 'divisor': Either a String or Quantity value used for calculations
-  /// - 'resource': String identifying the resource to select
-  ResourceFieldSelector.fromMap(Map<String, dynamic> data) {
-    containerName = data['containerName'];
-    divisor = (data['divisor'] is String?)
-        ? data['divisor']
-        : data['divisor'] as Quantity?;
-    resource = data['resource'];
-  }
+  factory ResourceFieldSelector.fromMap(Map<String, dynamic> data) =>
+      ResourceFieldSelector.fromJson(data);
 
-  Map<String, dynamic> toMap() => {
-        'containerName': containerName,
-        'divisor': divisor,
-        'resource': resource,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  factory ResourceFieldSelector.fromJson(Map<String, dynamic> json) =>
+      _$ResourceFieldSelectorFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ResourceFieldSelectorToJson(this);
 }

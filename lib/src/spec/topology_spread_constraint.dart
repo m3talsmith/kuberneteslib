@@ -1,63 +1,84 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'label_selector.dart';
 
-/// Represents a topology spread constraint in Kubernetes, which controls how pods are
-/// spread across your cluster among failure-domains such as regions, zones, nodes, etc.
+part 'topology_spread_constraint.g.dart';
+
+/// Represents a pod topology spread constraint in Kubernetes.
+///
+/// TopologySpreadConstraint controls how pods are distributed across failure
+/// domains for high availability. Key features include:
+/// - Workload distribution
+/// - Failure domain awareness
+/// - Scheduling flexibility
+/// - Custom topology support
+///
+/// Common use cases:
+/// - Zone-based distribution
+/// - Node-level spreading
+/// - Rack awareness
+/// - Availability optimization
+///
+/// Example:
+/// ```dart
+/// final spread = TopologySpreadConstraint()
+///   ..maxSkew = 1
+///   ..topologyKey = 'kubernetes.io/zone'
+///   ..whenUnsatisfiable = 'DoNotSchedule'
+///   ..labelSelector = (LabelSelector()
+///     ..matchLabels = {'app': 'web'});
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
+/// for more details about topology spread constraints.
+@JsonSerializable()
 class TopologySpreadConstraint {
-  /// Label selector used to find matching pods.
+  TopologySpreadConstraint();
+
+  /// Selector to identify pods for spreading calculation.
+  /// 
+  /// Used to find matching pods when determining spread distribution.
   LabelSelector? labelSelector;
 
-  /// A list of pod label keys to select the pods over which spreading will be calculated.
+  /// Pod label keys to consider for spread calculation.
+  /// 
+  /// Alternative to labelSelector for simpler matching scenarios.
   List<String>? matchLabelKeys;
 
-  /// The maximum difference between the number of matching pods in any two topology domains.
+  /// Maximum allowed difference in pod count between domains.
+  /// 
+  /// For example, maxSkew=1 means domains can differ by at most 1 pod.
   int? maxSkew;
 
-  /// The minimum number of topology domains that the pods should be spread over.
+  /// Minimum number of domains pods should spread across.
+  /// 
+  /// Ensures pods are distributed across at least this many domains.
   int? minDomains;
 
-  /// Indicates how we will treat Pod's nodeAffinity/nodeSelector when calculating
-  /// pod topology spread skew.
+  /// How to handle pod node affinity/selector in spread calculations.
+  /// 
+  /// Values: 'Honor', 'Ignore'
   String? nodeAffinityPolicy;
 
-  /// Indicates how we will treat node taints when calculating pod topology spread skew.
+  /// How to handle node taints in spread calculations.
+  /// 
+  /// Values: 'Honor', 'Ignore'
   String? nodeTaintsPolicy;
 
-  /// The key of node labels that the system uses to denote the topology domain.
+  /// Node label key defining the topology domain.
+  /// 
+  /// Examples: 'topology.kubernetes.io/zone', 'kubernetes.io/hostname'
   String? topologyKey;
 
-  /// Indicates how to deal with a pod if it doesn't satisfy the spread constraint.
-  /// Can be "DoNotSchedule" or "ScheduleAnyway".
+  /// Action when constraint cannot be satisfied.
+  /// 
+  /// Values:
+  /// - 'DoNotSchedule': Prevents pod scheduling
+  /// - 'ScheduleAnyway': Allows scheduling with best effort
   String? whenUnsatisfiable;
 
-  /// Creates a [TopologySpreadConstraint] from a map of values.
-  ///
-  /// The map should contain all the necessary fields to populate the constraint's properties.
-  TopologySpreadConstraint.fromMap(Map<String, dynamic> data) {
-    if (data['labelSelector'] != null) {
-      labelSelector = LabelSelector.fromMap(data['labelSelector']);
-    }
-    if (data['matchLabelKeys'] != null) {
-      matchLabelKeys = data['matchLabelKeys'] as List<String>;
-    }
-    maxSkew = data['maxSkew'];
-    minDomains = data['minDomains'];
-    nodeAffinityPolicy = data['nodeAffinityPolicy'];
-    nodeTaintsPolicy = data['nodeTaintsPolicy'];
-    topologyKey = data['topologyKey'];
-    whenUnsatisfiable = data['whenUnsatisfiable'];
-  }
+  factory TopologySpreadConstraint.fromJson(Map<String, dynamic> json) =>
+      _$TopologySpreadConstraintFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'labelSelector':
-            (labelSelector != null) ? labelSelector!.toMap() : null,
-        'matchLabelKeys': matchLabelKeys,
-        'maxSkew': maxSkew,
-        'minDomains': minDomains,
-        'nodeAffinityPolicy': nodeAffinityPolicy,
-        'nodeTaintsPolicy': nodeTaintsPolicy,
-        'topologyKey': topologyKey,
-        'whenUnsatisfiable': whenUnsatisfiable,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$TopologySpreadConstraintToJson(this);
 }

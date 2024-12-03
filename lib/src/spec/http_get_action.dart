@@ -1,56 +1,78 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'http_header.dart';
 
-/// Represents an HTTP GET action configuration for health checks or probes.
+part 'http_get_action.g.dart';
+
+/// Represents an HTTP GET action in Kubernetes.
+///
+/// HTTPGetAction defines how to perform HTTP GET requests for health checking
+/// and lifecycle management. Key features include:
+/// - Custom host targeting
+/// - Header configuration
+/// - Path specification
+/// - Port selection
+/// - Protocol scheme selection
+///
+/// Common use cases:
+/// - Health checks
+/// - Readiness probes
+/// - Liveness probes
+/// - Startup probes
+///
+/// Example:
+/// ```dart
+/// final httpGet = HTTPGetAction()
+///   ..path = '/health'
+///   ..port = 8080
+///   ..scheme = 'HTTP'
+///   ..httpHeaders = [
+///     HTTPHeader()
+///       ..name = 'Custom-Header'
+///       ..value = 'value'
+///   ];
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-http-request)
+/// for more details about HTTP probes.
+@JsonSerializable()
 class HTTPGetAction {
-  /// The host name to connect to, defaults to the pod IP.
+  HTTPGetAction();
+
+  /// The hostname to connect to.
+  /// 
+  /// Optional: Defaults to the pod IP. You probably want to set
+  /// "Host" in httpHeaders instead.
+  @JsonKey(includeIfNull: false)
   String? host;
 
   /// Custom headers to set in the request.
+  /// 
+  /// HTTP headers to set in the request. HTTP allows repeated headers.
+  @JsonKey(includeIfNull: false)
   List<HTTPHeader>? httpHeaders;
 
   /// Path to access on the HTTP server.
+  /// 
+  /// Optional: Defaults to '/'.
+  @JsonKey(includeIfNull: false)
   String? path;
 
   /// Port number or name to access on the container.
-  /// If specified as a number, it must be in the range 1 to 65535.
+  /// 
+  /// Required: Number must be in the range 1 to 65535.
+  /// Name must be an IANA_SVC_NAME.
+  @JsonKey(includeIfNull: false)
   dynamic port;
 
   /// Scheme to use for connecting to the host.
-  /// Defaults to HTTP.
+  /// 
+  /// Optional: Defaults to HTTP. Possible values are HTTP and HTTPS.
+  @JsonKey(includeIfNull: false)
   String? scheme;
 
-  /// Creates a new HTTPGetAction instance from a map structure.
-  ///
-  /// [data] should contain the following keys:
-  /// - host: String (optional)
-  /// - httpHeaders: List of header objects (optional)
-  /// - path: String (optional)
-  /// - port: number or string (required)
-  /// - scheme: String (optional)
-  HTTPGetAction.fromMap(Map<String, dynamic> data) {
-    host = data['host'];
-    if (data['httpHeaders'] != null) {
-      httpHeaders = [];
-      for (var e in data['httpHeaders']) {
-        httpHeaders!.add(HTTPHeader.fromMap(e));
-      }
-    }
-    path = data['path'];
-    port = data['port'];
-    scheme = data['scheme'];
-  }
+  factory HTTPGetAction.fromJson(Map<String, dynamic> json) =>
+      _$HTTPGetActionFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'host': host,
-        'httpHeaders': (httpHeaders != null)
-            ? httpHeaders!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'path': path,
-        'port': port,
-        'scheme': scheme,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$HTTPGetActionToJson(this);
 }

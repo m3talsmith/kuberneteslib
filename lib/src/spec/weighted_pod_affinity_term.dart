@@ -1,41 +1,53 @@
-/// Provides access to the [PodAffinityTerm] class which defines pod affinity scheduling rules.
-///
-/// This import is used by [WeightedPodAffinityTerm] to specify pod affinity rules
-/// with associated weights for pod scheduling decisions.
+import 'package:json_annotation/json_annotation.dart';
+
 import 'pod_affinity_term.dart';
 
+part 'weighted_pod_affinity_term.g.dart';
+
+/// Represents a weighted pod affinity term in Kubernetes scheduling.
+///
+/// WeightedPodAffinityTerm enables defining pod affinity preferences with
+/// different weights for scheduling decisions. Key features include:
+/// - Weighted scheduling preferences
+/// - Pod affinity rules
+/// - Flexible topology constraints
+/// - Priority-based placement
+///
+/// Common use cases:
+/// - Co-located pod scheduling
+/// - Workload distribution
+/// - Availability zone balancing
+/// - Service affinity rules
+///
+/// Example:
+/// ```dart
+/// final weightedTerm = WeightedPodAffinityTerm()
+///   ..weight = 100
+///   ..podAffinityTerm = (PodAffinityTerm()
+///     ..topologyKey = 'kubernetes.io/hostname'
+///     ..labelSelector = (LabelSelector()
+///       ..matchLabels = {'app': 'cache'}));
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
+/// for more details about pod affinity scheduling.
+@JsonSerializable()
 class WeightedPodAffinityTerm {
-  late PodAffinityTerm podAffinityTerm;
-  late int weight;
+  WeightedPodAffinityTerm(): podAffinityTerm = PodAffinityTerm(), weight = 0;
 
-  /// A weighted pod affinity term for pod scheduling rules.
-  ///
-  /// Combines a pod affinity term with a weight to influence pod scheduling decisions.
-  /// The weight field is used to compute the sum of weights of all of the matched
-  /// pod affinity terms, which is then used to prioritize node selection.
-  ///
-  /// Example:
-  /// ```dart
-  /// var term = WeightedPodAffinityTerm.fromMap({
-  ///   'podAffinityTerm': {
-  ///     'labelSelector': {'matchLabels': {'app': 'web'}},
-  ///     'topologyKey': 'kubernetes.io/hostname'
-  ///   },
-  ///   'weight': 100
-  /// });
-  /// ```
-  ///
-  /// Fields:
-  /// - [podAffinityTerm]: The pod affinity term that defines the scheduling rule
-  /// - [weight]: The weight (1-100) associated with matching this term
+  /// The pod affinity term associated with the weight.
+  /// 
+  /// Defines the matching criteria for pod affinity scheduling.
+  final PodAffinityTerm podAffinityTerm;
 
-  WeightedPodAffinityTerm.fromMap(Map<String, dynamic> data) {
-    podAffinityTerm = PodAffinityTerm.fromMap(data['podAffinityTerm']);
-    weight = data['weight'];
-  }
+  /// Weight associated with this pod affinity term.
+  /// 
+  /// Higher weights indicate stronger preferences in scheduling decisions.
+  /// The weight must be in the range 1-100.
+  final int weight;
 
-  Map<String, dynamic> toMap() => {
-        'podAffinityTerm': podAffinityTerm.toMap(),
-        'weight': weight,
-      };
+  factory WeightedPodAffinityTerm.fromJson(Map<String, dynamic> json) =>
+      _$WeightedPodAffinityTermFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$WeightedPodAffinityTermToJson(this);
 }

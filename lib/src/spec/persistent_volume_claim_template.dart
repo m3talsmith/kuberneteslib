@@ -1,28 +1,65 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import '../meta/object_meta.dart';
 import 'persistent_volume_claim_spec.dart';
 
-/// Represents a template for creating a PersistentVolumeClaim.
-/// 
-/// This template is commonly used in StatefulSet specifications to define storage
-/// requirements for each pod in the set.
+part 'persistent_volume_claim_template.g.dart';
+
+/// Represents a PersistentVolumeClaim template in Kubernetes.
+///
+/// PersistentVolumeClaimTemplate is used to dynamically create PVCs, typically
+/// in StatefulSet workloads. Key features include:
+/// - Dynamic PVC creation
+/// - Per-pod storage allocation
+/// - Consistent storage naming
+/// - StatefulSet integration
+///
+/// Common use cases:
+/// - Database per pod storage
+/// - Distributed storage systems
+/// - Stateful application scaling
+/// - Data persistence across pod restarts
+///
+/// Example:
+/// ```dart
+/// final template = PersistentVolumeClaimTemplate()
+///   ..metadata = (ObjectMeta()
+///     ..name = 'data'
+///     ..labels = {'app': 'database'})
+///   ..spec = (PersistentVolumeClaimSpec()
+///     ..accessModes = ['ReadWriteOnce']
+///     ..resources = (ResourceRequirements()
+///       ..requests = {'storage': '10Gi'})
+///     ..storageClassName = 'standard');
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#stable-storage)
+/// for more details about PVC templates in StatefulSets.
+@JsonSerializable()
 class PersistentVolumeClaimTemplate {
-  /// The metadata for the PersistentVolumeClaim template.
+  /// Metadata for the PVC template.
   /// 
-  /// Contains information like name, namespace, labels, and annotations.
-  late ObjectMeta metadata;
+  /// Defines the base metadata for each PVC created from this template.
+  /// StatefulSet will append a unique identifier to the name for each pod.
+  /// Example: If template name is "data" and StatefulSet name is "mysql",
+  /// PVCs will be named "data-mysql-0", "data-mysql-1", etc.
+  ObjectMeta metadata;
 
-  /// The specification for the PersistentVolumeClaim.
+  /// Specification for the PVCs created from this template.
   /// 
-  /// Defines the desired characteristics of the claim, such as storage size
-  /// and access modes.
-  late PersistentVolumeClaimSpec spec;
+  /// Defines the characteristics that each PVC should have, including:
+  /// - Storage size and class
+  /// - Access modes
+  /// - Volume mode
+  /// - Selector criteria
+  PersistentVolumeClaimSpec spec;
 
-  /// Creates a new [PersistentVolumeClaimTemplate] instance from a map structure.
-  /// 
-  /// [data] should contain 'metadata' and 'spec' keys with their respective
-  /// nested data structures.
-  PersistentVolumeClaimTemplate.fromMap(Map<String, dynamic> data) {
-    metadata = ObjectMeta.fromMap(data['metadata']);
-    spec = PersistentVolumeClaimSpec.fromMap(data['spec']);
-  }
+  PersistentVolumeClaimTemplate()
+      : metadata = ObjectMeta(),
+        spec = PersistentVolumeClaimSpec();
+
+  factory PersistentVolumeClaimTemplate.fromJson(Map<String, dynamic> json) =>
+      _$PersistentVolumeClaimTemplateFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PersistentVolumeClaimTemplateToJson(this);
 }

@@ -1,3 +1,5 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'volume/aws_elastic_block_store_volume_source.dart';
 import 'volume/azure_disk_volume_source.dart';
 import 'volume/azure_file_volume_source.dart';
@@ -28,239 +30,222 @@ import 'volume/secret_volume_source.dart';
 import 'volume/storage_os_volume_source.dart';
 import 'volume/vsphere_virtual_disk_volume_source.dart';
 
+part 'volume.g.dart';
+
 /// Represents a volume in Kubernetes that can be mounted by containers in a pod.
 ///
-/// A Volume specifies how to mount a filesystem inside a Pod. Kubernetes supports various
-/// types of volumes, each with its own configuration parameters.
+/// Volume defines storage that can be accessed by containers in a pod. Kubernetes
+/// supports many volume types for different storage backends. Key features include:
+/// - Cloud provider storage integration
+/// - Local and network storage
+/// - Configuration and secret mounting
+/// - Ephemeral and persistent storage
 ///
-/// See: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#volume-v1-core
+/// Common use cases:
+/// - Persistent application data
+/// - Shared configuration files
+/// - Cross-container data sharing
+/// - Cloud storage integration
+/// - Database storage
+///
+/// Example:
+/// ```dart
+/// final volume = Volume()
+///   ..name = 'config-volume'
+///   ..configMap = (ConfigMapVolumeSource()
+///     ..name = 'app-config'
+///     ..defaultMode = 420)  // 0644 in octal
+///   ..emptyDir = (EmptyDirVolumeSource()
+///     ..sizeLimit = '1Gi');
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/)
+/// for more details about volume types and configurations.
+@JsonSerializable()
 class Volume {
-  /// AWS EBS volume configuration
+  Volume();
+
+  /// AWS Elastic Block Store volume configuration.
+  /// 
+  /// Mounts an AWS EBS volume into the pod.
+  @JsonKey(includeIfNull: false)
   AWSElasticBlockStoreVolumeSource? awsElasticBlockStore;
 
-  /// Azure Disk volume configuration
+  /// Azure Disk volume configuration.
+  /// 
+  /// Mounts an Azure Data Disk into the pod.
+  @JsonKey(includeIfNull: false)
   AzureDiskVolumeSource? azureDisk;
 
-  /// Azure File volume configuration
+  /// Azure File volume configuration.
+  /// 
+  /// Mounts an Azure File Service share into the pod.
+  @JsonKey(includeIfNull: false)
   AzureFileVolumeSource? azureFile;
 
-  /// CephFS volume configuration
+  /// CephFS volume configuration.
+  /// 
+  /// Mounts a CephFS volume into the pod.
+  @JsonKey(includeIfNull: false)
   CephFSVolumeSource? cephfs;
 
-  /// Cinder volume configuration (OpenStack)
+  /// Cinder volume configuration (OpenStack).
+  /// 
+  /// Mounts an OpenStack Cinder volume into the pod.
+  @JsonKey(includeIfNull: false)
   CinderVolumeSource? cinder;
 
-  /// ConfigMap volume configuration
+  /// ConfigMap volume configuration.
+  /// 
+  /// Mounts a ConfigMap as a volume in the pod.
+  @JsonKey(includeIfNull: false)
   ConfigMapVolumeSource? configMap;
 
-  /// Container Storage Interface (CSI) volume configuration
+  /// Container Storage Interface (CSI) volume configuration.
+  /// 
+  /// Mounts a CSI volume into the pod.
+  @JsonKey(includeIfNull: false)
   CSIVolumeSource? csi;
 
-  /// DownwardAPI volume configuration
+  /// DownwardAPI volume configuration.
+  /// 
+  /// Makes pod and container information available as files.
+  @JsonKey(includeIfNull: false)
   DownwardAPIVolumeSource? downwardAPI;
 
-  /// EmptyDir volume configuration
+  /// EmptyDir volume configuration.
+  /// 
+  /// Creates an empty directory for scratch space.
+  @JsonKey(includeIfNull: false)
   EmptyDirVolumeSource? emptyDir;
 
-  /// Ephemeral volume configuration
+  /// Ephemeral volume configuration.
+  /// 
+  /// Specifies a template for an ephemeral volume.
+  @JsonKey(includeIfNull: false)
   EphemeralVolumeSource? ephemeral;
 
-  /// Fibre Channel volume configuration
+  /// Fibre Channel volume configuration.
+  /// 
+  /// Mounts a Fibre Channel volume into the pod.
+  @JsonKey(includeIfNull: false)
   FCVolumeSource? fc;
 
-  /// FlexVolume configuration
+  /// FlexVolume configuration.
+  /// 
+  /// Mounts a flexible volume driver volume.
+  @JsonKey(includeIfNull: false)
   FlexVolumeSource? flexVolume;
 
-  /// Flocker volume configuration
+  /// Flocker volume configuration.
+  /// 
+  /// Mounts a Flocker volume into the pod.
+  @JsonKey(includeIfNull: false)
   FlockerVolumeSource? flocker;
 
-  /// Google Compute Engine Persistent Disk configuration
+  /// Google Compute Engine Persistent Disk configuration.
+  /// 
+  /// Mounts a GCE PD into the pod.
+  @JsonKey(includeIfNull: false)
   GCEPersistentDiskVolumeSource? gcePersistentDisk;
 
-  /// GitRepo volume configuration (deprecated)
+  /// GitRepo volume configuration (deprecated).
+  /// 
+  /// Mounts a git repository into the pod.
+  @JsonKey(includeIfNull: false)
   GitRepoVolumeSource? gitRepo;
 
-  /// GlusterFS volume configuration
+  /// GlusterFS volume configuration.
+  /// 
+  /// Mounts a GlusterFS volume into the pod.
+  @JsonKey(includeIfNull: false)
   GlusterfsVolumeSource? glusterfs;
 
-  /// HostPath volume configuration
+  /// HostPath volume configuration.
+  /// 
+  /// Mounts a directory from the host into the pod.
+  @JsonKey(includeIfNull: false)
   HostPathVolumeSource? hostPath;
 
-  /// iSCSI volume configuration
+  /// iSCSI volume configuration.
+  /// 
+  /// Mounts an iSCSI volume into the pod.
+  @JsonKey(includeIfNull: false)
   ISCSIVolumeSource? iscsi;
 
-  /// Volume name
+  /// Name of the volume.
+  /// 
+  /// Must be unique within the pod.
+  @JsonKey(includeIfNull: false)
   String? name;
 
-  /// NFS volume configuration
+  /// NFS volume configuration.
+  /// 
+  /// Mounts an NFS share into the pod.
+  @JsonKey(includeIfNull: false)
   NFSVolumeSource? nfs;
 
-  /// PersistentVolumeClaim configuration
+  /// PersistentVolumeClaim configuration.
+  /// 
+  /// References a PersistentVolumeClaim in the pod's namespace.
+  @JsonKey(includeIfNull: false)
   PersistentVolumeClaimVolumeSource? persistentVolumeClaim;
 
-  /// PhotonController persistent disk configuration
+  /// PhotonController persistent disk configuration.
+  /// 
+  /// Mounts a Photon Controller persistent disk into the pod.
+  @JsonKey(includeIfNull: false)
   PhotonPersistentDiskVolumeSource? photonPersistentDisk;
 
-  /// Portworx volume configuration
+  /// Portworx volume configuration.
+  /// 
+  /// Mounts a Portworx volume into the pod.
+  @JsonKey(includeIfNull: false)
   PortworxVolumeSource? portworxVolume;
 
-  /// Projected volume configuration
+  /// Projected volume configuration.
+  /// 
+  /// Projects multiple volume sources into the same directory.
+  @JsonKey(includeIfNull: false)
   ProjectedVolumeSource? projected;
 
-  /// Quobyte volume configuration
+  /// Quobyte volume configuration.
+  /// 
+  /// Mounts a Quobyte volume into the pod.
+  @JsonKey(includeIfNull: false)
   QuobyteVolumeSource? quobyte;
 
-  /// Rados Block Device (RBD) volume configuration
+  /// Rados Block Device (RBD) volume configuration.
+  /// 
+  /// Mounts a Ceph RBD volume into the pod.
+  @JsonKey(includeIfNull: false)
   RBDVolumeSource? rbd;
 
-  /// ScaleIO volume configuration
+  /// ScaleIO volume configuration.
+  /// 
+  /// Mounts a ScaleIO volume into the pod.
+  @JsonKey(includeIfNull: false)
   ScaleIOVolumeSource? scaleIO;
 
-  /// Secret volume configuration
+  /// Secret volume configuration.
+  /// 
+  /// Mounts a secret as a volume in the pod.
+  @JsonKey(includeIfNull: false)
   SecretVolumeSource? secret;
 
-  /// StorageOS volume configuration
+  /// StorageOS volume configuration.
+  /// 
+  /// Mounts a StorageOS volume into the pod.
+  @JsonKey(includeIfNull: false)
   StorageOSVolumeSource? storageos;
 
-  /// VMware vSphere volume configuration
+  /// VMware vSphere volume configuration.
+  /// 
+  /// Mounts a vSphere VMDK volume into the pod.
+  @JsonKey(includeIfNull: false)
   VsphereVirtualDiskVolumeSource? vsphereVolume;
 
-  /// Creates a Volume instance from a map of data.
-  ///
-  /// The map should contain volume configuration data as received from the Kubernetes API.
-  /// Each supported volume type is conditionally parsed from its corresponding map entry.
-  Volume.fromMap(Map<String, dynamic> data) {
-    if (data['awsElasticBlockStore'] != null) {
-      awsElasticBlockStore = AWSElasticBlockStoreVolumeSource.fromMap(
-          data['awsElasticBlockStore']);
-    }
-    if (data['azureDisk'] != null) {
-      azureDisk = AzureDiskVolumeSource.fromMap(data['azureDisk']);
-    }
-    if (data['azureFile'] != null) {
-      azureFile = AzureFileVolumeSource.fromMap(data['azureFile']);
-    }
-    if (data['cephfs'] != null) {
-      cephfs = CephFSVolumeSource.fromMap(data['cephfs']);
-    }
-    if (data['cinder'] != null) {
-      cinder = CinderVolumeSource.fromMap(data['cinder']);
-    }
-    if (data['configMap'] != null) {
-      configMap = ConfigMapVolumeSource.fromMap(data['configMap']);
-    }
-    if (data['csi'] != null) {
-      csi = CSIVolumeSource.fromMap(data['csi']);
-    }
-    if (data['downwardAPI'] != null) {
-      downwardAPI = DownwardAPIVolumeSource.fromMap(data['downwardAPI']);
-    }
-    if (data['emptyDir'] != null) {
-      emptyDir = EmptyDirVolumeSource.fromMap(data['emptyDir']);
-    }
-    if (data['ephemeral'] != null) {
-      ephemeral = EphemeralVolumeSource.fromMap(data['ephemeral']);
-    }
-    if (data['fc'] != null) {
-      fc = FCVolumeSource.fromMap(data['fc']);
-    }
-    if (data['flexVolume'] != null) {
-      flexVolume = FlexVolumeSource.fromMap(data['flexVolume']);
-    }
-    if (data['flocker'] != null) {
-      flocker = FlockerVolumeSource.fromMap(data['flocker']);
-    }
-    if (data['gcePersistentDisk'] != null) {
-      gcePersistentDisk =
-          GCEPersistentDiskVolumeSource.fromMap(data['gcePersistentDisk']);
-    }
-    if (data['gitRepo'] != null) {
-      gitRepo = GitRepoVolumeSource.fromMap(data['gitRepo']);
-    }
-    if (data['glusterfs'] != null) {
-      glusterfs = GlusterfsVolumeSource.fromMap(data['glusterfs']);
-    }
-    if (data['hostPath'] != null) {
-      hostPath = HostPathVolumeSource.fromMap(data['hostPath']);
-    }
-    if (data['iscsi'] != null) {
-      iscsi = ISCSIVolumeSource.fromMap(data['iscsi']);
-    }
-    name = data['name'];
-    if (data['nfs'] != null) {
-      nfs = NFSVolumeSource.fromMap(data['nfs']);
-    }
-    if (data['persistentVolumeClaim'] != null) {
-      persistentVolumeClaim = PersistentVolumeClaimVolumeSource.fromMap(
-          data['persistentVolumeClaim']);
-    }
-    if (data['photonPersistentDisk'] != null) {
-      photonPersistentDisk = PhotonPersistentDiskVolumeSource.fromMap(
-          data['photonPersistentDisk']);
-    }
-    if (data['portworxVolume'] != null) {
-      portworxVolume = PortworxVolumeSource.fromMap(data['portworxVolume']);
-    }
-    if (data['projected'] != null) {
-      projected = ProjectedVolumeSource.fromMap(data['projected']);
-    }
-    if (data['quobyte'] != null) {
-      quobyte = QuobyteVolumeSource.fromMap(data['quobyte']);
-    }
-    if (data['rbd'] != null) {
-      rbd = RBDVolumeSource.fromMap(data['rbd']);
-    }
-    if (data['scaleIO'] != null) {
-      scaleIO = ScaleIOVolumeSource.fromMap(data['scaleIO']);
-    }
-    if (data['secret'] != null) {
-      secret = SecretVolumeSource.fromMap(data['secret']);
-    }
-    if (data['storageos'] != null) {
-      storageos = StorageOSVolumeSource.fromMap(data['storageos']);
-    }
-    if (data['vsphereVolume'] != null) {
-      vsphereVolume =
-          VsphereVirtualDiskVolumeSource.fromMap(data['vsphereVolume']);
-    }
-  }
+  factory Volume.fromJson(Map<String, dynamic> json) => _$VolumeFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'awsElasticBlockStore': (awsElasticBlockStore != null)
-            ? awsElasticBlockStore!.toMap()
-            : null,
-        'azureDisk': (azureDisk != null) ? azureDisk!.toMap() : null,
-        'azureFile': (azureFile != null) ? azureFile!.toMap() : null,
-        'cephfs': (cephfs != null) ? cephfs!.toMap() : null,
-        'cinder': (cinder != null) ? cinder!.toMap() : null,
-        'configMap': (configMap != null) ? configMap!.toMap() : null,
-        'csi': (csi != null) ? csi!.toMap() : null,
-        'downwardAPI': (downwardAPI != null) ? downwardAPI!.toMap() : null,
-        'emptyDir': (emptyDir != null) ? emptyDir!.toMap() : null,
-        'ephemeral': (ephemeral != null) ? ephemeral!.toMap() : null,
-        'fc': (fc != null) ? fc!.toMap() : null,
-        'flexVolume': (flexVolume != null) ? flexVolume!.toMap() : null,
-        'flocker': (flocker != null) ? flocker!.toMap() : null,
-        'gcePersistentDisk':
-            (gcePersistentDisk != null) ? gcePersistentDisk!.toMap() : null,
-        'gitRepo': (gitRepo != null) ? gitRepo!.toMap() : null,
-        'glusterfs': (glusterfs != null) ? glusterfs!.toMap() : null,
-        'hostPath': (hostPath != null) ? hostPath!.toMap() : null,
-        'iscsi': (iscsi != null) ? iscsi!.toMap() : null,
-        'name': name,
-        'nfs': (nfs != null) ? nfs!.toMap() : null,
-        'persistentVolumeClaim': (persistentVolumeClaim != null)
-            ? persistentVolumeClaim!.toMap()
-            : null,
-        'projected': (projected != null) ? projected!.toMap() : null,
-        'quobyte': (quobyte != null) ? quobyte!.toMap() : null,
-        'rbd': (rbd != null) ? rbd!.toMap() : null,
-        'scaleIO': (scaleIO != null) ? scaleIO!.toMap() : null,
-        'secret': (secret != null) ? secret!.toMap() : null,
-        'storageos': (storageos != null) ? storageos!.toMap() : null,
-        'vsphereVolume':
-            (vsphereVolume != null) ? vsphereVolume!.toMap() : null,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$VolumeToJson(this);
 }

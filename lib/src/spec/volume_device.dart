@@ -1,26 +1,51 @@
-/// Represents a volume device with its path and name.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'volume_device.g.dart';
+
+/// Represents a block device in Kubernetes container storage.
 ///
-/// This class is typically used to model storage devices or volumes
-/// in the system, containing essential information about the device.
+/// VolumeDevice enables containers to use raw block devices for storage.
+/// Key features include:
+/// - Direct device access
+/// - Block storage support
+/// - Device path mapping
+/// - Raw volume mounting
+///
+/// Common use cases:
+/// - Database storage
+/// - High-performance I/O
+/// - Direct device access
+/// - Storage-intensive workloads
+///
+/// Example:
+/// ```dart
+/// final device = VolumeDevice(
+///   devicePath: '/dev/xvdf',
+///   name: 'data-volume'
+/// );
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#block-devices)
+/// for more details about block device volumes.
+@JsonSerializable()
 class VolumeDevice {
-  /// The system path to the volume device.
-  late String devicePath;
+  VolumeDevice({required this.devicePath, required this.name});
 
-  /// The human-readable name of the volume device.
-  late String name;
+  /// Path inside the container at which the device will be mounted.
+  /// 
+  /// Examples:
+  /// - '/dev/xvdf'
+  /// - '/dev/sda'
+  /// - '/dev/block/volume1'
+  String devicePath;
 
-  /// Creates a [VolumeDevice] instance from a map of data.
-  ///
-  /// The map must contain the following keys:
-  /// * 'devicePath': String representing the system path to the device
-  /// * 'name': String representing the device name
-  VolumeDevice.fromMap(Map<String, dynamic> data) {
-    devicePath = data['devicePath'];
-    name = data['name'];
-  }
+  /// Name of the volume that should be mounted as a device.
+  /// 
+  /// Must match the name of a persistentVolumeClaim in the pod.
+  String name;
 
-  Map<String, dynamic> toMap() => {
-        'devicePath': devicePath,
-        'name': name,
-      };
+  factory VolumeDevice.fromJson(Map<String, dynamic> json) =>
+      _$VolumeDeviceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$VolumeDeviceToJson(this);
 }

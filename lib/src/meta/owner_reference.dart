@@ -1,59 +1,89 @@
-/// Implements the [OwnerReference] portion of the Kubernetes API specification.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'owner_reference.g.dart';
+
+/// Represents a reference to an owning Kubernetes resource.
 ///
-/// An OwnerReference contains enough information to let you identify an owning
-/// object. An owning object must be in the same namespace as the dependent, or
-/// be cluster-scoped, so there is no namespace field.
+/// OwnerReferences are used to represent relationships between Kubernetes objects,
+/// particularly for garbage collection and cascading deletion. They enable:
+/// 
+/// - Automatic cleanup of dependent objects
+/// - Tracking of resource relationships
+/// - Implementation of cascading behaviors
 ///
-/// [Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#ownerreference-v1-meta)
+/// Key use cases:
+/// - ReplicaSets owning their Pods
+/// - Deployments owning their ReplicaSets
+/// - StatefulSets owning their PersistentVolumeClaims
+///
+/// Example:
+/// ```dart
+/// final ownerRef = OwnerReference()
+///   ..apiVersion = 'apps/v1'
+///   ..kind = 'Deployment'
+///   ..name = 'nginx-deployment'
+///   ..uid = 'a123-456b-789c-0d'
+///   ..controller = true
+///   ..blockOwnerDeletion = true;
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#ownerreference-v1-meta)
+/// for more details about owner references.
+@JsonSerializable()
 class OwnerReference {
-  /// The API version of the owner object.
-  late String apiVersion;
+  /// The API version of the owner resource.
+  /// 
+  /// Examples:
+  /// - 'v1' for core resources
+  /// - 'apps/v1' for Deployments, StatefulSets
+  /// - 'batch/v1' for Jobs
+  String apiVersion;
 
-  /// If true, AND if the owner has the "foregroundDeletion" finalizer, then
-  /// the owner cannot be deleted from the key-value store until this
-  /// reference is removed.
-  late bool blockOwnerDeletion;
+  /// Controls the garbage collection behavior of the owner resource.
+  /// 
+  /// When true and the owner has the "foregroundDeletion" finalizer,
+  /// deletion of the owner will be blocked until this reference is removed.
+  /// This ensures proper cleanup of dependent resources.
+  bool blockOwnerDeletion;
 
-  /// If true, this reference points to the managing controller.
-  late bool controller;
+  /// Indicates if this reference points to the managing controller.
+  /// 
+  /// Only one OwnerReference can have controller=true. It's used
+  /// to determine which controller is the primary manager of the resource.
+  bool controller;
 
-  /// The kind of the owner object.
-  late String kind;
+  /// The kind of the owner resource.
+  /// 
+  /// Examples:
+  /// - 'Pod'
+  /// - 'Deployment'
+  /// - 'StatefulSet'
+  /// - 'Job'
+  String kind;
 
-  /// The name of the owner object.
-  late String name;
+  /// The name of the owner resource.
+  /// 
+  /// Must be in the same namespace as the dependent resource,
+  /// unless the owner is cluster-scoped.
+  String name;
 
-  /// The UID of the owner object.
-  late String uid;
+  /// The unique identifier of the owner resource.
+  /// 
+  /// This is a system-generated string that uniquely identifies
+  /// the owner resource across time and space.
+  String uid;
 
-  /// Creates an [OwnerReference] instance from a Map representation.
-  ///
-  /// [data] should contain all the required fields for an OwnerReference:
-  /// - apiVersion
-  /// - blockOwnerDeletion
-  /// - controller
-  /// - kind
-  /// - name
-  /// - uid
-  ///
-  /// Throws if any required fields are missing from the map.
-  OwnerReference.fromMap(Map<String, dynamic> data) {
-    apiVersion = data['apiVersion'];
-    blockOwnerDeletion = data['blockOwnerDeletion'];
-    controller = data['controller'];
-    kind = data['kind'];
-    name = data['name'];
-    uid = data['uid'];
-  }
+  /// Creates a new [OwnerReference] with default values.
+  OwnerReference()
+      : apiVersion = '',
+        blockOwnerDeletion = false,
+        controller = false,
+        kind = '',
+        name = '',
+        uid = '';
 
-  Map<String, dynamic> toMap() => {
-        'apiVersion': apiVersion,
-        'blockOwnerDeletion': blockOwnerDeletion,
-        'controller': controller,
-        'kind': kind,
-        'name': name,
-        'uid': uid,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  factory OwnerReference.fromJson(Map<String, dynamic> json) =>
+      _$OwnerReferenceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$OwnerReferenceToJson(this);
 }

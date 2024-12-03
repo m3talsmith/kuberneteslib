@@ -1,114 +1,111 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'se_linux_options.dart';
 import 'seccomp_profile.dart';
 import 'sysctl.dart';
 import 'windows_security_context_options.dart';
 
+part 'pod_security_context.g.dart';
+
 /// Represents security configuration settings that apply to a Pod in Kubernetes.
 ///
-/// PodSecurityContext holds pod-level security attributes and common container settings.
-/// Some fields are also available at the container level, and in such cases the
-/// container-level value will override the pod-level value.
+/// PodSecurityContext defines pod-level security attributes and common container settings.
+/// Key features include:
+/// - User and group ID management
+/// - Volume ownership controls
+/// - SELinux context configuration
+/// - Seccomp profile settings
+/// - Windows security options
+///
+/// Common use cases:
+/// - Non-root container execution
+/// - Shared storage access control
+/// - Security compliance requirements
+/// - Container isolation policies
+///
+/// Example:
+/// ```dart
+/// final securityContext = PodSecurityContext()
+///   ..runAsNonRoot = true
+///   ..runAsUser = 1000
+///   ..fsGroup = 2000
+///   ..supplementalGroups = [3000, 4000]
+///   ..seccompProfile = (SeccompProfile()
+///     ..type = 'RuntimeDefault');
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+/// for more details about Pod security contexts.
+@JsonSerializable()
 class PodSecurityContext {
+  PodSecurityContext();
+
   /// The GID (Group ID) to be used for all containers in the pod.
-  ///
-  /// This defaults to null. When specified, all containers will run with this FSGroup
-  /// unless it is overridden at the container level.
+  /// 
+  /// Used for volume access and file permissions when mounting volumes.
+  /// Containers will run with this FSGroup unless overridden at container level.
+  @JsonKey(includeIfNull: false)
   int? fsGroup;
 
   /// Defines behavior of changing ownership and permission of the volume.
-  ///
-  /// Can be "OnRootMismatch" or "Always". Defaults to "Always".
+  /// 
+  /// Values:
+  /// - "OnRootMismatch": Change permissions only if not owned by fsGroup
+  /// - "Always": Always change permissions (default)
+  @JsonKey(includeIfNull: false)
   String? fsGroupChangePolicy;
 
-  /// The GID (Group ID) to run the entrypoint of the container process.
-  ///
-  /// Uses runtime default if unset.
+  /// The GID (Group ID) to run the entrypoint of container processes.
+  /// 
+  /// Defaults to runtime default if unset. May be overridden by containers.
+  @JsonKey(includeIfNull: false)
   int? runAsGroup;
 
-  /// Indicates that the container must run as a non-root user.
-  ///
-  /// If true, the Kubelet will validate the image at runtime to ensure that it
-  /// does not run as UID 0 (root).
+  /// Requires that containers must run as non-root users.
+  /// 
+  /// If true, the Kubelet validates at runtime that container processes
+  /// don't run as UID 0 (root).
+  @JsonKey(includeIfNull: false)
   bool? runAsNonRoot;
 
-  /// The UID (User ID) to run the entrypoint of the container process.
-  ///
-  /// Uses runtime default if unset.
+  /// The UID (User ID) to run container processes.
+  /// 
+  /// Defaults to runtime default if unset. May be overridden by containers.
+  @JsonKey(includeIfNull: false)
   int? runAsUser;
 
-  /// The SELinux context to be applied to all containers.
-  ///
-  /// If unspecified, the container runtime will allocate a random SELinux context.
+  /// SELinux context applied to all containers.
+  /// 
+  /// If unspecified, the container runtime allocates a random SELinux context.
+  @JsonKey(includeIfNull: false)
   SELinuxOptions? seLinuxOptions;
 
-  /// The seccomp options to be applied to all containers.
+  /// Seccomp profile applied to all containers.
+  /// 
+  /// Controls which system calls the container processes can make.
+  @JsonKey(includeIfNull: false)
   SeccompProfile? seccompProfile;
 
-  /// A list of groups applied to the first process run in each container.
-  ///
-  /// These are additional groups relative to the primary GID specified in runAsGroup.
+  /// Additional groups applied to container processes.
+  /// 
+  /// Supplementary groups in addition to the primary GID specified in runAsGroup.
+  @JsonKey(includeIfNull: false)
   List<int>? supplementalGroups;
 
-  /// A list of sysctls to be applied to the pod.
+  /// Sysctls applied to the pod.
+  /// 
+  /// List of kernel parameters to be applied to the pod.
+  @JsonKey(includeIfNull: false)
   List<Sysctl>? sysctls;
 
-  /// Windows-specific settings applied to all containers.
+  /// Windows-specific security settings.
+  /// 
+  /// Only applicable when running on Windows nodes.
+  @JsonKey(includeIfNull: false)
   WindowsSecurityContextOptions? windowsOptions;
 
-  /// Creates a new [PodSecurityContext] instance from a map structure.
-  ///
-  /// This constructor is typically used when deserializing Kubernetes API responses.
-  ///
-  /// [data] should be a map containing the security context configuration values.
-  PodSecurityContext.fromMap(Map<String, dynamic> data) {
-    fsGroup = data['fsGroup'];
-    fsGroupChangePolicy = data['fsGroupChangePolicy'];
-    runAsGroup = data['runAsGroup'];
-    runAsNonRoot = data['runAsNonRoot'];
-    runAsUser = data['runAsUser'];
-    if (data['seLinuxOptions'] != null) {
-      seLinuxOptions = SELinuxOptions.fromMap(data['seLinuxOptions']);
-    }
-    if (data['seccompProfile'] != null) {
-      seccompProfile = SeccompProfile.fromMap(data['seccompProfile']);
-    }
-    if (data['supplementalGroups'] != null) {
-      supplementalGroups = [];
-      for (var e in data['supplementalGroups']) {
-        supplementalGroups!.add(e);
-      }
-    }
-    if (data['sysctls'] != null) {
-      sysctls = [];
-      for (var e in data['sysctls']) {
-        sysctls!.add(Sysctl.fromMap(e));
-      }
-    }
-    if (data['windowsOptions'] != null) {
-      windowsOptions =
-          WindowsSecurityContextOptions.fromMap(data['windowsOptions']);
-    }
-  }
+  factory PodSecurityContext.fromJson(Map<String, dynamic> json) =>
+      _$PodSecurityContextFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'fsGroup': fsGroup,
-        'fsGroupChangePolicy': fsGroupChangePolicy,
-        'runAsGroup': runAsGroup,
-        'runAsNonRoot': runAsNonRoot,
-        'runAsUser': runAsUser,
-        'seLinuxOptions':
-            (seLinuxOptions != null) ? seLinuxOptions!.toMap() : null,
-        'seccompProfile':
-            (seccompProfile != null) ? seccompProfile!.toMap() : null,
-        'supplementalGroups': supplementalGroups,
-        'sysctls': (sysctls != null)
-            ? sysctls!.map(
-                (e) => e.toMap(),
-              )
-            : null,
-        'windowsOptions':
-            (windowsOptions != null) ? windowsOptions!.toMap() : null,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$PodSecurityContextToJson(this);
 }

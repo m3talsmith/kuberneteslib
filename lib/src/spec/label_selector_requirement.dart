@@ -1,7 +1,39 @@
-/// A representation of a Kubernetes label selector requirement.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'label_selector_requirement.g.dart';
+
+/// Represents a label selector requirement in Kubernetes.
 ///
-/// Label selector requirements are used to filter Kubernetes resources based on
-/// their labels. Each requirement consists of a key, an operator, and a set of values.
+/// LabelSelectorRequirement defines a single rule for filtering Kubernetes resources
+/// based on their labels. Key features include:
+/// - Label key matching
+/// - Multiple operator types
+/// - Set-based selection
+/// - Existence checking
+///
+/// Common use cases:
+/// - Pod selection for services
+/// - Workload targeting
+/// - Resource filtering
+/// - Node affinity rules
+///
+/// Example:
+/// ```dart
+/// final requirement = LabelSelectorRequirement()
+///   ..key = 'environment'
+///   ..operator = 'In'
+///   ..values = ['production', 'staging'];
+/// ```
+///
+/// Supported operators:
+/// - `In`: Label value must match one of the specified values
+/// - `NotIn`: Label value must not match any of the specified values
+/// - `Exists`: Label key must exist (values are ignored)
+/// - `DoesNotExist`: Label key must not exist (values are ignored)
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
+/// for more details about label selectors.
+@JsonSerializable()
 class LabelSelectorRequirement {
   LabelSelectorRequirement({
     this.key,
@@ -10,40 +42,29 @@ class LabelSelectorRequirement {
   });
 
   /// The label key that the selector applies to.
+  /// 
+  /// Required: The name of the label key to match against.
+  /// Must be a valid label key as per Kubernetes naming conventions.
+  @JsonKey(includeFromJson: false)
   String? key;
 
   /// The operator representing the relationship between the key and values.
-  ///
-  /// Common operators include:
-  /// - In: label's value should be among the specified values
-  /// - NotIn: label's value should not be among the specified values
-  /// - Exists: label should exist
-  /// - DoesNotExist: label should not exist
+  /// 
+  /// Required: Must be one of: In, NotIn, Exists, DoesNotExist
+  /// Determines how the selector matches labels.
+  @JsonKey(includeFromJson: false)
   String? operator;
 
-  /// The set of values to match against, depending on the [operator].
-  ///
-  /// For operators like 'In' and 'NotIn', this list contains the allowed/disallowed values.
-  /// For 'Exists' and 'DoesNotExist' operators, this list is typically empty.
+  /// The set of values to match against, depending on the operator.
+  /// 
+  /// Required for In and NotIn operators.
+  /// Must be empty for Exists and DoesNotExist operators.
+  /// Values must be valid label values as per Kubernetes naming conventions.
+  @JsonKey(includeFromJson: false)
   List<String>? values;
 
-  /// Creates a [LabelSelectorRequirement] from a Map representation.
-  ///
-  /// The map should contain the following keys:
-  /// - 'key': String representing the label key
-  /// - 'operator': String representing the operator
-  /// - 'values': List<String> representing the values to match against
-  LabelSelectorRequirement.fromMap(Map<String, dynamic> data) {
-    key = data['key'];
-    operator = data['operator'];
-    values = data['values'];
-  }
+  factory LabelSelectorRequirement.fromJson(Map<String, dynamic> json) =>
+      _$LabelSelectorRequirementFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'key': key,
-        'operator': operator,
-        'values': values,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$LabelSelectorRequirementToJson(this);
 }

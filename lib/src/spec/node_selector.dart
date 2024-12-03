@@ -1,44 +1,59 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'node_selector_term.dart';
 
-/// A node selector represents the union of the results of one or more node selector terms.
+part 'node_selector.g.dart';
+
+/// Represents a node selector in Kubernetes.
 ///
-/// Node selectors are used to specify a set of node attributes that a pod should run on.
-/// The node selector is conceptually equivalent to an AND operation across all terms.
+/// NodeSelector defines a set of criteria for selecting nodes where pods can be scheduled.
+/// Key features include:
+/// - Multiple term support
+/// - AND logic between terms
+/// - Label-based selection
+/// - Field-based selection
+///
+/// Common use cases:
+/// - Hardware requirements
+/// - Zone/region selection
+/// - Operating system constraints
+/// - Resource availability filtering
+///
+/// Example:
+/// ```dart
+/// final selector = NodeSelector()
+///   ..nodeSelectorTerms = [
+///     NodeSelectorTerm()
+///       ..matchExpressions = [
+///         NodeSelectorRequirement()
+///           ..key = 'kubernetes.io/os'
+///           ..operator = 'In'
+///           ..values = ['linux']
+///       ]
+///       ..matchFields = [
+///         NodeSelectorRequirement()
+///           ..key = 'metadata.name'
+///           ..operator = 'NotIn'
+///           ..values = ['maintenance-node']
+///       ]
+///   ];
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+/// for more details about node selection.
+@JsonSerializable()
 class NodeSelector {
-  /// List of node selector terms that define the selector criteria.
-  ///
-  /// All terms must be satisfied for a node to be selected.
-  late List<NodeSelectorTerm> nodeSelectorTerms;
+  NodeSelector() : nodeSelectorTerms = [];
 
-  /// Creates a [NodeSelector] instance from a map representation.
-  ///
-  /// The [data] parameter should contain a 'nodeSelectorTerms' key with a list
-  /// of maps, where each map represents a [NodeSelectorTerm].
-  ///
-  /// Example:
-  /// ```dart
-  /// final selector = NodeSelector.fromMap({
-  ///   'nodeSelectorTerms': [
-  ///     {'matchExpressions': [...], 'matchFields': [...]}
-  ///   ]
-  /// });
-  /// ```
-  NodeSelector.fromMap(Map<String, dynamic> data) {
-    nodeSelectorTerms =
-        (data['nodeSelectorTerms'] as List<Map<String, dynamic>>)
-            .map(
-              (e) => NodeSelectorTerm.fromMap(e),
-            )
-            .toList();
-  }
+  /// List of node selector terms that define the selection criteria.
+  /// 
+  /// Each term is evaluated independently, and the node must match all requirements
+  /// within at least one term to be selected. Terms are combined using OR logic,
+  /// while requirements within each term use AND logic.
+  List<NodeSelectorTerm> nodeSelectorTerms;
 
-  Map<String, dynamic> toMap() => {
-        'nodeSelectorTerms': nodeSelectorTerms.isNotEmpty
-            ? nodeSelectorTerms.map(
-                (e) => e.toMap(),
-              )
-            : null
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  factory NodeSelector.fromJson(Map<String, dynamic> json) =>
+      _$NodeSelectorFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NodeSelectorToJson(this);
 }

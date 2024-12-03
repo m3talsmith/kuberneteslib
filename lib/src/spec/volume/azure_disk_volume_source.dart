@@ -1,30 +1,77 @@
-/// Represents an Azure Data Disk mount on the host.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'azure_disk_volume_source.g.dart';
+
+/// Represents an Azure Disk that can be mounted as a volume in Kubernetes.
+///
+/// AzureDiskVolumeSource enables pods to use Azure Managed Disks or VHDs for
+/// persistent storage. Key features include:
+/// - Support for different caching modes
+/// - Multiple disk kinds (Managed, Shared, Dedicated)
+/// - Various filesystem types
+///
+/// Common use cases:
+/// - Database storage
+/// - Stateful applications
+/// - High-performance workloads
+///
+/// Example:
+/// ```dart
+/// final azureDisk = AzureDiskVolumeSource()
+///   ..diskName = 'my-azure-disk'
+///   ..diskURI = '/subscriptions/.../disks/my-azure-disk'
+///   ..cachingMode = 'ReadWrite'
+///   ..fsType = 'ext4'
+///   ..kind = 'Managed'
+///   ..readOnly = false;
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#azuredisk)
+/// for more details about Azure Disk volumes.
+@JsonSerializable()
 class AzureDiskVolumeSource {
-  /// The host caching mode: None, Read Only, Read Write.
+  AzureDiskVolumeSource();
+
+  /// Host caching mode for the disk.
+  /// 
+  /// Possible values:
+  /// - 'None': No caching
+  /// - 'ReadOnly': Read-only caching
+  /// - 'ReadWrite': Read-write caching
   late String cachingMode;
 
-  /// The name of the data disk in the Azure Portal.
+  /// Name of the Azure Data Disk.
+  /// 
+  /// This must match the disk name in the Azure portal or CLI.
   late String diskName;
 
-  /// The URI of the data disk in the Azure Portal.
+  /// The URI the data disk in the Azure environment.
+  /// 
+  /// Format: '/subscriptions/{sub-id}/resourcegroups/{group-name}/...'
   late String diskURI;
 
-  /// Filesystem type to mount (ex. 'ext4', 'xfs', 'ntfs').
+  /// The filesystem type to mount.
+  /// 
+  /// Must be a filesystem type supported by the host operating system.
+  /// Common values: 'ext4', 'xfs', 'ntfs'
   late String fsType;
 
-  /// Kind of disk (Shared, Dedicated, Managed).
+  /// The type of Azure Data Disk to use.
+  /// 
+  /// Possible values:
+  /// - 'Shared': multiple VMs can share the disk
+  /// - 'Dedicated': single VM access
+  /// - 'Managed': Azure managed disk
   late String kind;
 
-  /// Whether to force the read-only setting in VolumeMounts.
+  /// Forces the volume to be mounted read-only.
+  /// 
+  /// When true, the disk will be mounted with read-only access.
+  /// Defaults to false (read/write).
   late bool readOnly;
 
-  /// Creates a new [AzureDiskVolumeSource] instance from a map structure.
-  AzureDiskVolumeSource.fromMap(Map<String, dynamic> data) {
-    cachingMode = data['cachingMode'];
-    diskName = data['diskName'];
-    diskURI = data['diskURI'];
-    fsType = data['fsType'];
-    kind = data['kind'];
-    readOnly = data['readOnly'];
-  }
+  factory AzureDiskVolumeSource.fromJson(Map<String, dynamic> json) =>
+      _$AzureDiskVolumeSourceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AzureDiskVolumeSourceToJson(this);
 }

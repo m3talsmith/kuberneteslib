@@ -1,35 +1,63 @@
-/// A selector for Kubernetes Secret keys that allows referencing specific entries in a Secret.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'secret_key_selector.g.dart';
+
+/// Represents a selector for specific keys within Kubernetes Secrets.
+///
+/// SecretKeySelector enables precise referencing of individual secret values.
+/// Key features include:
+/// - Single key selection
+/// - Optional secret handling
+/// - Granular secret access
+/// - Error handling control
+///
+/// Common use cases:
+/// - Individual credential access
+/// - Specific API key retrieval
+/// - Certificate selection
+/// - Token management
+///
+/// Example:
+/// ```dart
+/// final selector = SecretKeySelector()
+///   ..name = 'app-secrets'
+///   ..key = 'database-password'
+///   ..optional = false;
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets)
+/// for more details about accessing Secret keys.
+@JsonSerializable()
 class SecretKeySelector {
-  /// The key of the secret to select from.
-  /// Must be a valid secret key.
+  SecretKeySelector();
+
+  /// The key to select from the secret.
+  /// 
+  /// Must be a valid key name in the referenced secret.
+  /// Common examples: 'username', 'password', 'api-key', 'tls.crt'
+  @JsonKey(includeIfNull: false)
   String? key;
 
-  /// Name of the referent Secret.
-  /// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+  /// Name of the secret containing the key.
+  /// 
+  /// The secret must exist in the same namespace as the pod
+  /// referencing this selector.
+  @JsonKey(includeIfNull: false)
   String? name;
 
-  /// Specify whether the Secret or its key must be defined.
-  /// When true, the secret referenced may be missing, and null will be returned.
-  /// When false or not specified, the secret referenced must exist and contain the key.
+  /// Controls whether the secret and key must exist.
+  /// 
+  /// When true:
+  /// - Missing secrets or keys won't cause errors
+  /// - Returns null if secret or key not found
+  /// When false (default):
+  /// - Missing secrets or keys will cause errors
+  /// - Pod startup fails if secret or key not found
+  @JsonKey(includeIfNull: false)
   bool? optional;
 
-  /// Creates a new [SecretKeySelector] instance from a map structure.
-  ///
-  /// The map should contain the following keys:
-  /// - 'key': The key within the Secret
-  /// - 'name': The name of the Secret
-  /// - 'optional': Whether the Secret or key is optional
-  SecretKeySelector.fromMap(Map<String, dynamic> data) {
-    key = data['key'];
-    name = data['name'];
-    optional = data['optional'];
-  }
+  factory SecretKeySelector.fromJson(Map<String, dynamic> json) =>
+      _$SecretKeySelectorFromJson(json);
 
-  Map<String, dynamic> toMap() => {
-        'key': key,
-        'name': name,
-        'optional': optional,
-      }..removeWhere(
-          (key, value) => value == null,
-        );
+  Map<String, dynamic> toJson() => _$SecretKeySelectorToJson(this);
 }

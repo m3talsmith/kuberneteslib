@@ -1,45 +1,72 @@
 import '../local_object_reference.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-/// Represents a Container Storage Interface (CSI) volume source configuration.
-/// CSI allows storage drivers to be developed independently from Kubernetes.
+part 'csi_volume_source.g.dart';
+
+/// Represents a Container Storage Interface (CSI) volume in Kubernetes.
+///
+/// CSIVolumeSource enables pods to use storage from external providers through
+/// the Container Storage Interface. Key features include:
+/// - Vendor-agnostic storage integration
+/// - Dynamic volume provisioning
+/// - Storage feature standardization
+///
+/// Common use cases:
+/// - Cloud provider storage integration
+/// - Enterprise storage systems
+/// - Custom storage solutions
+///
+/// Example:
+/// ```dart
+/// final csiVolume = CSIVolumeSource()
+///   ..driver = 'ebs.csi.aws.com'
+///   ..volumeAttributes = {
+///     'size': '10Gi',
+///     'type': 'gp3'
+///   }
+///   ..fsType = 'ext4'
+///   ..readOnly = false
+///   ..nodePublishSecretRef = LocalObjectReference()..name = 'csi-secret';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#csi)
+/// for more details about CSI volumes.
+@JsonSerializable()
 class CSIVolumeSource {
-  /// The name of the CSI driver that handles this volume.
-  /// This field is required.
+  CSIVolumeSource();
+
+  /// Name of the CSI driver to use for this volume.
+  /// 
+  /// Must match the driver name returned by CSI GetPluginInfo call.
+  /// Required field.
   late String driver;
 
-  /// Filesystem type to mount. Must be a filesystem type supported by the host OS.
-  /// Examples include "ext4", "xfs", "ntfs".
+  /// Filesystem type to mount on the volume.
+  /// 
+  /// Must be a filesystem type supported by the host operating system.
+  /// Examples: "ext4", "xfs", "ntfs"
   late String fsType;
 
-  /// Reference to the secret object containing sensitive information to pass to
-  /// the CSI driver to complete the CSI NodePublishVolume call.
-  /// This secret will be mounted into the pod where the volume is attached.
+  /// Reference to the secret for CSI node publish operations.
+  /// 
+  /// Contains credentials needed by the CSI driver to complete the
+  /// NodePublishVolume call.
   late LocalObjectReference nodePublishSecretRef;
 
-  /// Specifies whether the volume should be mounted as read-only.
-  /// If true, the volume will be mounted with read-only permissions.
-  /// Defaults to false.
+  /// Controls read-only access to the volume.
+  /// 
+  /// When true, the volume will be mounted read-only.
+  /// Defaults to false (read/write).
   late bool readOnly;
 
-  /// Extra parameters to pass to the CSI driver when attaching the volume.
-  /// These parameters are specific to the CSI driver and can be used to
-  /// configure driver-specific behavior.
+  /// Driver-specific parameters for this volume.
+  /// 
+  /// These parameters are passed directly to the CSI driver
+  /// to configure volume-specific features.
   late Map<String, dynamic> volumeAttributes;
 
-  /// Creates a new [CSIVolumeSource] instance from a map structure.
-  /// 
-  /// The [data] parameter must contain the following keys:
-  /// - 'driver': String identifying the CSI driver
-  /// - 'fsType': String specifying the filesystem type
-  /// - 'nodePublishSecretRef': Map containing secret reference details
-  /// - 'readOnly': Boolean indicating read-only status
-  /// - 'volumeAttributes': Map of string key-value pairs for driver parameters
-  CSIVolumeSource.fromMap(Map<String, dynamic> data) {
-    driver = data['driver'];
-    fsType = data['fsType'];
-    nodePublishSecretRef =
-        LocalObjectReference.fromMap(data['nodePublishSecretRef']);
-    readOnly = data['readOnly'];
-    volumeAttributes = data['volumeAttributes'] as Map<String, dynamic>;
-  }
+  factory CSIVolumeSource.fromJson(Map<String, dynamic> json) =>
+      _$CSIVolumeSourceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CSIVolumeSourceToJson(this);
 }

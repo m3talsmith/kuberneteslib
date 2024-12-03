@@ -1,33 +1,53 @@
-/// Represents a Photon Controller persistent disk volume source.
-/// 
-/// This class is used to define the configuration for a VMware Photon Controller
-/// persistent disk when used as a volume source in Kubernetes.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'photon_persistent_disk_volume_source.g.dart';
+
+/// Represents a VMware Photon Controller persistent disk volume in Kubernetes.
+///
+/// PhotonPersistentDiskVolumeSource enables pods to use VMware Photon Platform's
+/// persistent disk storage. Key features include:
+/// - Persistent block storage
+/// - Cross-pod data sharing
+/// - VMware platform integration
+/// - Filesystem type selection
+///
+/// Common use cases:
+/// - VMware-based deployments
+/// - Persistent application storage
+/// - Database volumes
+/// - Stateful workloads
+///
+/// Example:
+/// ```dart
+/// final photonDisk = PhotonPersistentDiskVolumeSource()
+///   ..pdID = 'disk-123456'
+///   ..fsType = 'ext4';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#photon)
+/// for more details about Photon persistent disk volumes.
+@JsonSerializable()
 class PhotonPersistentDiskVolumeSource {
+  PhotonPersistentDiskVolumeSource();
+
   /// The filesystem type to mount.
   /// 
   /// Must be a filesystem type supported by the host operating system.
   /// Examples: "ext4", "xfs", "ntfs".
   /// 
-  /// This field is optional. If not specified, the default filesystem type
+  /// Optional: If not specified, the default filesystem type
   /// configured in the Kubernetes cluster will be used.
   late String fsType;
 
-  /// ID of the persistent disk resource in Photon Controller.
+  /// ID that identifies the Photon Controller persistent disk.
   /// 
-  /// This ID uniquely identifies the Photon Controller persistent disk.
-  /// The disk must already exist in the Photon Controller platform before
-  /// it can be used as a volume source.
-  /// 
-  /// This field is required.
+  /// Required: This ID must correspond to an existing persistent disk resource
+  /// in the Photon Platform. The disk must be created before it can be used
+  /// as a volume source.
   late String pdID;
 
-  /// Creates a new [PhotonPersistentDiskVolumeSource] instance from a map.
-  /// 
-  /// The [data] parameter must contain the following keys:
-  /// - 'fsType': The filesystem type (optional)
-  /// - 'pdID': The Photon Controller persistent disk ID (required)
-  PhotonPersistentDiskVolumeSource.fromMap(Map<String, dynamic> data) {
-    fsType = data['fsType'];
-    pdID = data['pdID'];
-  }
+  factory PhotonPersistentDiskVolumeSource.fromJson(Map<String, dynamic> json) =>
+      _$PhotonPersistentDiskVolumeSourceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PhotonPersistentDiskVolumeSourceToJson(this);
 }

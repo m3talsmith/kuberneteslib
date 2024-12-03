@@ -1,67 +1,101 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'label_selector.dart';
 import 'resource_requirements.dart';
 import 'typed_local_object_reference.dart';
 import 'typed_object_reference.dart';
 
-/// Represents the specification of a Persistent Volume Claim in Kubernetes.
-/// 
-/// A PersistentVolumeClaim (PVC) is a request for storage by a user that can be fulfilled
-/// by a PersistentVolume. This specification defines the desired characteristics of the claim.
+part 'persistent_volume_claim_spec.g.dart';
+
+/// Represents a PersistentVolumeClaim (PVC) specification in Kubernetes.
+///
+/// PersistentVolumeClaimSpec defines the desired characteristics of a volume
+/// that a pod can mount. Key features include:
+/// - Access mode configuration
+/// - Storage capacity requests
+/// - Volume selection criteria
+/// - Storage class specification
+///
+/// Common use cases:
+/// - Database storage
+/// - Shared file systems
+/// - Application data persistence
+/// - Stateful workload storage
+///
+/// Example:
+/// ```dart
+/// final pvcSpec = PersistentVolumeClaimSpec()
+///   ..accessModes = ['ReadWriteOnce']
+///   ..resources = (ResourceRequirements()
+///     ..requests = {'storage': '10Gi'})
+///   ..storageClassName = 'standard';
+/// ```
+///
+/// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+/// for more details about persistent volume claims.
+@JsonSerializable()
 class PersistentVolumeClaimSpec {
-  /// List of access modes the volume should support.
+  PersistentVolumeClaimSpec()
+      : accessModes = [],
+        dataSource = TypedLocalObjectReference(),
+        dataSourceRef = TypedObjectReference(),
+        resources = ResourceRequirements(),
+        selector = LabelSelector();
+
+  /// List of desired access modes for the volume.
   /// 
-  /// Common values include:
-  /// * ReadWriteOnce (RWO) - can be mounted as read-write by a single node
-  /// * ReadOnlyMany (ROX) - can be mounted read-only by many nodes
-  /// * ReadWriteMany (RWX) - can be mounted as read-write by many nodes
+  /// Values:
+  /// - `ReadWriteOnce` (RWO): Volume can be mounted as read-write by a single node
+  /// - `ReadOnlyMany` (ROX): Volume can be mounted as read-only by many nodes
+  /// - `ReadWriteMany` (RWX): Volume can be mounted as read-write by many nodes
+  /// - `ReadWriteOncePod` (RWOP): Volume can be mounted as read-write by a single pod
   late List<String> accessModes;
 
-  /// Local volume data source reference.
+  /// Reference to a volume snapshot or other data source in the same namespace.
   /// 
-  /// Defines a reference to a resource in the same namespace that contains the data
-  /// to be restored.
+  /// Used for pre-populating the PVC with data from another source.
+  /// Only one of dataSource or dataSourceRef can be specified.
   late TypedLocalObjectReference dataSource;
 
-  /// Reference to the volume data source.
+  /// Reference to a volume snapshot or other data source, potentially in another namespace.
   /// 
-  /// Similar to dataSource but can reference resources in other namespaces.
+  /// Similar to dataSource but allows cross-namespace references.
+  /// Only one of dataSource or dataSourceRef can be specified.
   late TypedObjectReference dataSourceRef;
 
-  /// Resource requirements for the claim.
+  /// Resource requirements for the persistent volume claim.
   /// 
-  /// Specifies the minimum resources the volume should have, such as storage size.
+  /// Typically specifies storage size requirements using the 'requests' field.
+  /// Example: {'storage': '10Gi'}
   late ResourceRequirements resources;
 
-  /// Label selector for volume selection.
+  /// Label selector to filter potential persistent volumes.
   /// 
-  /// Used to filter the set of volumes that can be bound to this claim.
+  /// Used to bind to specific PVs based on their labels.
+  /// If specified, only volumes matching the selector can be bound.
   late LabelSelector selector;
 
-  /// Name of the StorageClass required by the claim.
+  /// Name of the desired StorageClass for this claim.
   /// 
-  /// The StorageClass will determine what type of volume is provisioned.
+  /// The StorageClass determines the provisioning behavior and type of storage.
+  /// Use empty string for immediate volume binding, or null to use the default class.
   late String storageClassName;
 
-  /// The volume mode describes how a volume is intended to be consumed.
+  /// Defines how the volume should be formatted and mounted.
   /// 
-  /// Values can be "Filesystem" or "Block".
+  /// Values:
+  /// - `Filesystem`: Traditional filesystem-based storage (default)
+  /// - `Block`: Raw block device without a filesystem
   late String volumeMode;
 
-  /// Name of the specific volume to bind to.
+  /// Name of a specific PersistentVolume to bind to.
   /// 
-  /// If specified, this volume will be bound to this claim.
+  /// If specified, binds exclusively to the named volume.
+  /// Volume must exist and match other requirements (size, access modes, etc.).
   late String volumeName;
 
-  /// Creates a new PersistentVolumeClaimSpec from a map structure.
-  /// 
-  /// [data] should contain all the necessary fields to populate the spec.
-  PersistentVolumeClaimSpec.fromMap(Map<String, dynamic> data) {
-    accessModes = data['accessModes'] as List<String>;
-    dataSource = TypedLocalObjectReference.fromMap(data['dataSource']);
-    dataSourceRef = TypedObjectReference.fromMap(data['dataSourceRef']);
-    resources = ResourceRequirements.fromMap(data['resources']);
-    selector = LabelSelector.fromMap(data['selector']);
-    volumeMode = data['volumeMode'];
-    volumeName = data['volumeName'];
-  }
+  factory PersistentVolumeClaimSpec.fromJson(Map<String, dynamic> json) =>
+      _$PersistentVolumeClaimSpecFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PersistentVolumeClaimSpecToJson(this);
 }
