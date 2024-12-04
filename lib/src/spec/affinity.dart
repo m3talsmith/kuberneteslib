@@ -127,6 +127,7 @@ class NodeAffinity implements Affinity {
   factory NodeAffinity.fromJson(Map<String, dynamic> json) =>
       _$NodeAffinityFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$NodeAffinityToJson(this);
 
   @override
@@ -162,6 +163,7 @@ class PodAffinity implements Affinity {
   factory PodAffinity.fromJson(Map<String, dynamic> json) =>
       _$PodAffinityFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$PodAffinityToJson(this);
 
   @override
@@ -194,6 +196,7 @@ class PodAntiAffinity implements Affinity {
   factory PodAntiAffinity.fromJson(Map<String, dynamic> json) =>
       _$PodAntiAffinityFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$PodAntiAffinityToJson(this);
 
   @override

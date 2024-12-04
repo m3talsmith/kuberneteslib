@@ -70,6 +70,7 @@ class ResourceTemplate extends Resource {
   /// 
   /// Only includes non-null fields in the output to maintain
   /// clean and minimal JSON representations.
+  @override
   Map<String, dynamic> toJson() => <String, dynamic>{
         if (metadata case final value?) 'metadata': value,
         if (spec case final value?) 'spec': value,

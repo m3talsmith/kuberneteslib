@@ -66,10 +66,11 @@ class Quantity {
   }
 
   @override
-  String toString() => value == 0.1 ? '100m' : '${value}';
+  String toString() => value == 0.1 ? '100m' : '$value';
 
   bool operator <(Quantity other) => value < other.value;
   bool operator >(Quantity other) => value > other.value;
+  @override
   bool operator ==(Object other) => other is Quantity && value == other.value;
   
   @override

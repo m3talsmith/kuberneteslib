@@ -11,7 +11,6 @@ import 'pod_readiness_gate.dart';
 import 'pod_resource_claim.dart';
 import 'pod_scheduling_gate.dart';
 import 'pod_security_context.dart';
-import 'spec.dart';
 import 'toleration.dart';
 import 'topology_spread_constraint.dart';
 import 'volume.dart';
@@ -277,5 +276,6 @@ class PodSpec implements ObjectSpec {
   factory PodSpec.fromJson(Map<String, dynamic> json) =>
       _$PodSpecFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$PodSpecToJson(this);
 }
