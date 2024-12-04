@@ -6,9 +6,16 @@ part of 'config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Configs _$ConfigsFromJson(Map<String, dynamic> json) => Configs();
+Configs _$ConfigsFromJson(Map<String, dynamic> json) => Configs(
+      configs: (json['configs'] as List<dynamic>?)
+              ?.map((e) => Config.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    );
 
-Map<String, dynamic> _$ConfigsToJson(Configs instance) => <String, dynamic>{};
+Map<String, dynamic> _$ConfigsToJson(Configs instance) => <String, dynamic>{
+      'configs': instance.configs,
+    };
 
 Config _$ConfigFromJson(Map<String, dynamic> json) => Config()
   ..apiVersion = json['apiVersion'] as String?
