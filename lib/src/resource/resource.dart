@@ -94,37 +94,16 @@ class Resource implements ResourceBase {
 
   /// [ignoreList] is a list of [ResourceKind] enums to ignore when listing
   /// resources.
-  static const ignoreList = [
-    ResourceKind.unknown,
-    ResourceKind.container,
-    ResourceKind.volume,
-    ResourceKind.binding,
-  ];
+  static List<ResourceKind> get ignoreList => ResourceKind.ignoreList;
 
   /// [ignoreShow] is a list of [ResourceKind] enums to ignore when showing
   /// resources.
-  static const ignoreShow = [
-    ...ignoreList,
-    ResourceKind.persistentVolume,
-  ];
+  static List<ResourceKind> get ignoreShow => ResourceKind.ignoreShow;
 
   /// [apiReadKinds] gathers a list of API readable [ResourceKind]s.
   ///
   /// Will return the list sorted by [ResourceKind.name], with [ignoreList]
-  /// resources removed.
-  static List<ResourceKind> get apiReadKinds {
-    List<ResourceKind> values = [];
-    for (var e in ResourceKind.values) {
-      values.add(e);
-    }
-    return values
-      ..sort(
-        (a, b) => a.name.compareTo(b.name),
-      )
-      ..removeWhere(
-        (e) => ignoreList.contains(e),
-      );
-  }
+  static List<ResourceKind> get apiReadKinds => ResourceKind.apiReadKinds;
 
   /// [getApi] returns the correct API path for a given [resourceKind].
   ///

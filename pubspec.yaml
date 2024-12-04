@@ -1,6 +1,6 @@
 name: kuberneteslib
 description: A library that implements the Kubernetes API natively. It is written using the direct specs and currently covers most of the V1 Core, Apps, and Batch resources.
-version: 0.3.14
+version: 0.3.15
 repository: https://github.com/m3talsmith/kuberneteslib
 
 environment:

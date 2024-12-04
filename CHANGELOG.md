@@ -1,5 +1,10 @@
 # KubernetesLib
 
+## 0.3.15
+
+- Added `apiReadKinds` to Resource
+- Added `ignoreList` and `ignoreShow` to ResourceKind
+
 ## 0.3.14
 
 - Fixed json serialization for Config
