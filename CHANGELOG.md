@@ -1,9 +1,13 @@
 # KubernetesLib
 
+## 0.3.11
+
+- Added common List methods to Configs wrapper
+- Added documentation for Configs
+
 ## 0.3.10
 
 - Improved documentation for many classes
-
 
 ## 0.3.9
 
