@@ -7,14 +7,13 @@ part of 'cluster.dart';
 // **************************************************************************
 
 Cluster _$ClusterFromJson(Map<String, dynamic> json) => Cluster(
-      certificateAuthorityData: json['certificateAuthorityData'] as String?,
+      certificateAuthorityData: json['certificate-authority-data'] as String?,
       server: json['server'] as String?,
       name: json['name'] as String?,
     );
 
 Map<String, dynamic> _$ClusterToJson(Cluster instance) => <String, dynamic>{
       if (instance.certificateAuthorityData case final value?)
-        'certificateAuthorityData': value,
+        'certificate-authority-data': value,
       if (instance.server case final value?) 'server': value,
-      if (instance.name case final value?) 'name': value,
     };

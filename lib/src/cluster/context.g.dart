@@ -15,5 +15,4 @@ Context _$ContextFromJson(Map<String, dynamic> json) => Context(
 Map<String, dynamic> _$ContextToJson(Context instance) => <String, dynamic>{
       if (instance.cluster case final value?) 'cluster': value,
       if (instance.user case final value?) 'user': value,
-      if (instance.name case final value?) 'name': value,
     };

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:json2yaml/json2yaml.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:yaml/yaml.dart';
@@ -25,7 +27,7 @@ part 'config.g.dart';
 
 class Configs {
   /// Creates a new [Configs] instance with an optional list of [Config] objects.
-  Configs({this.configs = const []});
+  Configs({List<Config>? configs}) : configs = configs ?? [];
 
   /// The list of configurations
   List<Config> configs = [];
@@ -289,19 +291,20 @@ class Configs {
   /// the returned list will not affect the original [Configs] instance.
   List<Config> toList() => configs;
 
-  factory Configs.fromJson(List<dynamic> json) {
+  factory Configs.fromJson(Map<String, dynamic> json) {
     final configs = Configs();
-    for (var e in json) {
+    for (var e in json['configs']) {
       configs.add(Config.fromJson(e as Map<String, dynamic>));
     }
     return configs;
   }
 
-  List<dynamic> toJson() {
-    final json = <dynamic>[];
+  Map<String, dynamic> toJson() {
+    final configJson = <dynamic>[];
     for (var config in configs) {
-      json.add(config.toJson());
+      configJson.add(config.toJson());
     }
+    final json = {'configs': configJson};
     return json;
   }
 }
@@ -364,7 +367,7 @@ class Config {
   @JsonKey(includeIfNull: false)
   String? displayName;
 
-  factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
+  factory Config.fromJson(Map<String, dynamic> data) => _$ConfigFromJson(data);
 
   Map<String, dynamic> toJson() => _$ConfigToJson(this);
 

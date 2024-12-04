@@ -400,7 +400,9 @@ class Resource implements ResourceBase {
       namespace: json['namespace'] as String?,
       auth: json['auth'] == null
           ? null
-          : ClusterAuth.fromJson(json['auth'] as Map<String, dynamic>),
+          : (json['auth'] is Map<String, dynamic>)
+              ? ClusterAuth.fromJson(json['auth'] as Map<String, dynamic>)
+              : json['auth'],
     )
       ..spec = json['spec'] == null
           ? null
@@ -416,8 +418,5 @@ class Resource implements ResourceBase {
             if (metadata case final value?) 'metadata': value,
             if (spec case final value?) 'spec': value,
             if (status case final value?) 'status': value,
-            if (kind case final value?) 'kind': value,
-            if (namespace case final value?) 'namespace': value,
-            if (auth case final value?) 'auth': value,
           };
 }

@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.3.14
+
+- Fixed json serialization for Config
+
 ## 0.3.13
 
 - Added `toJson` method to Configs

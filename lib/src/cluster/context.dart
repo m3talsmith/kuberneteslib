@@ -56,10 +56,20 @@ class Context {
   /// 
   /// This name is used to reference the context in the kubeconfig,
   /// particularly when setting the current-context.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, includeToJson: false)
   String? name;
 
-  factory Context.fromJson(Map<String, dynamic> json) => _$ContextFromJson(json);
-  
-  Map<String, dynamic> toJson() => _$ContextToJson(this);
+  factory Context.fromJson(Map<String, dynamic> json) {
+    final contextData = json['context'];
+    contextData['name'] = json['name'];
+    final context = _$ContextFromJson(contextData);
+    return context;
+  }
+
+  Map<String, dynamic> toJson() {
+    final contextJson = _$ContextToJson(this);
+    contextJson.remove('name');
+    final json = {'context': contextJson, 'name': name};
+    return json;
+  }
 }

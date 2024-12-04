@@ -81,10 +81,15 @@ class ClusterAuth {
   /// Extracts and decodes the necessary certificate and authentication data from the config.
   /// This includes certificate authority data, client certificates, and private keys.
   ClusterAuth.fromConfig(Config config) {
-    final context =
-        config.contexts.firstWhere((e) => e.name == config.currentContext);
-    cluster = config.clusters.firstWhere((e) => e.name == context.cluster);
-    user = config.users.firstWhere((e) => e.name == context.user);
+    final context = config.contexts.firstWhere((e) =>
+        (e.name != null && e.name == config.currentContext),
+        orElse: () => config.contexts.first);
+    cluster = config.clusters.firstWhere((e) =>
+        (e.name != null && e.name == context.cluster),
+        orElse: () => config.clusters.first);
+    user = config.users.firstWhere((e) =>
+        (e.name != null && e.name == context.user),
+        orElse: () => config.users.first);
 
     clientCertificateAuthority =
         base64Decode(cluster?.certificateAuthorityData ?? '');
