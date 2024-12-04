@@ -22,7 +22,7 @@ part 'config.g.dart';
 ///   Config()..currentContext = 'prod-cluster',
 /// ]);
 /// ```
-@JsonSerializable()
+
 class Configs {
   /// Creates a new [Configs] instance with an optional list of [Config] objects.
   Configs({this.configs = const []});
@@ -289,10 +289,21 @@ class Configs {
   /// the returned list will not affect the original [Configs] instance.
   List<Config> toList() => configs;
 
-  factory Configs.fromJson(Map<String, dynamic> json) =>
-      _$ConfigsFromJson(json);
+  factory Configs.fromJson(List<dynamic> json) {
+    final configs = Configs();
+    for (var e in json) {
+      configs.add(Config.fromJson(e as Map<String, dynamic>));
+    }
+    return configs;
+  }
 
-  Map<String, dynamic> toJson() => _$ConfigsToJson(this);
+  List<dynamic> toJson() {
+    final json = <dynamic>[];
+    for (var config in configs) {
+      json.add(config.toJson());
+    }
+    return json;
+  }
 }
 
 /// Represents a complete Kubernetes configuration file.
