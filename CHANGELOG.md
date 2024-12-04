@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.3.12
+
+- Added `fromString` method to ResourceKind
+
 ## 0.3.11
 
 - Added common List methods to Configs wrapper
