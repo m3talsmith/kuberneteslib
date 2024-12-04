@@ -1,5 +1,10 @@
 # KubernetesLib
 
+## 0.3.13
+
+- Added `toJson` method to Configs
+- Added `fromJson` method to Configs
+
 ## 0.3.12
 
 - Added `fromString` method to ResourceKind
