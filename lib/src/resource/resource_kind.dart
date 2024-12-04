@@ -42,7 +42,39 @@ enum ResourceKind {
 
   /// Network endpoints for a Service.
   /// Tracks the IPs and ports for a set of Pods.
-  endpoints, unknown, volume, binding, persistentVolume, daemonSet, deployment, replicaSet, statefulSet, controllerRevision, cronJob,
+  endpoints,
 
-  // ... existing enum values with their documentation ...
+  /// Unknown resource kind.
+  unknown,
+
+  /// A storage unit that can be mounted to a pod.
+  volume,
+
+  /// A binding is used to bind a pod to a node.
+  binding,
+
+  /// A persistent storage resource in Kubernetes.
+  persistentVolume,
+
+  /// A controller that ensures a set of nodes run a copy of a pod.
+  daemonSet,
+
+  /// A controller that manages a set of identical pods.
+  deployment,
+
+  /// A controller that manages a set of pod replicas.
+  replicaSet,
+
+  /// A controller that manages pods with unique identities.
+  statefulSet,
+
+  /// A revision of a controller's state.
+  controllerRevision,
+
+  /// A job that runs on a schedule.
+  cronJob;
+
+  /// Converts a string to a [ResourceKind].
+  /// Returns [ResourceKind.unknown] if the string does not match any known resource kind.
+  static ResourceKind fromString(String value) => ResourceKind.values.firstWhere((e) => e.name == value, orElse: () => ResourceKind.unknown);
 }
