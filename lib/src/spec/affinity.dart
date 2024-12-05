@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:json_annotation/json_annotation.dart';
 
@@ -56,14 +57,25 @@ enum AffinityKind {
 /// JSON converter for Affinity objects.
 ///
 /// Handles serialization and deserialization of Affinity instances to/from JSON.
-class AffinityConverter implements JsonConverter<Affinity, String> {
+class AffinityConverter implements JsonConverter<Affinity, Map<String, dynamic>> {
   const AffinityConverter();
 
   @override
-  Affinity fromJson(String json) => Affinity.fromJson(jsonDecode(json));
+  Affinity fromJson(Map<String, dynamic> data) {
+    if (data.containsKey('nodeAffinity')) {
+      return NodeAffinity.fromJson(data);
+    }
+    if (data.containsKey('podAffinity')) {
+      return PodAffinity.fromJson(data);
+    }
+    if (data.containsKey('podAntiAffinity')) {
+      return PodAntiAffinity.fromJson(data);
+    }
+    return Affinity.fromJson(data);
+  }
 
   @override
-  String toJson(Affinity object) => jsonEncode(object.toJson());
+  Map<String, dynamic> toJson(Affinity object) => object.toJson();
 }
 
 /// Base class for Kubernetes affinity configurations.
@@ -113,16 +125,14 @@ class Affinity {
 /// Used to constrain which nodes your pod can be scheduled on based on node labels
 @JsonSerializable()
 class NodeAffinity implements Affinity {
-  NodeAffinity()
-      : preferredDuringSchedulingIgnoredDuringExecution = [],
-        requiredDuringSchedulingIgnoredDuringExecution = NodeSelector();
+  NodeAffinity();
 
   /// Preferred node scheduling requirements that the scheduler will try to meet
   /// but will not guarantee
-  final List<PreferredSchedulingTerm> preferredDuringSchedulingIgnoredDuringExecution;
+  List<PreferredSchedulingTerm>? preferredDuringSchedulingIgnoredDuringExecution;
 
   /// Required node scheduling requirements that must be met for pod scheduling
-  final NodeSelector requiredDuringSchedulingIgnoredDuringExecution;
+  NodeSelector? requiredDuringSchedulingIgnoredDuringExecution;
 
   factory NodeAffinity.fromJson(Map<String, dynamic> json) =>
       _$NodeAffinityFromJson(json);
@@ -149,16 +159,14 @@ class NodeAffinity implements Affinity {
 /// that use them to reduce latency.
 @JsonSerializable()
 class PodAffinity implements Affinity {
-  PodAffinity()
-      : preferredDuringSchedulingIgnoredDuringExecution = [],
-        requiredDuringSchedulingIgnoredDuringExecution = [];
+  PodAffinity();
 
   /// Preferred pod scheduling requirements that the scheduler will try to meet
   /// but will not guarantee
-  List<WeightedPodAffinityTerm> preferredDuringSchedulingIgnoredDuringExecution;
+  List<WeightedPodAffinityTerm>? preferredDuringSchedulingIgnoredDuringExecution;
 
   /// Required pod scheduling requirements that must be met for pod scheduling
-  List<PodAffinityTerm> requiredDuringSchedulingIgnoredDuringExecution;
+  List<PodAffinityTerm>? requiredDuringSchedulingIgnoredDuringExecution;
 
   factory PodAffinity.fromJson(Map<String, dynamic> json) =>
       _$PodAffinityFromJson(json);
@@ -187,11 +195,10 @@ class PodAntiAffinity implements Affinity {
   PodAntiAffinity();
   /// Preferred pod anti-affinity scheduling requirements that the scheduler will try to meet
   /// but will not guarantee
-  late List<WeightedPodAffinityTerm>
-      preferredDuringSchedulingIgnoredDuringExecution;
-
+  List<WeightedPodAffinityTerm>? preferredDuringSchedulingIgnoredDuringExecution;
+  
   /// Required pod anti-affinity scheduling requirements that must be met for pod scheduling
-  late List<PodAffinityTerm> requiredDuringSchedulingIgnoredDuringExecution;
+  List<PodAffinityTerm>? requiredDuringSchedulingIgnoredDuringExecution;
 
   factory PodAntiAffinity.fromJson(Map<String, dynamic> json) =>
       _$PodAntiAffinityFromJson(json);

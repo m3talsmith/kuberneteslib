@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:json_annotation/json_annotation.dart';
 
 import 'affinity.dart';
@@ -273,8 +275,7 @@ class PodSpec implements ObjectSpec {
   /// [data] should be a Map containing the pod specification fields as defined
   /// in the Kubernetes API. This constructor handles the deserialization of
   /// all nested objects and lists.
-  factory PodSpec.fromJson(Map<String, dynamic> json) =>
-      _$PodSpecFromJson(json);
+  factory PodSpec.fromJson(Map<String, dynamic> data) => _$PodSpecFromJson(data);
 
   @override
   Map<String, dynamic> toJson() => _$PodSpecToJson(this);

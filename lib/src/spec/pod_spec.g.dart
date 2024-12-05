@@ -11,7 +11,7 @@ PodSpec _$PodSpecFromJson(Map<String, dynamic> json) => PodSpec(
           ?.map((e) => Container.fromJson(e as Map<String, dynamic>))
           .toList(),
       activeDeadlineSeconds: (json['activeDeadlineSeconds'] as num?)?.toInt(),
-      affinity: _$JsonConverterFromJson<String, Affinity>(
+      affinity: _$JsonConverterFromJson<Map<String, dynamic>, Affinity>(
           json['affinity'], const AffinityConverter().fromJson),
       automountServiceAccountToken:
           json['automountServiceAccountToken'] as bool?,
@@ -84,7 +84,7 @@ PodSpec _$PodSpecFromJson(Map<String, dynamic> json) => PodSpec(
 Map<String, dynamic> _$PodSpecToJson(PodSpec instance) => <String, dynamic>{
       if (instance.activeDeadlineSeconds case final value?)
         'activeDeadlineSeconds': value,
-      if (_$JsonConverterToJson<String, Affinity>(
+      if (_$JsonConverterToJson<Map<String, dynamic>, Affinity>(
               instance.affinity, const AffinityConverter().toJson)
           case final value?)
         'affinity': value,

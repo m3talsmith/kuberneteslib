@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:humanizer/humanizer.dart';
+import 'package:json2yaml/json2yaml.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:kuberneteslib/src/helpers/yaml_parser.dart';
 import 'package:kuberneteslib/src/resource/resource_base.dart';
+import 'package:yaml/yaml.dart';
 
 import '../auth/cluster.dart';
 import '../auth/exceptions.dart';
@@ -125,7 +129,7 @@ class Resource implements ResourceBase {
       case ResourceKind.controllerRevision:
         return appsAPI;
       case ResourceKind.cronJob:
-      case ResourceKind.pod:
+      case ResourceKind.job:
         return batchAPI;
       default:
         return coreAPI;
@@ -285,12 +289,19 @@ class Resource implements ResourceBase {
 
   static Future<Resource?> create({
     ClusterAuth? auth,
-    required String resourceKind,
-    required Map<String, dynamic> body,
+    Resource? resource,
+    String? resourceKind,
+    Map<String, dynamic>? body,
     bool pluralize = true,
     String? namespace = 'default',
   }) async {
     if (auth == null) throw MissingAuthException();
+    if (resource == null && resourceKind == null && body == null) {
+      throw ArgumentError('resource, resourceKind, or body is required');
+    }
+
+    resource ??= Resource.fromJson(body!);
+    resourceKind ??= resource.kind!;
 
     final api = Resource.getApi(resourceKind: resourceKind);
 
@@ -320,6 +331,45 @@ class Resource implements ResourceBase {
     data['auth'] = auth;
 
     return Resource.fromJson(data);
+  }
+
+  Future<Resource?> update() async {
+    if (auth == null) throw MissingAuthException();
+    if (kind == null) throw ArgumentError('kind is required');
+    
+    final api = Resource.getApi(resourceKind: kind!);
+    final resourceKindPluralized = kind!.toLowerCase().toPluralForm();
+
+    final resourcePath = (namespace != null)
+        ? '$api/namespaces/$namespace/$resourceKindPluralized'
+        : '$api/$resourceKindPluralized';
+    final uri = Uri.parse('${auth!.cluster!.server!}$resourcePath');
+
+    final response = await auth!.put(uri, body: toJson());
+    if (response.statusCode > 299) {
+      return null;
+    }
+    return Resource.fromJson(jsonDecode(response.body));
+  }
+
+  Future<Resource?> save() async {
+    final resources = await Resource.list(
+      auth: auth,
+      resourceKind: kind!,
+      namespace: namespace,
+    );
+
+    Resource? resource;
+
+    final foundResource = resources.firstWhere((r) => r.metadata?.name == metadata?.name, orElse: () => Resource());
+
+    if (foundResource.metadata?.name != metadata?.name) {
+      resource = await Resource.create(auth: auth, resource: this);
+    } else {
+      resource = await update();
+    }
+
+    return resource;
   }
 
   /// [delete] queries the Kubernetes API to remove an instance of a resource
@@ -361,14 +411,32 @@ class Resource implements ResourceBase {
     }
   }
 
+  static String asKubernetesYaml(Resource resource) {
+    return resource.toKubernetesYaml();
+  }
+
   /// Converts a [Resource] to a Kubernetes yaml file
   String toKubernetesYaml() {
     var template = '''
-    ---
-    apiVersion: v1
-    kind: $kind
+---
+apiVersion: v1
+kind: $kind
+annotations:
+  ${metadata != null && metadata!.annotations != null ? json2yaml(metadata!.annotations!) : ''}
+labels:
+  ${metadata != null && metadata!.labels != null ? json2yaml(metadata!.labels!) : ''}
+metadata:
+  ${metadata != null ? json2yaml(metadata!.toJson()) : ''}
+spec:
+  ${spec != null ? json2yaml(spec!.toJson()) : ''}
     ''';
     return template;
+  }
+
+  static Resource? fromYaml(String yaml) {
+    final yamlMap = loadYaml(yaml);
+    if (yamlMap == null) return null;
+    return Resource.fromJson(fromYamlMap(yamlMap));
   }
 
   factory Resource.fromJson(Map<String, dynamic> json) => Resource(

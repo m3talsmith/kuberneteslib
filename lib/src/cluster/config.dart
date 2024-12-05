@@ -1,5 +1,6 @@
 import 'package:json2yaml/json2yaml.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:kuberneteslib/src/helpers/yaml_parser.dart';
 import 'package:yaml/yaml.dart';
 
 import 'cluster.dart';
@@ -374,7 +375,7 @@ class Config {
   /// Returns null if the input [data] is empty.
   static Config? fromYaml(String data) {
     if (data.isEmpty) return null;
-    final configMapping = _fromYamlMap(loadYaml(data));
+    final configMapping = fromYamlMap(loadYaml(data));
     return Config.fromJson(configMapping);
   }
 
@@ -382,35 +383,4 @@ class Config {
   String toYaml() {
     return json2yaml(toJson());
   }
-}
-
-/// Converts a YAML node to its corresponding Dart type.
-/// 
-/// Handles conversion of:
-/// - YamlMap to Map<String, dynamic>
-/// - YamlList to List<dynamic>
-/// - Other values are returned as-is
-dynamic _convertNode(dynamic v) {
-  if (v is YamlMap) {
-    return _fromYamlMap(v);
-  } else if (v is YamlList) {
-    var list = <dynamic>[];
-    for (var e in v) {
-      list.add(_convertNode(e));
-    }
-    return list;
-  } else {
-    return v;
-  }
-}
-
-/// Converts a [YamlMap] to a Dart [Map<String, dynamic>].
-/// 
-/// Used internally to convert YAML structures to Dart structures.
-Map<String, dynamic> _fromYamlMap(YamlMap nodes) {
-  var map = <String, dynamic>{};
-  nodes.forEach((k, v) {
-    map[k] = _convertNode(v);
-  });
-  return map;
 }

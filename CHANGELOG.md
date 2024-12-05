@@ -1,5 +1,19 @@
 # KubernetesLib
 
+## 0.4.17
+
+- Fixed `getApi` method for Resource pod kind
+- Added `save` method to Resource
+- Added `update` method to Resource
+- Removed `fromKubernetesYaml` method from Resource
+- Added `fromYaml` method to Resource
+
+## 0.3.16
+
+- Added `asKubernetesYaml` method to Resource
+- Added `fromKubernetesYaml` method to Resource
+- Added `fromYamlMap` helper to `yaml_parser.dart`
+
 ## 0.3.15
 
 - Added `apiReadKinds` to Resource
