@@ -76,6 +76,13 @@ class BearerClient extends BaseClient implements ClusterAuthClient {
 
     request.headers['user-agent'] = ClusterAuthClient.userAgent;
     request.headers['Authorization'] = 'Bearer $token';
+    switch (request.method) {
+      case 'PATCH':
+        request.headers['Content-Type'] = 'application/merge-patch+json';
+        break;
+      default:
+        request.headers['Content-Type'] = 'application/json';
+    }
     var context = SecurityContext()..allowLegacyUnsafeRenegotiation = true;
     var client = HttpClient(context: context)
       ..badCertificateCallback = badCertificateCallback;

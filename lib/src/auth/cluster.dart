@@ -157,6 +157,8 @@ class ClusterAuth {
     return client!.post(
       url,
       headers: headers,
+      body: body,
+      encoding: encoding,
     );
   }
 
@@ -176,6 +178,8 @@ class ClusterAuth {
     return client!.put(
       url,
       headers: headers,
+      body: body,
+      encoding: encoding,
     );
   }
 
@@ -195,6 +199,8 @@ class ClusterAuth {
     return client!.patch(
       url,
       headers: headers,
+      body: body,
+      encoding: encoding,
     );
   }
 
@@ -214,8 +220,6 @@ class ClusterAuth {
     return client!.delete(
       url,
       headers: headers,
-      body: body,
-      encoding: encoding,
     );
   }
 

@@ -64,6 +64,10 @@ class Resource implements ResourceBase {
     this.auth,
   });
 
+  /// The API version of the resource.
+  @JsonKey(includeIfNull: false)
+  String? apiVersion;
+
   /// Resource metadata including name, labels, annotations, etc.
   @JsonKey(includeIfNull: false)
   ObjectMeta? metadata;
@@ -85,7 +89,7 @@ class Resource implements ResourceBase {
   @JsonKey(includeIfNull: false)
   String? namespace;
   /// Authentication configuration for API operations.
-  @JsonKey(includeIfNull: false, fromJson: _authFromJson)
+  @JsonKey(includeIfNull: false, fromJson: _authFromJson, includeToJson: false)
   ClusterAuth? auth;
 
   /// The API path for V1 Core resource types.
@@ -98,6 +102,7 @@ class Resource implements ResourceBase {
   static const batchAPI = '/apis/batch/v1';
 
   static ClusterAuth? _authFromJson(dynamic json) {
+    if (json == null) return null;
     if (json is ClusterAuth) {
       return json;
     }
@@ -322,10 +327,11 @@ class Resource implements ResourceBase {
         : '$api/$resourceKindPluralized';
     final uri = Uri.parse('${auth.cluster!.server!}$resourcePath');
 
-    final response = await auth.post(uri, body: resource.toJson());
-    log('uri: $uri');
-    log('response: ${response.body}');
-    log('status code: ${response.statusCode}');
+    final response = await auth.post(uri, body: jsonEncode(resource.toJson()));
+    
+    
+    
+    
     if (response.statusCode > 299) {
       return null;
     }
@@ -351,14 +357,15 @@ class Resource implements ResourceBase {
     final resourceKindPluralized = kind!.toLowerCase().toPluralForm();
 
     final resourcePath = (namespace != null)
-        ? '$api/namespaces/$namespace/$resourceKindPluralized'
-        : '$api/$resourceKindPluralized';
+        ? '$api/namespaces/$namespace/$resourceKindPluralized/${metadata!.name}'
+        : '$api/$resourceKindPluralized/${metadata!.name}';
     final uri = Uri.parse('${auth!.cluster!.server!}$resourcePath');
 
-    final response = await auth!.put(uri, body: toJson());
-    log('uri: $uri');
-    log('response: ${response.body}');
-    log('status code: ${response.statusCode}');
+    final response = await auth!.patch(uri, body: jsonEncode(toJson()));
+    
+    
+    
+    
     if (response.statusCode > 299) {
       return null;
     }
@@ -377,13 +384,14 @@ class Resource implements ResourceBase {
     final foundResource = resources.firstWhere((r) => r.metadata?.name == metadata?.name, orElse: () => Resource());
 
     if (foundResource.metadata?.name != metadata?.name) {
-      log('saving resource: ${metadata?.name}');
+      
+      
       resource = await Resource.create(auth: auth, resource: this);
-      log('saved resource: ${resource?.metadata?.name}');
+      
     } else {
-      log('updating resource: ${metadata?.name}');
+      
       resource = await update();
-      log('updated resource: ${resource?.metadata?.name}');
+      
     }
 
     return resource;

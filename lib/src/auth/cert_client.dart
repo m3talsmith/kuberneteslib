@@ -84,6 +84,13 @@ class CertClient extends BaseClient implements ClusterAuthClient {
     badCertificateCallback ??= (_, __, ___) => true;
 
     request.headers['user-agent'] = ClusterAuthClient.userAgent;
+    switch (request.method) {
+      case 'PATCH':
+        request.headers['Content-Type'] = 'application/merge-patch+json';
+        break;
+      default:
+        request.headers['Content-Type'] = 'application/json';
+    }
     var context = SecurityContext()
       ..allowLegacyUnsafeRenegotiation = true
       ..setClientAuthoritiesBytes(clientCertificateAuthority);
