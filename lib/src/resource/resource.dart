@@ -219,6 +219,7 @@ class Resource implements ResourceBase {
 
       /// Adds additional internal tracking for the [namespace] used
       item['namespace'] = namespace;
+      item['metadata']?['namespace'] = namespace;
 
       final resource = Resource.fromJson(item);
       resources.add(resource);
