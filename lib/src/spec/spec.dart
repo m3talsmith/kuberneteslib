@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:json_annotation/json_annotation.dart';
 
 import '../resource/resource_kind.dart';
@@ -19,10 +22,7 @@ class ObjectSpecConverter implements JsonConverter<ObjectSpec, Map<String, dynam
   
   @override
   ObjectSpec fromJson(Map<String, dynamic> json) {
-    return Spec.fromJson(json, kind: ResourceKind.values.firstWhere(
-      (k) => k.name == json['kind'],
-      orElse: () => ResourceKind.pod,
-    )).spec!;
+    return Spec.fromJson(json, kind: json['kind']).spec!;
   }
 
   @override
@@ -72,10 +72,13 @@ class Spec {
   /// 
   /// Currently supports:
   /// - Pod specifications (ResourceKind.pod)
-  factory Spec.fromJson(Map<String, dynamic> data,
-      {required ResourceKind kind}) {
-    data['kind'] = kind.name;
-    switch (kind) {
+  factory Spec.fromJson(Map<String, dynamic> data, {String? kind}) {
+    kind ??= (data.containsKey('metadata') && data['metadata']!.containsKey('kind'))
+        ? data['metadata']['kind']
+        : 'unknown';
+
+    data['kind'] = kind;
+    switch (ResourceKind.fromString(kind!)) {
       case ResourceKind.pod:
         return Spec(spec: PodSpec.fromJson(data));
       default:

@@ -54,10 +54,7 @@ class ResourceTemplate extends Resource {
       ..spec = json['spec'] == null
           ? null
           : Spec.fromJson(json['spec'] as Map<String, dynamic>,
-              kind: ResourceKind.values.firstWhere(
-                (k) => k.toString().split('.').last == json['kind'],
-                orElse: () => ResourceKind.unknown,
-              ))
+              kind: json['kind'])
       ..status = json['status'] == null
           ? null
           : Status.fromJson(json['status'] as Map<String, dynamic>)

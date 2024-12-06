@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.4.38
+
+- Fixed Spec deserialization
+
 ## 0.4.17
 
 - Fixed `getApi` method for Resource pod kind

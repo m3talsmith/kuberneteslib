@@ -15,6 +15,7 @@ import '../spec/spec.dart';
 import '../status/status.dart';
 import 'resource_kind.dart';
 
+part 'resource.g.dart';
 /// Represents a Kubernetes resource with full API interaction capabilities.
 ///
 /// The Resource class is the core component for interacting with Kubernetes resources,
@@ -51,6 +52,7 @@ import 'resource_kind.dart';
 /// and [Status] to provide a complete representation of Kubernetes resources.
 /// See the [Kubernetes API documentation](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/)
 /// for more details about specific resource types.
+@JsonSerializable()
 class Resource implements ResourceBase {
   /// Creates a new Resource instance.
   /// 
@@ -82,9 +84,8 @@ class Resource implements ResourceBase {
   /// The namespace where this resource exists.
   @JsonKey(includeIfNull: false)
   String? namespace;
-
   /// Authentication configuration for API operations.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, fromJson: _authFromJson)
   ClusterAuth? auth;
 
   /// The API path for V1 Core resource types.
@@ -95,6 +96,13 @@ class Resource implements ResourceBase {
 
   /// The API path for V1 Batch resource types.
   static const batchAPI = '/apis/batch/v1';
+
+  static ClusterAuth? _authFromJson(dynamic json) {
+    if (json is ClusterAuth) {
+      return json;
+    }
+    return ClusterAuth.fromJson(json as Map<String, dynamic>);
+  }
 
   /// [ignoreList] is a list of [ResourceKind] enums to ignore when listing
   /// resources.
@@ -208,7 +216,6 @@ class Resource implements ResourceBase {
       final resource = Resource.fromJson(item);
       resources.add(resource);
     }
-
     return resources;
   }
 
@@ -315,7 +322,10 @@ class Resource implements ResourceBase {
         : '$api/$resourceKindPluralized';
     final uri = Uri.parse('${auth.cluster!.server!}$resourcePath');
 
-    final response = await auth.post(uri, body: body);
+    final response = await auth.post(uri, body: resource.toJson());
+    log('uri: $uri');
+    log('response: ${response.body}');
+    log('status code: ${response.statusCode}');
     if (response.statusCode > 299) {
       return null;
     }
@@ -346,6 +356,9 @@ class Resource implements ResourceBase {
     final uri = Uri.parse('${auth!.cluster!.server!}$resourcePath');
 
     final response = await auth!.put(uri, body: toJson());
+    log('uri: $uri');
+    log('response: ${response.body}');
+    log('status code: ${response.statusCode}');
     if (response.statusCode > 299) {
       return null;
     }
@@ -364,9 +377,13 @@ class Resource implements ResourceBase {
     final foundResource = resources.firstWhere((r) => r.metadata?.name == metadata?.name, orElse: () => Resource());
 
     if (foundResource.metadata?.name != metadata?.name) {
+      log('saving resource: ${metadata?.name}');
       resource = await Resource.create(auth: auth, resource: this);
+      log('saved resource: ${resource?.metadata?.name}');
     } else {
+      log('updating resource: ${metadata?.name}');
       resource = await update();
+      log('updated resource: ${resource?.metadata?.name}');
     }
 
     return resource;
@@ -439,31 +456,10 @@ spec:
     return Resource.fromJson(fromYamlMap(yamlMap));
   }
 
-  factory Resource.fromJson(Map<String, dynamic> json) => Resource(
-      metadata: json['metadata'] == null
-          ? null
-          : ObjectMeta.fromJson(json['metadata'] as Map<String, dynamic>),
-      kind: json['kind'] as String?,
-      namespace: json['namespace'] as String?,
-      auth: json['auth'] == null
-          ? null
-          : (json['auth'] is Map<String, dynamic>)
-              ? ClusterAuth.fromJson(json['auth'] as Map<String, dynamic>)
-              : json['auth'],
-    )
-      ..spec = json['spec'] == null
-          ? null
-          : Spec.fromJson(json['spec'] as Map<String, dynamic>,
-              kind: ResourceKind.values.firstWhere(
-                (k) => k.toString().split('.').last == json['kind'] as String,
-                orElse: () => ResourceKind.unknown))
-      ..status = json['status'] == null
-          ? null
-          : Status.fromJson(json['status'] as Map<String, dynamic>);
+  factory Resource.fromJson(Map<String, dynamic> json) {
+    json['kind'] ??= (json.containsKey('metadata') && json['metadata']!.containsKey('kind')) ? json['metadata']['kind'] : 'unknown' ;
+    return _$ResourceFromJson(json);
+  }
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-            if (metadata case final value?) 'metadata': value,
-            if (spec case final value?) 'spec': value,
-            if (status case final value?) 'status': value,
-          };
+  Map<String, dynamic> toJson() => _$ResourceToJson(this);
 }
