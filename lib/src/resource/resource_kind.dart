@@ -1,19 +1,19 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:kuberneteslib/kuberneteslib.dart';
 
-const _ignoreList = [
+List<ResourceKind> _ignoreList = [
   ResourceKind.unknown,
   ResourceKind.container,
   ResourceKind.volume,
   ResourceKind.binding,
 ];
 
-const _ignoreShow = [
+List<ResourceKind> _ignoreShow = [
   ..._ignoreList,
   ResourceKind.persistentVolume,
 ];
 
-final _apiReadKinds = [
+List<ResourceKind> _apiReadKinds = [
   ...ResourceKind.values.where((e) => !_ignoreList.contains(e)),
 ];
 

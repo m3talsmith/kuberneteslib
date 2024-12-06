@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.4.39
+
+- Fixed `ResourceKind.ignoreList` and `ResourceKind.ignoreShow`
+
 ## 0.4.38
 
 - Fixed Spec deserialization
