@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.4.59
+
+- Fixed `Resource.delete` method
+
 ## 0.4.39
 
 - Fixed `ResourceKind.ignoreList` and `ResourceKind.ignoreShow`

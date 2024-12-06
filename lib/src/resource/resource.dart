@@ -422,6 +422,10 @@ class Resource implements ResourceBase {
   /// }
   /// ```
   delete() async {
+    if (auth == null) throw MissingAuthException();
+    if (kind == null) throw ArgumentError('kind is required');
+    namespace ??= (metadata?.namespace ?? 'default');
+    
     final api = Resource.getApi(resourceKind: kind!);
 
     var resourceKindPluralized = kind!.toLowerCase().toPluralForm();
