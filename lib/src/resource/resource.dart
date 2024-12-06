@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:humanizer/humanizer.dart';
 import 'package:json2yaml/json2yaml.dart';
@@ -217,6 +216,9 @@ class Resource implements ResourceBase {
 
       /// Adds additional internal tracking for the [auth] instance used
       item['auth'] = auth;
+
+      /// Adds additional internal tracking for the [namespace] used
+      item['namespace'] = namespace;
 
       final resource = Resource.fromJson(item);
       resources.add(resource);

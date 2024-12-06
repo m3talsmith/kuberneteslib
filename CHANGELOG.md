@@ -1,5 +1,10 @@
 # KubernetesLib
 
+## 0.4.61
+
+- Added `namespace` parameter to `Resource.delete` method
+- Added `namespace` parameter to `Resource.fromJson` method
+
 ## 0.4.59
 
 - Fixed `Resource.delete` method
