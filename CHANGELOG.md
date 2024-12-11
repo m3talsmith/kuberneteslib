@@ -1,5 +1,11 @@
 # KubernetesLib
 
+## 0.4.77
+
+- Added tests for BearerClient
+- Added tests for ClusterAuthClient
+- Added tests for CertClient
+
 ## 0.4.76
 
 - Added tests for User

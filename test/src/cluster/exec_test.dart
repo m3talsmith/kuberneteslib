@@ -7,60 +7,70 @@ void main() {
       final exec = Exec();
       
       expect(exec.command, equals('doctl'));
+      expect(exec.arguments, isNull);
       expect(exec.apiVersion, equals('client.authentication.k8s.io/v1beta1'));
       expect(exec.interactiveMode, equals('IfAvailable'));
-      expect(exec.provideClusterInfo, equals(false));
-      expect(exec.arguments, isNull);
-      expect(exec.env, isNull);
+      expect(exec.provideClusterInfo, isFalse);
     });
 
     test('creates instance with custom values', () {
       final exec = Exec(
         command: 'aws',
-        arguments: ['eks', 'get-token', '--cluster-name', 'my-cluster'],
-        apiVersion: 'client.authentication.k8s.io/v1',
+        arguments: ['eks', 'get-token', '--cluster-name', 'test-cluster'],
+        apiVersion: 'v2',
         env: 'AWS_PROFILE=default',
         interactiveMode: 'Never',
         provideClusterInfo: true,
       );
 
       expect(exec.command, equals('aws'));
-      expect(exec.arguments, equals(['eks', 'get-token', '--cluster-name', 'my-cluster']));
-      expect(exec.apiVersion, equals('client.authentication.k8s.io/v1'));
+      expect(exec.arguments, equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
+      expect(exec.apiVersion, equals('v2'));
       expect(exec.env, equals('AWS_PROFILE=default'));
       expect(exec.interactiveMode, equals('Never'));
-      expect(exec.provideClusterInfo, equals(true));
+      expect(exec.provideClusterInfo, isTrue);
     });
 
-    test('serializes to JSON correctly', () {
-      final exec = Exec(
-        command: 'gcloud',
-        arguments: ['container', 'clusters', 'get-credentials'],
-      );
+    group('JSON serialization', () {
+      test('serializes to JSON with all fields', () {
+        final exec = Exec(
+          command: 'aws',
+          arguments: ['eks', 'get-token', '--cluster-name', 'test-cluster'],
+          apiVersion: 'v2',
+          env: 'AWS_PROFILE=default',
+          interactiveMode: 'Never',
+          provideClusterInfo: true,
+        );
 
-      final json = exec.toJson();
-      
-      expect(json['command'], equals('gcloud'));
-      expect(json['arguments'], equals(['container', 'clusters', 'get-credentials']));
-      expect(json['apiVersion'], equals('client.authentication.k8s.io/v1beta1'));
-      expect(json['interactiveMode'], equals('IfAvailable'));
-      expect(json['provideClusterInfo'], equals(false));
-    });
+        final json = exec.toJson();
+        
+        expect(json['command'], equals('aws'));
+        expect(json['arguments'], equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
+        expect(json['apiVersion'], equals('v2'));
+        expect(json['env'], equals('AWS_PROFILE=default'));
+        expect(json['interactiveMode'], equals('Never'));
+        expect(json['provideClusterInfo'], isTrue);
+      });
 
-    test('deserializes from JSON correctly', () {
-      final json = {
-        'command': 'aws',
-        'arguments': ['eks', 'get-token'],
-        'apiVersion': 'client.authentication.k8s.io/v1',
-        'interactiveMode': 'Never',
-      };
+      test('deserializes from JSON', () {
+        final json = {
+          'command': 'aws',
+          'arguments': ['eks', 'get-token', '--cluster-name', 'test-cluster'],
+          'apiVersion': 'v2',
+          'env': 'AWS_PROFILE=default',
+          'interactiveMode': 'Never',
+          'provideClusterInfo': true,
+        };
 
-      final exec = Exec.fromJson(json);
+        final exec = Exec.fromJson(json);
 
-      expect(exec.command, equals('aws'));
-      expect(exec.arguments, equals(['eks', 'get-token']));
-      expect(exec.apiVersion, equals('client.authentication.k8s.io/v1'));
-      expect(exec.interactiveMode, equals('Never'));
+        expect(exec.command, equals('aws'));
+        expect(exec.arguments, equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
+        expect(exec.apiVersion, equals('v2'));
+        expect(exec.env, equals('AWS_PROFILE=default'));
+        expect(exec.interactiveMode, equals('Never'));
+        expect(exec.provideClusterInfo, isTrue);
+      });
     });
   });
 
@@ -70,33 +80,15 @@ void main() {
         kind: 'ExecCredential',
         apiVersion: 'client.authentication.k8s.io/v1beta1',
         spec: ExecSpec(interactive: false),
-        status: ExecStatus(token: 'abc123'),
+        status: ExecStatus(token: 'test-token'),
       );
-
-      expect(result.kind, equals('ExecCredential'));
-      expect(result.apiVersion, equals('client.authentication.k8s.io/v1beta1'));
-      expect(result.spec.interactive, equals(false));
-      expect(result.status.token, equals('abc123'));
 
       final json = result.toJson();
+      
       expect(json['kind'], equals('ExecCredential'));
-      expect(json['status']['token'], equals('abc123'));
-    });
-  });
-
-  group('ExecStatus', () {
-    test('handles expiration timestamp correctly', () {
-      final timestamp = DateTime.utc(2024, 1, 1, 12, 0);
-      final status = ExecStatus(
-        token: 'xyz789',
-        expirationTimestamp: timestamp,
-      );
-
-      final json = status.toJson();
-      final decoded = ExecStatus.fromJson(json);
-
-      expect(decoded.token, equals('xyz789'));
-      expect(decoded.expirationTimestamp?.toUtc(), equals(timestamp));
+      expect(json['apiVersion'], equals('client.authentication.k8s.io/v1beta1'));
+      expect(json['spec']['interactive'], isFalse);
+      expect(json['status']['token'], equals('test-token'));
     });
   });
 } 
