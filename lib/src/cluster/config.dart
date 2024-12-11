@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:json2yaml/json2yaml.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:kuberneteslib/src/helpers/yaml_parser.dart';
@@ -40,7 +42,8 @@ class Configs {
   /// configs.add(Config()..currentContext = 'dev-cluster');
   /// final contexts = configs.map((config) => config.currentContext);
   /// ```
-  T map<T>(T Function(Config config) transform) => configs.map(transform).toList() as T;
+  T map<T>(T Function(Config config) transform) =>
+      configs.map(transform).toList() as T;
 
   /// Reduces the collection of configurations to a single value by iteratively
   /// combining each configuration with an accumulator value.
@@ -49,13 +52,15 @@ class Configs {
   /// ```dart
   /// final configs = Configs();
   /// configs.add(Config()..currentContext = 'dev');
-  /// configs.add(Config()..currentContext = 'prod'); 
+  /// configs.add(Config()..currentContext = 'prod');
   /// final contexts = configs.reduce<String>(
-  ///   '', 
+  ///   '',
   ///   (acc, config) => '$acc${config.currentContext},'
   /// );
   /// ```
-  T reduce<T>(T initialValue, T Function(T accumulator, Config element) combine) => configs.fold(initialValue, combine);
+  T reduce<T>(
+          T initialValue, T Function(T accumulator, Config element) combine) =>
+      configs.fold(initialValue, combine);
 
   /// Inserts a configuration at the specified index in the collection.
   ///
@@ -83,7 +88,8 @@ class Configs {
   /// );
   /// print(result.currentContext); // prints: default
   /// ```
-  Config firstOrElse(bool Function(Config config) test, {required Config Function() orElse}) {
+  Config firstOrElse(bool Function(Config config) test,
+      {required Config Function() orElse}) {
     for (final config in configs) {
       if (test(config)) return config;
     }
@@ -129,7 +135,7 @@ class Configs {
   /// configs.add(Config()..currentContext = 'prod-cluster');
   /// ```
   void add(Config config) => configs.add(config);
-  
+
   /// Adds all configurations from another [Configs] collection.
   ///
   /// Takes a [Configs] object and adds all of its configurations to this collection.
@@ -195,7 +201,7 @@ class Configs {
   /// ```dart
   /// final configs = Configs();
   /// configs.add(Config()..currentContext = 'dev-cluster');
-  /// configs.add(Config()..currentContext = 'prod-cluster'); 
+  /// configs.add(Config()..currentContext = 'prod-cluster');
   /// print(configs.indexWhere(
   ///   (config) => config.currentContext == 'dev-cluster'
   /// )); // 0
@@ -309,7 +315,7 @@ class Configs {
 }
 
 /// Represents a complete Kubernetes configuration file.
-/// 
+///
 /// This class models the structure of a kubeconfig file, which is the standard
 /// configuration file used by Kubernetes command-line tools and clients. It contains
 /// all necessary information to connect to and authenticate with Kubernetes clusters.
@@ -338,6 +344,7 @@ class Configs {
 @JsonSerializable()
 class Config {
   Config();
+
   /// The Kubernetes API version for this config
   @JsonKey(includeIfNull: false)
   String? apiVersion;
@@ -357,7 +364,8 @@ class Config {
   String? kind;
 
   /// Additional preferences for the configuration
-  Map<String, dynamic> preferences = {};
+  @JsonKey(includeIfNull: false)
+  Map<String, dynamic>? preferences = {};
 
   /// List of user credentials defined in this config
   List<User> users = [];
@@ -366,15 +374,54 @@ class Config {
   @JsonKey(includeIfNull: false)
   String? displayName;
 
-  factory Config.fromJson(Map<String, dynamic> data) => _$ConfigFromJson(data);
+  factory Config.fromJson(Map<String, dynamic> json) {
+    log('json: $json');
+    return Config()
+      ..apiVersion = json['apiVersion'] as String?
+      ..clusters = (json['clusters'] as List<dynamic>)
+          .map((e) => Cluster.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..contexts = (json['contexts'] as List<dynamic>)
+          .map((e) => Context.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..currentContext = json['currentContext'] as String?
+      ..kind = json['kind'] as String?
+      ..preferences = json['preferences'] as Map<String, dynamic>?
+      ..users = (json['users'] as List<dynamic>)
+          .map((e) => User.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..displayName = json['displayName'] as String?;
+  }
 
-  Map<String, dynamic> toJson() => _$ConfigToJson(this);
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        if (apiVersion case final value?) 'apiVersion': value,
+        'clusters': clusters
+            .map(
+              (e) => e.toJson(),
+            )
+            .toList(),
+        'contexts': contexts
+            .map(
+              (e) => e.toJson(),
+            )
+            .toList(),
+        if (currentContext case final value?) 'currentContext': value,
+        if (kind case final value?) 'kind': value,
+        'preferences': preferences,
+        'users': users
+            .map(
+              (e) => e.toJson(),
+            )
+            .toList(),
+        if (displayName case final value?) 'displayName': value,
+      };
 
   /// Creates a [Config] instance from a YAML string.
-  /// 
+  ///
   /// Returns null if the input [data] is empty.
   static Config? fromYaml(String data) {
     if (data.isEmpty) return null;
+    log('data: $data');
     final configMapping = fromYamlMap(loadYaml(data));
     return Config.fromJson(configMapping);
   }

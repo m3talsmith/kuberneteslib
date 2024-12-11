@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.4.74
+
+- Fixed toYaml for config
+
 ## 0.4.61
 
 - Added `namespace` parameter to `Resource.delete` method
