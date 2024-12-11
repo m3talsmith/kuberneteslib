@@ -46,16 +46,8 @@ part 'fields_v1.g.dart';
 /// for more details about field management.
 @JsonSerializable()
 class FieldsV1 {
-  /// Creates a new [FieldsV1] instance.
-  ///
-  /// The instance is initialized empty and can be populated using [fromJson]
-  /// or by directly manipulating the underlying map structure.
-  FieldsV1() : super();
+  FieldsV1();
 
-  /// Creates a [FieldsV1] instance from a JSON map.
-  factory FieldsV1.fromJson(Map<String, dynamic> json) =>
-      _$FieldsV1FromJson(json);
-
-  /// Converts this [FieldsV1] instance to a JSON map.
+  factory FieldsV1.fromJson(Map<String, dynamic> json) => _$FieldsV1FromJson(json);
   Map<String, dynamic> toJson() => _$FieldsV1ToJson(this);
 }
