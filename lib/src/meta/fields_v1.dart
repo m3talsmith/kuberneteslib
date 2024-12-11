@@ -1,7 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'fields_v1.g.dart';
-
 /// Represents a Kubernetes FieldsV1 type that tracks managed fields in objects.
 ///
 /// FieldsV1 is used by the Kubernetes API server to track which fields in an object
@@ -44,10 +40,24 @@ part 'fields_v1.g.dart';
 ///
 /// See the [Kubernetes API documentation](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#fieldsv1-v1-meta)
 /// for more details about field management.
-@JsonSerializable()
 class FieldsV1 {
-  FieldsV1();
+  FieldsV1({this.fields = const {}});
 
-  factory FieldsV1.fromJson(Map<String, dynamic> json) => _$FieldsV1FromJson(json);
-  Map<String, dynamic> toJson() => _$FieldsV1ToJson(this);
+  Map<String, dynamic> fields;
+
+  factory FieldsV1.fromJson(Map<String, dynamic> json) {
+    final fields = <String, dynamic>{};
+    for (var entry in json.entries) {
+      fields[entry.key] = entry.value;
+    }
+    return FieldsV1(fields: fields);
+  }
+
+  Map<String, dynamic> toJson() {
+    final json = <String, dynamic>{};
+    for (var entry in fields.entries) {
+      json[entry.key] = entry.value;
+    }
+    return json;
+  }
 }

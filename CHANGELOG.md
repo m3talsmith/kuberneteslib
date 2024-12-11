@@ -1,5 +1,12 @@
 # KubernetesLib
 
+## 0.4.79
+
+- Added tests for ObjectMeta
+- Added tests for OwnerReference
+- Added tests for FieldsV1
+- Added tests for ManagedFieldEntry
+
 ## 0.4.78
 
 - Added tests for Helpers

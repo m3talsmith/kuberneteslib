@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../helpers/fieldsv1_converter.dart';
 import 'fields_v1.dart';
 
 part 'managed_field_entry.g.dart';
@@ -42,6 +43,7 @@ class ManagedFieldEntry {
 
   /// The set of fields that were modified by this manager.
   /// Contains a structured description of the fields owned by this manager.
+  @FieldV1Converter()
   FieldsV1 fieldsV1;
 
   /// Identifier of the manager that modified these fields.

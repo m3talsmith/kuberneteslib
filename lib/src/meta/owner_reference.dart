@@ -37,20 +37,20 @@ class OwnerReference {
   /// - 'v1' for core resources
   /// - 'apps/v1' for Deployments, StatefulSets
   /// - 'batch/v1' for Jobs
-  String apiVersion;
+  String? apiVersion;
 
   /// Controls the garbage collection behavior of the owner resource.
   /// 
   /// When true and the owner has the "foregroundDeletion" finalizer,
   /// deletion of the owner will be blocked until this reference is removed.
   /// This ensures proper cleanup of dependent resources.
-  bool blockOwnerDeletion;
+  bool? blockOwnerDeletion;
 
   /// Indicates if this reference points to the managing controller.
   /// 
   /// Only one OwnerReference can have controller=true. It's used
   /// to determine which controller is the primary manager of the resource.
-  bool controller;
+  bool? controller;
 
   /// The kind of the owner resource.
   /// 
@@ -59,28 +59,22 @@ class OwnerReference {
   /// - 'Deployment'
   /// - 'StatefulSet'
   /// - 'Job'
-  String kind;
+  String? kind;
 
   /// The name of the owner resource.
   /// 
   /// Must be in the same namespace as the dependent resource,
   /// unless the owner is cluster-scoped.
-  String name;
+  String? name;
 
   /// The unique identifier of the owner resource.
   /// 
   /// This is a system-generated string that uniquely identifies
   /// the owner resource across time and space.
-  String uid;
+  String? uid;
 
   /// Creates a new [OwnerReference] with default values.
-  OwnerReference()
-      : apiVersion = '',
-        blockOwnerDeletion = false,
-        controller = false,
-        kind = '',
-        name = '',
-        uid = '';
+  OwnerReference();
 
   factory OwnerReference.fromJson(Map<String, dynamic> json) =>
       _$OwnerReferenceFromJson(json);

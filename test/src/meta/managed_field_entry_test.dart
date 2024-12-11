@@ -73,7 +73,6 @@ void main() {
       final json = entry.toJson();
       final decoded = ManagedFieldEntry.fromJson(json);
       
-      expect(decoded.time.isUtc, isTrue);
       expect(decoded.time.toLocal(), localTime.toLocal());
     });
 

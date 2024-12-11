@@ -10,7 +10,8 @@ ManagedFieldEntry _$ManagedFieldEntryFromJson(Map<String, dynamic> json) =>
     ManagedFieldEntry()
       ..apiVersion = json['apiVersion'] as String
       ..fieldsType = json['fieldsType'] as String
-      ..fieldsV1 = FieldsV1.fromJson(json['fieldsV1'] as Map<String, dynamic>)
+      ..fieldsV1 = const FieldV1Converter()
+          .fromJson(json['fieldsV1'] as Map<String, dynamic>)
       ..manager = json['manager'] as String
       ..operation = json['operation'] as String
       ..time = DateTime.parse(json['time'] as String);
@@ -19,7 +20,7 @@ Map<String, dynamic> _$ManagedFieldEntryToJson(ManagedFieldEntry instance) =>
     <String, dynamic>{
       'apiVersion': instance.apiVersion,
       'fieldsType': instance.fieldsType,
-      'fieldsV1': instance.fieldsV1,
+      'fieldsV1': const FieldV1Converter().toJson(instance.fieldsV1),
       'manager': instance.manager,
       'operation': instance.operation,
       'time': instance.time.toIso8601String(),
