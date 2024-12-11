@@ -110,7 +110,13 @@ class ExecResult {
 
   factory ExecResult.fromJson(Map<String, dynamic> json) => _$ExecResultFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ExecResultToJson(this);
+  Map<String, dynamic> toJson() =>
+    <String, dynamic>{
+      'kind': kind,
+      'apiVersion': apiVersion,
+      'spec': spec.toJson(),
+      'status': status.toJson(),
+    };
 }
 
 /// Specifies the execution parameters used during authentication.
@@ -157,5 +163,9 @@ class ExecStatus {
 
   factory ExecStatus.fromJson(Map<String, dynamic> json) => _$ExecStatusFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ExecStatusToJson(this);
+  Map<String, dynamic> toJson() => <String, dynamic>{
+      if (expirationTimestamp?.toIso8601String() != null)
+        'expirationTimestamp': expirationTimestamp?.toIso8601String(),
+      if (token != null) 'token': token,
+    };
 }

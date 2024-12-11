@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'cluster.g.dart';
@@ -57,7 +59,11 @@ class Cluster {
   factory Cluster.fromJson(Map<String, dynamic> json) {
     final clusterData = json['cluster'];
     clusterData['name'] = json['name'];
-    final cluster = _$ClusterFromJson(clusterData);
+    Map<String, dynamic> data = {};
+    for (var e in clusterData.entries) {
+      data[e.key] = e.value;
+    }
+    final cluster = _$ClusterFromJson(data);
     return cluster;
   }
 

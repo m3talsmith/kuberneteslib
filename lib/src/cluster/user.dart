@@ -78,14 +78,21 @@ class User {
   final Exec? exec;
 
   factory User.fromJson(Map<String, dynamic> json) {
-    final userData = json['user'];
+    final userData = <String, dynamic>{};
+    for (var e in json['user'].entries) {
+      userData[e.key] = e.value;
+    }
     userData['name'] = json['name'];
-    final user = _$UserFromJson(userData);
-    return user;
+    return _$UserFromJson(userData);
   }
 
   Map<String, dynamic> toJson() {
-    final userJson = _$UserToJson(this);
+    final userJson = <String, dynamic>{
+      if (clientCertificateData != null)
+        'client-certificate-data': clientCertificateData,
+      if (clientKeyData != null) 'client-key-data': clientKeyData,
+      if (exec != null) 'exec': exec!.toJson(),
+    };
     userJson.remove('name');
     final json = {'user': userJson, 'name': name};
     return json;

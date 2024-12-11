@@ -62,7 +62,11 @@ class Context {
   factory Context.fromJson(Map<String, dynamic> json) {
     final contextData = json['context'];
     contextData['name'] = json['name'];
-    final context = _$ContextFromJson(contextData);
+    Map<String, dynamic> data = {};
+    for (var e in contextData.entries) {
+      data[e.key] = e.value;
+    }
+    final context = _$ContextFromJson(data);
     return context;
   }
 

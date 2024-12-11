@@ -1,5 +1,20 @@
 # KubernetesLib
 
+## 0.4.76
+
+- Added tests for User
+- Added tests for Exec
+- Added tests for ExecSpec
+- Added tests for ExecStatus
+- Fixed User deserialization
+- Fixed Exec deserialization
+- Fixed ExecSpec deserialization
+- Fixed ExecStatus deserialization
+- Fixed User serialization
+- Fixed Exec serialization
+- Fixed ExecSpec serialization
+- Fixed ExecStatus serialization
+
 ## 0.4.75
 
 - Updated README with Slack channel
