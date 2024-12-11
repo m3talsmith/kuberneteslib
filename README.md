@@ -13,6 +13,10 @@ A Dart library that implements the Kubernetes API natively. Built using official
 - List, Show, and Delete operations
 - Type-safe resource handling
 
+## Slack
+
+We've got a slack channel for questions and technical help: https://kuberneteslib.slack.com
+
 ## Installation
 
 Install with `dart pub add kuberneteslib`.

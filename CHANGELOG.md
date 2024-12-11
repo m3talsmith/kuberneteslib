@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.4.75
+
+- Updated README with Slack channel
+
 ## 0.4.74
 
 - Fixed toYaml for config
