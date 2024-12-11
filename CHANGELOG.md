@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.4.78
+
+- Added tests for Helpers
+
 ## 0.4.77
 
 - Added tests for BearerClient
