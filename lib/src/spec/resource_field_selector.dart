@@ -29,7 +29,7 @@ part 'resource_field_selector.g.dart';
 /// for more details about resource field selectors.
 @JsonSerializable()
 class ResourceFieldSelector {
-  ResourceFieldSelector();
+  ResourceFieldSelector({this.containerName, this.divisor, this.resource});
 
   /// The name of the container to extract the resource value from.
   /// 

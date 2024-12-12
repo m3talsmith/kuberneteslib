@@ -10,7 +10,7 @@ DownwardAPIVolumeFile _$DownwardAPIVolumeFileFromJson(
         Map<String, dynamic> json) =>
     DownwardAPIVolumeFile(
       fieldRef: _fieldRefFromJson(json['fieldRef'] as Map<String, dynamic>?),
-      mode: (json['mode'] as num?)?.toInt(),
+      mode: _modeFromJson(json['mode']),
       path: json['path'] as String?,
       resourceFieldRef: _resourceFieldRefFromJson(
           json['resourceFieldRef'] as Map<String, dynamic>?),
@@ -21,7 +21,7 @@ Map<String, dynamic> _$DownwardAPIVolumeFileToJson(
     <String, dynamic>{
       if (_fieldRefToJson(instance.fieldRef) case final value?)
         'fieldRef': value,
-      if (instance.mode case final value?) 'mode': value,
+      if (_modeToJson(instance.mode) case final value?) 'mode': value,
       if (instance.path case final value?) 'path': value,
       if (_resourceFieldRefToJson(instance.resourceFieldRef) case final value?)
         'resourceFieldRef': value,

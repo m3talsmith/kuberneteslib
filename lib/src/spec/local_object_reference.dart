@@ -28,13 +28,13 @@ part 'local_object_reference.g.dart';
 @JsonSerializable()
 class LocalObjectReference {
   /// Creates a new LocalObjectReference with an empty name.
-  LocalObjectReference() : name = '';
+  LocalObjectReference({this.name});
 
   /// The name of the referenced Kubernetes object.
   /// 
   /// Required: Must be a valid object name in the same namespace.
   /// The name must be unique within the namespace.
-  String name;
+  String? name;
 
   factory LocalObjectReference.fromJson(Map<String, dynamic> json) =>
       _$LocalObjectReferenceFromJson(json);

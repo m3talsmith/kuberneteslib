@@ -31,39 +31,50 @@ part 'csi_volume_source.g.dart';
 ///
 /// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#csi)
 /// for more details about CSI volumes.
+
+Map<String, dynamic>? _secretRefToJson(LocalObjectReference? ref) =>
+    ref?.toJson();
+
+LocalObjectReference? _secretRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : LocalObjectReference.fromJson(json);
+
 @JsonSerializable()
 class CSIVolumeSource {
-  CSIVolumeSource();
+  CSIVolumeSource({this.driver, this.fsType, this.nodePublishSecretRef, this.readOnly, this.volumeAttributes});
 
   /// Name of the CSI driver to use for this volume.
   /// 
   /// Must match the driver name returned by CSI GetPluginInfo call.
   /// Required field.
-  late String driver;
+  String? driver;
 
   /// Filesystem type to mount on the volume.
   /// 
   /// Must be a filesystem type supported by the host operating system.
   /// Examples: "ext4", "xfs", "ntfs"
-  late String fsType;
+  @JsonKey(includeIfNull: false)
+  String? fsType;
 
   /// Reference to the secret for CSI node publish operations.
   /// 
   /// Contains credentials needed by the CSI driver to complete the
   /// NodePublishVolume call.
-  late LocalObjectReference nodePublishSecretRef;
+  @JsonKey(toJson: _secretRefToJson, fromJson: _secretRefFromJson, includeIfNull: false)
+  LocalObjectReference? nodePublishSecretRef;
 
   /// Controls read-only access to the volume.
   /// 
   /// When true, the volume will be mounted read-only.
   /// Defaults to false (read/write).
-  late bool readOnly;
+  @JsonKey(includeIfNull: false, defaultValue: false)
+  bool? readOnly;
 
   /// Driver-specific parameters for this volume.
   /// 
   /// These parameters are passed directly to the CSI driver
   /// to configure volume-specific features.
-  late Map<String, dynamic> volumeAttributes;
+  @JsonKey(includeIfNull: false)
+  Map<String, dynamic>? volumeAttributes;
 
   factory CSIVolumeSource.fromJson(Map<String, dynamic> json) =>
       _$CSIVolumeSourceFromJson(json);

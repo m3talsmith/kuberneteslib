@@ -7,15 +7,16 @@ part of 'ceph_fs_volume_source.dart';
 // **************************************************************************
 
 CephFSVolumeSource _$CephFSVolumeSourceFromJson(Map<String, dynamic> json) =>
-    CephFSVolumeSource()
-      ..monitors =
-          (json['monitors'] as List<dynamic>).map((e) => e as String).toList()
-      ..path = json['path'] as String
-      ..readOnly = json['readOnly'] as bool
-      ..secretFile = json['secretFile'] as String
-      ..secretRef = LocalObjectReference.fromJson(
-          json['secretRef'] as Map<String, dynamic>)
-      ..user = json['user'] as String;
+    CephFSVolumeSource(
+      monitors: (json['monitors'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      path: json['path'] as String?,
+      readOnly: json['readOnly'] as bool?,
+      secretFile: json['secretFile'] as String?,
+      secretRef: _secretRefFromJson(json['secretRef'] as Map<String, dynamic>?),
+      user: json['user'] as String?,
+    );
 
 Map<String, dynamic> _$CephFSVolumeSourceToJson(CephFSVolumeSource instance) =>
     <String, dynamic>{
@@ -23,6 +24,6 @@ Map<String, dynamic> _$CephFSVolumeSourceToJson(CephFSVolumeSource instance) =>
       'path': instance.path,
       'readOnly': instance.readOnly,
       'secretFile': instance.secretFile,
-      'secretRef': instance.secretRef,
+      'secretRef': _secretRefToJson(instance.secretRef),
       'user': instance.user,
     };

@@ -8,10 +8,11 @@ part of 'resource_field_selector.dart';
 
 ResourceFieldSelector _$ResourceFieldSelectorFromJson(
         Map<String, dynamic> json) =>
-    ResourceFieldSelector()
-      ..containerName = json['containerName'] as String?
-      ..divisor = json['divisor']
-      ..resource = json['resource'] as String?;
+    ResourceFieldSelector(
+      containerName: json['containerName'] as String?,
+      divisor: json['divisor'],
+      resource: json['resource'] as String?,
+    );
 
 Map<String, dynamic> _$ResourceFieldSelectorToJson(
         ResourceFieldSelector instance) =>

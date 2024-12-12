@@ -1,3 +1,4 @@
+
 import 'package:json_annotation/json_annotation.dart';
 
 import '../object_field_selector.dart';
@@ -43,9 +44,46 @@ Map<String, dynamic>? _resourceFieldRefToJson(ResourceFieldSelector? ref) =>
 ResourceFieldSelector? _resourceFieldRefFromJson(Map<String, dynamic>? json) =>
     json == null ? null : ResourceFieldSelector.fromJson(json);
 
+dynamic _modeFromJson(dynamic value) {
+  if (value is String) {
+    return int.parse(value, radix: 8);
+  } else if (value is int) {
+    return _encodeMode(value);
+  }
+  return null;
+}
+
+dynamic _modeToJson(dynamic mode) {
+  if (mode is int) {
+    return _decodeMode(mode);
+  }
+  return mode;
+}
+
+int? _encodeMode(dynamic mode) {
+  if (mode is int) {
+    if (mode > 511) {
+      mode = '0${mode.toString()}';
+      mode = int.parse(mode, radix: 8);
+    }
+    return mode;
+  } else if (mode is String) {
+    return int.parse(mode, radix: 8);
+  }
+  return null;
+}
+
+String? _decodeMode(int? mode) {
+  if (mode == null) {
+    return null;
+  }
+  mode = _encodeMode(mode);
+  return mode?.toRadixString(8).padLeft(4, '0');
+}
+
 @JsonSerializable()
 class DownwardAPIVolumeFile {
-  DownwardAPIVolumeFile({this.fieldRef, this.mode, this.path, this.resourceFieldRef});
+  DownwardAPIVolumeFile({this.fieldRef, dynamic mode, this.path, this.resourceFieldRef}) : mode = _encodeMode(mode);
 
   /// Selects a field from the pod's metadata.
   /// 
@@ -62,8 +100,8 @@ class DownwardAPIVolumeFile {
   /// Must be an octal value between 0000 and 0777 or
   /// a decimal value between 0 and 511.
   /// Example: 0644 (rw-r--r--)
-  @JsonKey(includeIfNull: false)
-  int? mode;
+  @JsonKey(includeIfNull: false, fromJson: _modeFromJson, toJson: _modeToJson)
+  dynamic mode;
 
   /// Path where the file will be created in the volume.
   /// 
