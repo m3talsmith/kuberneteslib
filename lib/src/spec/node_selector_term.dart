@@ -44,16 +44,14 @@ part 'node_selector_term.g.dart';
 /// for more details about node selection.
 @JsonSerializable()
 class NodeSelectorTerm {
-  NodeSelectorTerm()
-      : matchExpressions = [],
-        matchFields = [];
+  NodeSelectorTerm();
 
   /// A list of node label selector requirements.
   /// 
   /// These requirements are based on node labels and are evaluated as a logical AND.
   /// Each requirement specifies a key, operator, and values for matching node labels.
   /// If empty, this criterion is ignored.
-  List<NodeSelectorRequirement> matchExpressions;
+  List<NodeSelectorRequirement>? matchExpressions;
 
   /// A list of node field selector requirements.
   /// 
@@ -61,7 +59,7 @@ class NodeSelectorTerm {
   /// metadata.namespace) and are evaluated as a logical AND. Each requirement
   /// specifies a key, operator, and values for matching node fields.
   /// If empty, this criterion is ignored.
-  List<NodeSelectorRequirement> matchFields;
+  List<NodeSelectorRequirement>? matchFields;
 
   factory NodeSelectorTerm.fromJson(Map<String, dynamic> json) =>
       _$NodeSelectorTermFromJson(json);

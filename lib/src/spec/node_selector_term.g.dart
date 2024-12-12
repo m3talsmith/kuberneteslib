@@ -8,12 +8,12 @@ part of 'node_selector_term.dart';
 
 NodeSelectorTerm _$NodeSelectorTermFromJson(Map<String, dynamic> json) =>
     NodeSelectorTerm()
-      ..matchExpressions = (json['matchExpressions'] as List<dynamic>)
-          .map((e) =>
+      ..matchExpressions = (json['matchExpressions'] as List<dynamic>?)
+          ?.map((e) =>
               NodeSelectorRequirement.fromJson(e as Map<String, dynamic>))
           .toList()
-      ..matchFields = (json['matchFields'] as List<dynamic>)
-          .map((e) =>
+      ..matchFields = (json['matchFields'] as List<dynamic>?)
+          ?.map((e) =>
               NodeSelectorRequirement.fromJson(e as Map<String, dynamic>))
           .toList();
 

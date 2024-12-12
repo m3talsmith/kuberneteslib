@@ -7,17 +7,14 @@ part of 'pod_spec.dart';
 // **************************************************************************
 
 PodSpec _$PodSpecFromJson(Map<String, dynamic> json) => PodSpec(
-      containers: (json['containers'] as List<dynamic>?)
-          ?.map((e) => Container.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      containers: _containersFromJson(json['containers'] as List?),
       activeDeadlineSeconds: (json['activeDeadlineSeconds'] as num?)?.toInt(),
       affinity: _$JsonConverterFromJson<Map<String, dynamic>, Affinity>(
           json['affinity'], const AffinityConverter().fromJson),
       automountServiceAccountToken:
           json['automountServiceAccountToken'] as bool?,
-      dnsConfig: json['dnsConfig'] == null
-          ? null
-          : PodDNSConfig.fromJson(json['dnsConfig'] as Map<String, dynamic>),
+      dnsConfig: _$JsonConverterFromJson<Map<String, dynamic>, PodDNSConfig>(
+          json['dnsConfig'], const PodDNSConfigConverter().fromJson),
       dnsPolicy: json['dnsPolicy'] as String?,
       enableServiceLinks: json['enableServiceLinks'] as bool?,
       ephemeralContainers: (json['ephemeralContainers'] as List<dynamic>?)
@@ -30,12 +27,12 @@ PodSpec _$PodSpecFromJson(Map<String, dynamic> json) => PodSpec(
       hostNetwork: json['hostNetwork'] as bool?,
       hostUsers: json['hostUsers'] as bool?,
       hostname: json['hostname'] as String?,
-      imagePullSecrets: (json['imagePullSecrets'] as List<dynamic>?)
-          ?.map((e) => LocalObjectReference.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      initContainers: (json['initContainers'] as List<dynamic>?)
-          ?.map((e) => Container.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      imagePullSecrets: _$JsonConverterFromJson<List<Map<String, dynamic>>,
+              List<LocalObjectReference>>(json['imagePullSecrets'],
+          const LocalObjectReferencesConverter().fromJson),
+      initContainers:
+          _$JsonConverterFromJson<List<Map<String, dynamic>>, List<Container>>(
+              json['initContainers'], const ContainersConverter().fromJson),
       nodeName: json['nodeName'] as String?,
       nodeSelector: json['nodeSelector'] as Map<String, dynamic>?,
       os: json['os'] == null
@@ -57,10 +54,10 @@ PodSpec _$PodSpecFromJson(Map<String, dynamic> json) => PodSpec(
       schedulingGates: (json['schedulingGates'] as List<dynamic>?)
           ?.map((e) => PodSchedulingGate.fromJson(e as Map<String, dynamic>))
           .toList(),
-      securityContext: json['securityContext'] == null
-          ? null
-          : PodSecurityContext.fromJson(
-              json['securityContext'] as Map<String, dynamic>),
+      securityContext:
+          _$JsonConverterFromJson<Map<String, dynamic>, PodSecurityContext>(
+              json['securityContext'],
+              const PodSecurityContextConverter().fromJson),
       serviceAccount: json['serviceAccount'] as String?,
       serviceAccountName: json['serviceAccountName'] as String?,
       setHostnameAsFQDN: json['setHostnameAsFQDN'] as bool?,
@@ -79,9 +76,11 @@ PodSpec _$PodSpecFromJson(Map<String, dynamic> json) => PodSpec(
       volumes: (json['volumes'] as List<dynamic>?)
           ?.map((e) => Volume.fromJson(e as Map<String, dynamic>))
           .toList(),
+      kind: json['kind'] as String? ?? 'pod',
     );
 
 Map<String, dynamic> _$PodSpecToJson(PodSpec instance) => <String, dynamic>{
+      if (instance.kind case final value?) 'kind': value,
       if (instance.activeDeadlineSeconds case final value?)
         'activeDeadlineSeconds': value,
       if (_$JsonConverterToJson<Map<String, dynamic>, Affinity>(
@@ -90,8 +89,12 @@ Map<String, dynamic> _$PodSpecToJson(PodSpec instance) => <String, dynamic>{
         'affinity': value,
       if (instance.automountServiceAccountToken case final value?)
         'automountServiceAccountToken': value,
-      if (instance.containers case final value?) 'containers': value,
-      if (instance.dnsConfig case final value?) 'dnsConfig': value,
+      if (_containersToJson(instance.containers) case final value?)
+        'containers': value,
+      if (_$JsonConverterToJson<Map<String, dynamic>, PodDNSConfig>(
+              instance.dnsConfig, const PodDNSConfigConverter().toJson)
+          case final value?)
+        'dnsConfig': value,
       if (instance.dnsPolicy case final value?) 'dnsPolicy': value,
       if (instance.enableServiceLinks case final value?)
         'enableServiceLinks': value,
@@ -102,9 +105,15 @@ Map<String, dynamic> _$PodSpecToJson(PodSpec instance) => <String, dynamic>{
       if (instance.hostNetwork case final value?) 'hostNetwork': value,
       if (instance.hostUsers case final value?) 'hostUsers': value,
       if (instance.hostname case final value?) 'hostname': value,
-      if (instance.imagePullSecrets case final value?)
+      if (_$JsonConverterToJson<List<Map<String, dynamic>>,
+                  List<LocalObjectReference>>(instance.imagePullSecrets,
+              const LocalObjectReferencesConverter().toJson)
+          case final value?)
         'imagePullSecrets': value,
-      if (instance.initContainers case final value?) 'initContainers': value,
+      if (_$JsonConverterToJson<List<Map<String, dynamic>>, List<Container>>(
+              instance.initContainers, const ContainersConverter().toJson)
+          case final value?)
+        'initContainers': value,
       if (instance.nodeName case final value?) 'nodeName': value,
       if (instance.nodeSelector case final value?) 'nodeSelector': value,
       if (instance.os case final value?) 'os': value,
@@ -121,7 +130,11 @@ Map<String, dynamic> _$PodSpecToJson(PodSpec instance) => <String, dynamic>{
         'runtimeClassName': value,
       if (instance.schedulerName case final value?) 'schedulerName': value,
       if (instance.schedulingGates case final value?) 'schedulingGates': value,
-      if (instance.securityContext case final value?) 'securityContext': value,
+      if (_$JsonConverterToJson<Map<String, dynamic>, PodSecurityContext>(
+              instance.securityContext,
+              const PodSecurityContextConverter().toJson)
+          case final value?)
+        'securityContext': value,
       if (instance.serviceAccount case final value?) 'serviceAccount': value,
       if (instance.serviceAccountName case final value?)
         'serviceAccountName': value,

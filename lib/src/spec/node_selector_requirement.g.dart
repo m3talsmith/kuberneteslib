@@ -8,8 +8,17 @@ part of 'node_selector_requirement.dart';
 
 NodeSelectorRequirement _$NodeSelectorRequirementFromJson(
         Map<String, dynamic> json) =>
-    NodeSelectorRequirement();
+    NodeSelectorRequirement(
+      key: json['key'] as String?,
+      operator: json['operator'] as String?,
+      values:
+          (json['values'] as List<dynamic>?)?.map((e) => e as String).toList(),
+    );
 
 Map<String, dynamic> _$NodeSelectorRequirementToJson(
         NodeSelectorRequirement instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'key': instance.key,
+      'operator': instance.operator,
+      'values': instance.values,
+    };

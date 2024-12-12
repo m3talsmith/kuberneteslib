@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../helpers/container_ports_converter.dart';
 import 'container_port.dart';
 import 'container_resize_policy.dart';
 import 'env_from_source.dart';
@@ -48,7 +49,7 @@ part 'container.g.dart';
 /// for more details about container configuration.
 @JsonSerializable()
 class Container {
-  Container();
+  Container({this.args, this.command, this.env, this.envFrom, this.image, this.imagePullPolicy, this.lifecycle, this.livenessProbe, this.name, this.ports, this.readinessProbe, this.resizePolicy, this.resources, this.restartPolicy, this.securityContext, this.startupProbe, this.stdin, this.stdinOnce, this.terminationMessagePath, this.terminationMessagePolicy, this.tty, this.volumeDevices, this.volumeMounts, this.workingDir});
   /// The arguments to pass to the container command
   @JsonKey(includeIfNull: false)
   List<String>? args;
@@ -87,6 +88,7 @@ class Container {
 
   /// List of ports to expose from the container
   @JsonKey(includeIfNull: false)
+  @ContainerPortsConverter()
   List<ContainerPort>? ports;
 
   /// Periodic probe of container service readiness

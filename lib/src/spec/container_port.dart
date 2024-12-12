@@ -31,7 +31,7 @@ part 'container_port.g.dart';
 /// for more details about container ports.
 @JsonSerializable()
 class ContainerPort {
-  ContainerPort();
+  ContainerPort({this.containerPort, this.hostIP, this.hostPort, this.name, this.protocol});
 
   /// The port number to expose from the container.
   /// 

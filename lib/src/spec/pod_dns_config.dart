@@ -41,7 +41,7 @@ class PodDNSConfig {
   /// These nameservers are used in the order specified. If this field is empty,
   /// the pod inherits the name server settings from the node.
   /// Example: ['8.8.8.8', '8.8.4.4']
-  late List<String> nameservers;
+  List<String>? nameservers;
 
   /// List of DNS resolver options for the pod.
   /// 
@@ -50,14 +50,14 @@ class PodDNSConfig {
   /// - ndots: minimum number of dots in name for absolute lookup
   /// - timeout: DNS query timeout
   /// - attempts: number of DNS query attempts
-  late List<PodDNSConfigOption> options;
+  List<PodDNSConfigOption>? options;
 
   /// List of DNS search domains for hostname lookup in the pod.
   /// 
   /// These search domains are used to expand short names into fully qualified
   /// domain names. They are tried in the order specified.
   /// Example: ['ns1.svc.cluster.local', 'svc.cluster.local', 'cluster.local']
-  late List<String> searches;
+  List<String>? searches;
 
   factory PodDNSConfig.fromJson(Map<String, dynamic> json) =>
       _$PodDNSConfigFromJson(json);

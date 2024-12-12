@@ -37,10 +37,7 @@ part 'node_selector_requirement.g.dart';
 /// for more details about node selection.
 @JsonSerializable()
 class NodeSelectorRequirement {
-  NodeSelectorRequirement()
-      : key = '',
-        operator = '',
-        values = [];
+  NodeSelectorRequirement({this.key, this.operator, this.values});
 
   /// The label or field key that the selector applies to.
   /// 
@@ -48,13 +45,13 @@ class NodeSelectorRequirement {
   /// - 'kubernetes.io/os'
   /// - 'node.kubernetes.io/instance-type'
   /// - 'topology.kubernetes.io/zone'
-  final String key;
+  String? key;
 
   /// The operator that relates the key with values.
   /// 
   /// Must be one of: In, NotIn, Exists, DoesNotExist, Gt, Lt
   /// Determines how the requirement selects nodes.
-  final String operator;
+  String? operator;
 
   /// The array of values to select nodes by.
   /// 
@@ -62,7 +59,7 @@ class NodeSelectorRequirement {
   /// - For In and NotIn: List of values to match against
   /// - For Exists and DoesNotExist: Must be empty
   /// - For Gt and Lt: Must contain exactly one value
-  final List<String> values;
+  List<String>? values;
 
   factory NodeSelectorRequirement.fromJson(Map<String, dynamic> json) =>
       _$NodeSelectorRequirementFromJson(json);

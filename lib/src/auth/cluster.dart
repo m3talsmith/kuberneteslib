@@ -39,7 +39,7 @@ part 'cluster.g.dart';
 /// ```
 @JsonSerializable()
 class ClusterAuth {
-  ClusterAuth();
+  ClusterAuth({required cluster});
 
   /// The cluster configuration containing server and certificate information
   @JsonKey(includeIfNull: false)

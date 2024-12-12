@@ -1,5 +1,24 @@
 # KubernetesLib
 
+## 0.4.80
+
+- Added tests for PodSpec
+- Added tests for Container
+- Added tests for ObjectMeta
+- Added tests for OwnerReference
+- Added tests for FieldsV1
+- Added tests for ManagedFieldEntry
+- Added tests for Helpers
+- Added tests for BearerClient
+- Added tests for ClusterAuthClient
+- Added tests for CertClient
+- Fixed PodSpec deserialization
+- Fixed Container deserialization
+- Fixed ObjectMeta deserialization
+- Fixed OwnerReference deserialization
+- Fixed FieldsV1 deserialization
+- Fixed ManagedFieldEntry deserialization
+
 ## 0.4.79
 
 - Added tests for ObjectMeta

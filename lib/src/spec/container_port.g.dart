@@ -7,12 +7,13 @@ part of 'container_port.dart';
 // **************************************************************************
 
 ContainerPort _$ContainerPortFromJson(Map<String, dynamic> json) =>
-    ContainerPort()
-      ..containerPort = (json['containerPort'] as num?)?.toInt()
-      ..hostIP = json['hostIP'] as String?
-      ..hostPort = (json['hostPort'] as num?)?.toInt()
-      ..name = json['name'] as String?
-      ..protocol = json['protocol'] as String?;
+    ContainerPort(
+      containerPort: (json['containerPort'] as num?)?.toInt(),
+      hostIP: json['hostIP'] as String?,
+      hostPort: (json['hostPort'] as num?)?.toInt(),
+      name: json['name'] as String?,
+      protocol: json['protocol'] as String?,
+    );
 
 Map<String, dynamic> _$ContainerPortToJson(ContainerPort instance) =>
     <String, dynamic>{

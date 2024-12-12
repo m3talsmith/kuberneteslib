@@ -63,13 +63,13 @@ class AffinityConverter implements JsonConverter<Affinity, Map<String, dynamic>>
   @override
   Affinity fromJson(Map<String, dynamic> data) {
     if (data.containsKey('nodeAffinity')) {
-      return NodeAffinity.fromJson(data);
+      return NodeAffinity.fromJson(data['nodeAffinity']);
     }
     if (data.containsKey('podAffinity')) {
-      return PodAffinity.fromJson(data);
+      return PodAffinity.fromJson(data['podAffinity']);
     }
     if (data.containsKey('podAntiAffinity')) {
-      return PodAntiAffinity.fromJson(data);
+      return PodAntiAffinity.fromJson(data['podAntiAffinity']);
     }
     return Affinity.fromJson(data);
   }
@@ -95,7 +95,7 @@ class AffinityConverter implements JsonConverter<Affinity, Map<String, dynamic>>
 /// );
 /// ```
 class Affinity {
-  Affinity({required this.kind, required this.affinity});
+  Affinity({this.kind, this.affinity});
 
   AffinityKind? kind;
   Affinity? affinity;
@@ -134,16 +134,20 @@ class NodeAffinity implements Affinity {
   /// Required node scheduling requirements that must be met for pod scheduling
   NodeSelector? requiredDuringSchedulingIgnoredDuringExecution;
 
-  factory NodeAffinity.fromJson(Map<String, dynamic> json) =>
-      _$NodeAffinityFromJson(json);
+  factory NodeAffinity.fromJson(Map<String, dynamic> json) {
+    final nodeAffinity = _$NodeAffinityFromJson(json);
+    return nodeAffinity;
+  }
 
   @override
   Map<String, dynamic> toJson() => _$NodeAffinityToJson(this);
 
   @override
+  @JsonKey(includeToJson: true)
   AffinityKind? kind;
 
   @override
+  @JsonKey(includeToJson: true, includeFromJson: true)
   Affinity? affinity;
 }
 

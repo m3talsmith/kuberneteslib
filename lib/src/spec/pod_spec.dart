@@ -1,7 +1,10 @@
-import 'dart:developer';
 
 import 'package:json_annotation/json_annotation.dart';
 
+import '../helpers/containers_converter.dart';
+import '../helpers/local_object_references_converter.dart';
+import '../helpers/pod_dns_config_converter.dart';
+import '../helpers/pod_security_context_converter.dart';
 import 'affinity.dart';
 import 'container.dart';
 import 'ephemeral_container.dart';
@@ -97,7 +100,11 @@ class PodSpec implements ObjectSpec {
     this.tolerations,
     this.topologySpreadConstraints,
     this.volumes,
+    this.kind = 'pod',
   });
+
+  @JsonKey(includeIfNull: false)
+  String? kind;
 
   /// Maximum time in seconds for a pod to complete its execution.
   /// After this deadline, the pod may be terminated.
@@ -117,12 +124,14 @@ class PodSpec implements ObjectSpec {
 
   /// The list of containers that will run in this pod.
   /// At least one container is required.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, fromJson: _containersFromJson, toJson: _containersToJson)
+  // @ContainersConverter()
   List<Container>? containers;
 
   /// Custom DNS settings for the pod.
   /// Allows fine-grained control over DNS resolution.
   @JsonKey(includeIfNull: false)
+  @PodDNSConfigConverter()
   PodDNSConfig? dnsConfig;
 
   /// DNS resolution policy for the pod.
@@ -166,11 +175,13 @@ class PodSpec implements ObjectSpec {
 
   /// References to secrets used for pulling container images.
   @JsonKey(includeIfNull: false)
+  @LocalObjectReferencesConverter()
   List<LocalObjectReference>? imagePullSecrets;
 
   /// Containers that run to completion before the main containers start.
   /// Used for setup or initialization tasks.
   @JsonKey(includeIfNull: false)
+  @ContainersConverter()
   List<Container>? initContainers;
 
   /// Request to schedule this pod onto a specific node.
@@ -231,6 +242,7 @@ class PodSpec implements ObjectSpec {
 
   /// Security context settings that apply to the entire pod.
   @JsonKey(includeIfNull: false)
+  @PodSecurityContextConverter()
   PodSecurityContext? securityContext;
 
   /// @deprecated Use serviceAccountName instead.
@@ -270,7 +282,7 @@ class PodSpec implements ObjectSpec {
   @JsonKey(includeIfNull: false)
   List<Volume>? volumes;
 
-  /// Creates a new PodSpec instance from a Map representation.
+  /// Creates a new PodSpec from a Map representation.
   ///
   /// [data] should be a Map containing the pod specification fields as defined
   /// in the Kubernetes API. This constructor handles the deserialization of
@@ -280,3 +292,9 @@ class PodSpec implements ObjectSpec {
   @override
   Map<String, dynamic> toJson() => _$PodSpecToJson(this);
 }
+
+List<Container>? _containersFromJson(List<dynamic>? json) =>
+  json?.map((e) => Container.fromJson(e as Map<String, dynamic>)).toList();
+
+List<Map<String, dynamic>>? _containersToJson(List<Container>? containers) =>
+  containers?.map((e) => e.toJson()).toList();

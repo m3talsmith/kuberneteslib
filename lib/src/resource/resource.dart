@@ -9,6 +9,8 @@ import 'package:yaml/yaml.dart';
 
 import '../auth/cluster.dart';
 import '../auth/exceptions.dart';
+import '../helpers/object_meta_converter.dart';
+import '../helpers/object_spec_converter.dart';
 import '../meta/object_meta.dart';
 import '../spec/spec.dart';
 import '../status/status.dart';
@@ -69,6 +71,7 @@ class Resource implements ResourceBase {
 
   /// Resource metadata including name, labels, annotations, etc.
   @JsonKey(includeIfNull: false)
+  @ObjectMetaConverter()
   ObjectMeta? metadata;
 
   /// Resource specification defining desired state.
@@ -468,7 +471,10 @@ spec:
   static Resource? fromYaml(String yaml) {
     final yamlMap = loadYaml(yaml);
     if (yamlMap == null) return null;
-    return Resource.fromJson(fromYamlMap(yamlMap));
+    final json = fromYamlMap(yamlMap);
+    json['kind'] = (json['kind'] as String).toSingularForm().toLowerCase();
+    json['spec']['kind'] = json['kind'];
+    return Resource.fromJson(json);
   }
 
   factory Resource.fromJson(Map<String, dynamic> json) {

@@ -69,12 +69,12 @@ class ResourceTemplate extends Resource {
   /// clean and minimal JSON representations.
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
-        if (metadata case final value?) 'metadata': value,
-        if (spec case final value?) 'spec': value,
-        if (status case final value?) 'status': value,
+        if (metadata case final value?) 'metadata': value.toJson(),
+        if (spec case final value?) 'spec': value.toJson(),
+        if (status case final value?) 'status': value.toJson(),
         if (kind case final value?) 'kind': value,
         if (namespace case final value?) 'namespace': value,
-        if (auth case final value?) 'auth': value,
+        if (auth case final value?) 'auth': value.toJson(),
         'apiVersion': apiVersion,
       };
 }

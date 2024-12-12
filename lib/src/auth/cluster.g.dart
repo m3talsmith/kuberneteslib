@@ -6,26 +6,26 @@ part of 'cluster.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ClusterAuth _$ClusterAuthFromJson(Map<String, dynamic> json) => ClusterAuth()
-  ..cluster = json['cluster'] == null
-      ? null
-      : Cluster.fromJson(json['cluster'] as Map<String, dynamic>)
-  ..user = json['user'] == null
-      ? null
-      : User.fromJson(json['user'] as Map<String, dynamic>)
-  ..token = json['token'] as String?
-  ..expirationTimestamp = json['expirationTimestamp'] == null
-      ? null
-      : DateTime.parse(json['expirationTimestamp'] as String)
-  ..clientCertificateAuthority = _$JsonConverterFromJson<String, Uint8List>(
-      json['clientCertificateAuthority'], const Uint8ListConverter().fromJson)
-  ..clientCertificateData = _$JsonConverterFromJson<String, Uint8List>(
-      json['clientCertificateData'], const Uint8ListConverter().fromJson)
-  ..clientKeyData = _$JsonConverterFromJson<String, Uint8List>(
-      json['clientKeyData'], const Uint8ListConverter().fromJson)
-  ..client = json['client'] == null
-      ? null
-      : ClusterAuthClient.fromJson(json['client'] as Map<String, dynamic>);
+ClusterAuth _$ClusterAuthFromJson(Map<String, dynamic> json) => ClusterAuth(
+      cluster: json['cluster'],
+    )
+      ..user = json['user'] == null
+          ? null
+          : User.fromJson(json['user'] as Map<String, dynamic>)
+      ..token = json['token'] as String?
+      ..expirationTimestamp = json['expirationTimestamp'] == null
+          ? null
+          : DateTime.parse(json['expirationTimestamp'] as String)
+      ..clientCertificateAuthority = _$JsonConverterFromJson<String, Uint8List>(
+          json['clientCertificateAuthority'],
+          const Uint8ListConverter().fromJson)
+      ..clientCertificateData = _$JsonConverterFromJson<String, Uint8List>(
+          json['clientCertificateData'], const Uint8ListConverter().fromJson)
+      ..clientKeyData = _$JsonConverterFromJson<String, Uint8List>(
+          json['clientKeyData'], const Uint8ListConverter().fromJson)
+      ..client = json['client'] == null
+          ? null
+          : ClusterAuthClient.fromJson(json['client'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$ClusterAuthToJson(ClusterAuth instance) =>
     <String, dynamic>{

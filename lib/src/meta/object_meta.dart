@@ -30,7 +30,7 @@ part 'object_meta.g.dart';
 @JsonSerializable()
 class ObjectMeta {
   /// Creates a new [ObjectMeta] instance with a required [name].
-  ObjectMeta() : name = '';
+  ObjectMeta({this.name, this.namespace, this.annotations, this.labels});
 
   /// Unstructured key-value pairs that can be set by external tools.
   /// 
@@ -93,12 +93,12 @@ class ObjectMeta {
   List<ManagedFieldEntry>? managedFields;
 
   /// Required: unique identifier within a namespace.
-  String name;
+  String? name;
 
   /// The namespace this object belongs to.
   /// 
   /// Namespaces provide a scope for names. Cannot be updated.
-  @JsonKey(includeFromJson: false)
+  @JsonKey(includeIfNull: false)
   String? namespace;
 
   /// References to owning objects.

@@ -3,10 +3,6 @@ import 'package:kuberneteslib/src/meta/object_meta.dart';
 
 void main() {
   group('ObjectMeta', () {
-    test('creates instance with empty name by default', () {
-      final meta = ObjectMeta();
-      expect(meta.name, equals(''));
-    });
 
     test('serializes to JSON with minimal properties', () {
       final meta = ObjectMeta()..name = 'test-object';

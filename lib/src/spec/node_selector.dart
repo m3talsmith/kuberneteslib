@@ -52,8 +52,7 @@ class NodeSelector {
   /// while requirements within each term use AND logic.
   List<NodeSelectorTerm> nodeSelectorTerms;
 
-  factory NodeSelector.fromJson(Map<String, dynamic> json) =>
-      _$NodeSelectorFromJson(json);
+  factory NodeSelector.fromJson(Map<String, dynamic> json) => _$NodeSelectorFromJson(json);
 
   Map<String, dynamic> toJson() => _$NodeSelectorToJson(this);
 }
