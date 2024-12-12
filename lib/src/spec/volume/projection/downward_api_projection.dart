@@ -30,9 +30,16 @@ part 'downward_api_projection.g.dart';
 ///
 /// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/projected-volumes/#downwardapi)
 /// for more details about downward API projections.
+
+List<Map<String, dynamic>>? _itemsToJson(List<DownwardAPIVolumeFile>? items) =>
+    items?.map((item) => item.toJson()).toList();
+
+List<DownwardAPIVolumeFile>? _itemsFromJson(List<dynamic>? items) =>
+    items?.map((item) => DownwardAPIVolumeFile.fromJson(item)).toList();
+
 @JsonSerializable()
 class DownwardAPIProjection {
-  DownwardAPIProjection();
+  DownwardAPIProjection({this.items});
 
   /// List of files to project into the volume.
   /// 
@@ -40,7 +47,7 @@ class DownwardAPIProjection {
   /// location within the projected volume. Sources can include:
   /// - Pod metadata fields
   /// - Container resource fields (CPU, memory)
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, toJson: _itemsToJson, fromJson: _itemsFromJson)
   List<DownwardAPIVolumeFile>? items;
 
   factory DownwardAPIProjection.fromJson(Map<String, dynamic> json) =>

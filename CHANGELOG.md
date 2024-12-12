@@ -1,5 +1,12 @@
 # KubernetesLib
 
+## 0.4.81
+
+- Added tests for ServiceAccountTokenProjection
+- Added tests for SecretProjection
+- Added tests for DownwardAPIProjection
+- Added tests for KeyToPath
+
 ## 0.4.80
 
 - Added tests for PodSpec

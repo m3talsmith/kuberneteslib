@@ -35,15 +35,13 @@ part 'object_field_selector.g.dart';
 /// for more details about the Downward API.
 @JsonSerializable()
 class ObjectFieldSelector {
-  ObjectFieldSelector()
-      : apiVersion = '',
-        fieldPath = '';
+  ObjectFieldSelector({this.apiVersion, this.fieldPath});
 
   /// API version of the referenced object.
   /// 
   /// Typically 'v1' for core Kubernetes resources.
   /// Must match the API version of the referenced resource.
-  String apiVersion;
+  String? apiVersion;
 
   /// Path to the desired field in the specified API version.
   /// 
@@ -52,7 +50,7 @@ class ObjectFieldSelector {
   /// - 'metadata.namespace': Pod namespace
   /// - 'spec.nodeName': Node name
   /// - 'status.podIP': Pod IP address
-  String fieldPath;
+  String? fieldPath;
 
   factory ObjectFieldSelector.fromJson(Map<String, dynamic> json) =>
       _$ObjectFieldSelectorFromJson(json);

@@ -40,7 +40,7 @@ class ConfigMapProjection {
   /// If not specified, each key-value pair in the ConfigMap's Data field will be
   /// projected into the volume as a file whose name is the key and content is
   /// the value.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, toJson: _itemsToJson, fromJson: _itemsFromJson)
   List<KeyToPath>? items;
 
   /// Name of the ConfigMap to project.
@@ -64,3 +64,9 @@ class ConfigMapProjection {
       _$ConfigMapProjectionFromJson(json);
   Map<String, dynamic> toJson() => _$ConfigMapProjectionToJson(this);
 }
+
+List<KeyToPath>? _itemsFromJson(List<dynamic>? json) =>
+  json?.map((e) => KeyToPath.fromJson(e as Map<String, dynamic>)).toList();
+
+List<Map<String, dynamic>>? _itemsToJson(List<KeyToPath>? items) =>
+  items?.map((e) => e.toJson()).toList();

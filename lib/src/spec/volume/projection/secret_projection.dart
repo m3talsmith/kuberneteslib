@@ -30,15 +30,22 @@ part 'secret_projection.g.dart';
 ///
 /// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/projected-volumes/#secret)
 /// for more details about secret projections.
+
+List<Map<String, dynamic>>? _itemsToJson(List<KeyToPath>? items) =>
+    items?.map((item) => item.toJson()).toList();
+
+List<KeyToPath>? _itemsFromJson(List<dynamic>? items) =>
+    items?.map((item) => KeyToPath.fromJson(item)).toList();
+
 @JsonSerializable()
 class SecretProjection {
-  SecretProjection();
+  SecretProjection({this.items, this.name, this.optional});
   
   /// Optional mappings of Secret keys to specific paths.
   /// 
   /// If not specified, each key-value pair in the Secret's Data field will be
   /// projected as a file using the key as the filename.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, toJson: _itemsToJson, fromJson: _itemsFromJson)
   List<KeyToPath>? items; 
 
   /// Name of the Secret to project.

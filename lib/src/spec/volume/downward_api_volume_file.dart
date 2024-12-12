@@ -30,9 +30,22 @@ part 'downward_api_volume_file.g.dart';
 ///
 /// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#downwardapi)
 /// for more details about Downward API volumes.
+
+Map<String, dynamic>? _fieldRefToJson(ObjectFieldSelector? fieldRef) =>
+    fieldRef?.toJson();
+
+ObjectFieldSelector? _fieldRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : ObjectFieldSelector.fromJson(json);
+
+Map<String, dynamic>? _resourceFieldRefToJson(ResourceFieldSelector? ref) =>
+    ref?.toJson();
+
+ResourceFieldSelector? _resourceFieldRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : ResourceFieldSelector.fromJson(json);
+
 @JsonSerializable()
 class DownwardAPIVolumeFile {
-  DownwardAPIVolumeFile();
+  DownwardAPIVolumeFile({this.fieldRef, this.mode, this.path, this.resourceFieldRef});
 
   /// Selects a field from the pod's metadata.
   /// 
@@ -41,7 +54,7 @@ class DownwardAPIVolumeFile {
   /// - metadata.namespace: Pod namespace
   /// - metadata.labels: Pod labels
   /// - metadata.annotations: Pod annotations
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, toJson: _fieldRefToJson, fromJson: _fieldRefFromJson)
   ObjectFieldSelector? fieldRef;
 
   /// Unix permission mode for the created file.
@@ -65,7 +78,7 @@ class DownwardAPIVolumeFile {
   /// - CPU limits and requests
   /// - Memory limits and requests
   /// - Storage limits and requests
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, toJson: _resourceFieldRefToJson, fromJson: _resourceFieldRefFromJson)
   ResourceFieldSelector? resourceFieldRef;
 
   factory DownwardAPIVolumeFile.fromJson(Map<String, dynamic> json) =>
