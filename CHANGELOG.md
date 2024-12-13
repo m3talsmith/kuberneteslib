@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.4.82
+
+- Added tests for all volume types
+
 ## 0.4.81
 
 - Added tests for ServiceAccountTokenProjection
