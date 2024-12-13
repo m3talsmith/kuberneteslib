@@ -4,6 +4,12 @@ import '../../spec/local_object_reference.dart';
 
 part 'storage_os_volume_source.g.dart';
 
+Map<String, dynamic>? _secretRefToJson(LocalObjectReference? ref) =>
+    ref?.toJson();
+
+LocalObjectReference? _secretRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : LocalObjectReference.fromJson(json);
+
 /// Represents a StorageOS volume in Kubernetes for cloud-native storage.
 ///
 /// StorageOSVolumeSource enables pods to use StorageOS distributed storage.
@@ -40,30 +46,35 @@ class StorageOSVolumeSource {
   /// 
   /// Required: Must be a filesystem type supported by the host operating system.
   /// Examples: "ext4", "xfs", "ntfs"
-  late String fsType;
+  @JsonKey(includeIfNull: false)
+  String? fsType;
 
   /// Controls read-only access to the volume.
   /// 
   /// When true, the volume will be mounted read-only.
   /// When false, the volume will be mounted with read-write permissions.
-  late bool readOnly;
+  @JsonKey(includeIfNull: false)
+  bool? readOnly;
 
   /// Reference to the secret containing StorageOS credentials.
   /// 
   /// Required: References a Kubernetes secret containing the StorageOS API credentials.
   /// The secret must exist in the same namespace as the pod.
-  late LocalObjectReference secretRef;
+  @JsonKey(includeIfNull: false, toJson: _secretRefToJson, fromJson: _secretRefFromJson)
+  LocalObjectReference? secretRef;
 
   /// The name of the StorageOS volume.
   /// 
   /// Required: Must be a valid volume name in the StorageOS system.
-  late String volumeName;
+  @JsonKey(includeIfNull: false)
+  String? volumeName;
 
   /// The namespace where the StorageOS volume resides.
   /// 
   /// Required: Specifies the StorageOS namespace for the volume.
   /// Usually matches the Kubernetes namespace but can be different.
-  late String volumeNamespace;
+  @JsonKey(includeIfNull: false)
+  String? volumeNamespace;
 
   factory StorageOSVolumeSource.fromJson(Map<String, dynamic> json) =>
       _$StorageOSVolumeSourceFromJson(json);

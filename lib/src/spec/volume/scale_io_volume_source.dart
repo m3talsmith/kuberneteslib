@@ -4,6 +4,12 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'scale_io_volume_source.g.dart';
 
+Map<String, dynamic>? _secretRefToJson(LocalObjectReference? ref) =>
+    ref?.toJson();
+
+LocalObjectReference? _secretRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : LocalObjectReference.fromJson(json);
+
 /// Represents a ScaleIO persistent volume source in Kubernetes.
 /// ScaleIO is a software-defined storage platform that creates a virtual SAN from server-based storage.
 @JsonSerializable()
@@ -36,7 +42,8 @@ class ScaleIOVolumeSource {
 
   /// Reference to the secret object containing sensitive information
   /// such as ScaleIO user credentials.
-  LocalObjectReference secretRef;
+  @JsonKey(includeIfNull: false, toJson: _secretRefToJson, fromJson: _secretRefFromJson)
+  LocalObjectReference? secretRef;
 
   /// Flag to enable/disable SSL communication with Gateway.
   bool sslEnabled;

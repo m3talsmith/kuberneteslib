@@ -4,6 +4,12 @@ import '../../spec/key_to_path.dart';
 
 part 'secret_volume_source.g.dart';
 
+List<Map<String, dynamic>>? _itemsToJson(List<KeyToPath>? items) =>
+    items?.map((item) => item.toJson()).toList();
+
+List<KeyToPath>? _itemsFromJson(List<dynamic>? items) =>
+    items?.map((item) => KeyToPath.fromJson(item)).toList();
+
 /// Represents a Secret volume in Kubernetes for sensitive data storage.
 ///
 /// SecretVolumeSource enables pods to access Kubernetes Secrets as files.
@@ -52,7 +58,7 @@ class SecretVolumeSource {
   /// Optional: If specified, only the listed keys will be projected into the
   /// specified paths. If unspecified, all keys will be mounted using the key
   /// name as the file name.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, toJson: _itemsToJson, fromJson: _itemsFromJson)
   List<KeyToPath>? items;
 
   /// Controls whether the Secret must exist.

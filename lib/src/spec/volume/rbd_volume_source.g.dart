@@ -8,16 +8,16 @@ part of 'rbd_volume_source.dart';
 
 RBDVolumeSource _$RBDVolumeSourceFromJson(Map<String, dynamic> json) =>
     RBDVolumeSource()
-      ..fsType = json['fsType'] as String
-      ..image = json['image'] as String
-      ..keyring = json['keyring'] as String
+      ..fsType = json['fsType'] as String?
+      ..image = json['image'] as String?
+      ..keyring = json['keyring'] as String?
       ..monitors =
-          (json['monitors'] as List<dynamic>).map((e) => e as String).toList()
-      ..pool = json['pool'] as String
-      ..readOnly = json['readOnly'] as bool
-      ..secretRef = LocalObjectReference.fromJson(
-          json['secretRef'] as Map<String, dynamic>)
-      ..user = json['user'] as String;
+          (json['monitors'] as List<dynamic>?)?.map((e) => e as String).toList()
+      ..pool = json['pool'] as String?
+      ..readOnly = json['readOnly'] as bool?
+      ..secretRef =
+          _secretRefFromJson(json['secretRef'] as Map<String, dynamic>?)
+      ..user = json['user'] as String?;
 
 Map<String, dynamic> _$RBDVolumeSourceToJson(RBDVolumeSource instance) =>
     <String, dynamic>{
@@ -27,6 +27,7 @@ Map<String, dynamic> _$RBDVolumeSourceToJson(RBDVolumeSource instance) =>
       'monitors': instance.monitors,
       'pool': instance.pool,
       'readOnly': instance.readOnly,
-      'secretRef': instance.secretRef,
+      if (_secretRefToJson(instance.secretRef) case final value?)
+        'secretRef': value,
       'user': instance.user,
     };

@@ -8,12 +8,12 @@ part of 'quobyte_volume_source.dart';
 
 QuobyteVolumeSource _$QuobyteVolumeSourceFromJson(Map<String, dynamic> json) =>
     QuobyteVolumeSource()
-      ..group = json['group'] as String
-      ..readOnly = json['readOnly'] as bool
-      ..registry = json['registry'] as String
-      ..tenant = json['tenant'] as String
-      ..user = json['user'] as String
-      ..volume = json['volume'] as String;
+      ..group = json['group'] as String?
+      ..readOnly = json['readOnly'] as bool?
+      ..registry = json['registry'] as String?
+      ..tenant = json['tenant'] as String?
+      ..user = json['user'] as String?
+      ..volume = json['volume'] as String?;
 
 Map<String, dynamic> _$QuobyteVolumeSourceToJson(
         QuobyteVolumeSource instance) =>

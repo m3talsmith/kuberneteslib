@@ -3,6 +3,12 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'rbd_volume_source.g.dart';
 
+Map<String, dynamic>? _secretRefToJson(LocalObjectReference? ref) =>
+    ref?.toJson();
+
+LocalObjectReference? _secretRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : LocalObjectReference.fromJson(json);
+
 /// Represents a Rados Block Device (RBD) volume in Kubernetes.
 ///
 /// RBDVolumeSource enables pods to use Ceph RBD (Rados Block Device) storage.
@@ -42,49 +48,50 @@ class RBDVolumeSource {
   /// 
   /// Required: Must be a filesystem type supported by the host operating system.
   /// Examples: "ext4", "xfs", "ntfs"
-  late String fsType;
+  String? fsType;
 
   /// The rados image name.
   /// 
   /// Required: Name of the RBD image in the pool.
   /// Example: "foo-image"
-  late String image;
+  String? image;
 
   /// Path to key ring for RBDUser authentication.
   /// 
   /// Optional: Defaults to /etc/ceph/keyring.
   /// Contains authentication keys for the Ceph cluster.
-  late String keyring;
+  String? keyring;
 
   /// A collection of Ceph monitors.
   /// 
   /// Required: List of Ceph monitor addresses for accessing the RADOS cluster.
   /// Format: ["<ip>:<port>", ...]
-  late List<String> monitors;
+  List<String>? monitors;
 
   /// The rados pool name.
   /// 
   /// Optional: Name of the RADOS pool containing the RBD image.
   /// Defaults to 'rbd'.
-  late String pool;
+  String? pool;
 
   /// Controls read-only access to the volume.
   /// 
   /// Optional: When true, the volume will be mounted read-only.
   /// Defaults to false.
-  late bool readOnly;
+  bool? readOnly;
 
   /// Reference to the authentication secret for RBD user.
   /// 
   /// Optional: References a Kubernetes secret containing Ceph authentication credentials.
   /// The secret must exist in the same namespace as the pod.
-  late LocalObjectReference secretRef;
+  @JsonKey(includeIfNull: false, toJson: _secretRefToJson, fromJson: _secretRefFromJson)
+  LocalObjectReference? secretRef;
 
   /// The rados user name.
   /// 
   /// Optional: Name of the RADOS user for authentication.
   /// Defaults to 'admin'.
-  late String user;
+  String? user;
 
   factory RBDVolumeSource.fromJson(Map<String, dynamic> json) =>
       _$RBDVolumeSourceFromJson(json);

@@ -8,19 +8,19 @@ part of 'iscsi_volume_source.dart';
 
 ISCSIVolumeSource _$ISCSIVolumeSourceFromJson(Map<String, dynamic> json) =>
     ISCSIVolumeSource()
-      ..chapAuthDiscovery = json['chapAuthDiscovery'] as bool
-      ..chapAuthSession = json['chapAuthSession'] as bool
-      ..fsType = json['fsType'] as String
-      ..initiatorName = json['initiatorName'] as String
-      ..iqn = json['iqn'] as String
-      ..iscsiInterface = json['iscsiInterface'] as String
-      ..lun = (json['lun'] as num).toInt()
+      ..chapAuthDiscovery = json['chapAuthDiscovery'] as bool?
+      ..chapAuthSession = json['chapAuthSession'] as bool?
+      ..fsType = json['fsType'] as String?
+      ..initiatorName = json['initiatorName'] as String?
+      ..iqn = json['iqn'] as String?
+      ..iscsiInterface = json['iscsiInterface'] as String?
+      ..lun = (json['lun'] as num?)?.toInt()
       ..portals =
-          (json['portals'] as List<dynamic>).map((e) => e as String).toList()
-      ..readOnly = json['readOnly'] as bool
-      ..secretRef = LocalObjectReference.fromJson(
-          json['secretRef'] as Map<String, dynamic>)
-      ..targetPortal = json['targetPortal'] as String;
+          (json['portals'] as List<dynamic>?)?.map((e) => e as String).toList()
+      ..readOnly = json['readOnly'] as bool?
+      ..secretRef =
+          _secretRefFromJson(json['secretRef'] as Map<String, dynamic>?)
+      ..targetPortal = json['targetPortal'] as String?;
 
 Map<String, dynamic> _$ISCSIVolumeSourceToJson(ISCSIVolumeSource instance) =>
     <String, dynamic>{
@@ -33,6 +33,7 @@ Map<String, dynamic> _$ISCSIVolumeSourceToJson(ISCSIVolumeSource instance) =>
       'lun': instance.lun,
       'portals': instance.portals,
       'readOnly': instance.readOnly,
-      'secretRef': instance.secretRef,
+      if (_secretRefToJson(instance.secretRef) case final value?)
+        'secretRef': value,
       'targetPortal': instance.targetPortal,
     };

@@ -8,27 +8,21 @@ part of 'volume_projection.dart';
 
 VolumeProjection _$VolumeProjectionFromJson(Map<String, dynamic> json) =>
     VolumeProjection()
-      ..configMap = json['configMap'] == null
-          ? null
-          : ConfigMapProjection.fromJson(
-              json['configMap'] as Map<String, dynamic>)
-      ..downwardAPI = json['downwardAPI'] == null
-          ? null
-          : DownwardAPIProjection.fromJson(
-              json['downwardAPI'] as Map<String, dynamic>)
-      ..secret = json['secret'] == null
-          ? null
-          : SecretProjection.fromJson(json['secret'] as Map<String, dynamic>)
-      ..serviceAccountToken = json['serviceAccountToken'] == null
-          ? null
-          : ServiceAccountTokenProjection.fromJson(
-              json['serviceAccountToken'] as Map<String, dynamic>);
+      ..configMap = _configMapFromJson(json['configMap'])
+      ..downwardAPI =
+          _downwardAPIFromJson(json['downwardAPI'] as Map<String, dynamic>?)
+      ..secret = _secretFromJson(json['secret'] as Map<String, dynamic>?)
+      ..serviceAccountToken = _serviceAccountTokenFromJson(
+          json['serviceAccountToken'] as Map<String, dynamic>?);
 
 Map<String, dynamic> _$VolumeProjectionToJson(VolumeProjection instance) =>
     <String, dynamic>{
-      if (instance.configMap case final value?) 'configMap': value,
-      if (instance.downwardAPI case final value?) 'downwardAPI': value,
-      if (instance.secret case final value?) 'secret': value,
-      if (instance.serviceAccountToken case final value?)
+      if (_configMapToJson(instance.configMap) case final value?)
+        'configMap': value,
+      if (_downwardAPIToJson(instance.downwardAPI) case final value?)
+        'downwardAPI': value,
+      if (_secretToJson(instance.secret) case final value?) 'secret': value,
+      if (_serviceAccountTokenToJson(instance.serviceAccountToken)
+          case final value?)
         'serviceAccountToken': value,
     };

@@ -5,6 +5,12 @@ import 'persistent_volume_claim_spec.dart';
 
 part 'persistent_volume_claim_template.g.dart';
 
+Map<String, dynamic>? _metadataToJson(ObjectMeta? metadata) =>
+    metadata?.toJson();
+
+ObjectMeta? _metadataFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : ObjectMeta.fromJson(json);
+
 /// Represents a PersistentVolumeClaim template in Kubernetes.
 ///
 /// PersistentVolumeClaimTemplate is used to dynamically create PVCs, typically
@@ -43,7 +49,8 @@ class PersistentVolumeClaimTemplate {
   /// StatefulSet will append a unique identifier to the name for each pod.
   /// Example: If template name is "data" and StatefulSet name is "mysql",
   /// PVCs will be named "data-mysql-0", "data-mysql-1", etc.
-  ObjectMeta metadata;
+  @JsonKey(includeIfNull: false, toJson: _metadataToJson, fromJson: _metadataFromJson)
+  ObjectMeta? metadata;
 
   /// Specification for the PVCs created from this template.
   /// 
@@ -52,7 +59,8 @@ class PersistentVolumeClaimTemplate {
   /// - Access modes
   /// - Volume mode
   /// - Selector criteria
-  PersistentVolumeClaimSpec spec;
+  @JsonKey(includeIfNull: false, toJson: _specToJson, fromJson: _specFromJson)
+  PersistentVolumeClaimSpec? spec;
 
   PersistentVolumeClaimTemplate()
       : metadata = ObjectMeta(),
@@ -63,3 +71,6 @@ class PersistentVolumeClaimTemplate {
 
   Map<String, dynamic> toJson() => _$PersistentVolumeClaimTemplateToJson(this);
 }
+
+Map<String, dynamic>? _specToJson(PersistentVolumeClaimSpec? spec) => spec?.toJson();
+PersistentVolumeClaimSpec? _specFromJson(Map<String, dynamic>? json) => json == null ? null : PersistentVolumeClaimSpec.fromJson(json);

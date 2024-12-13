@@ -34,13 +34,13 @@ class FlockerVolumeSource {
   /// 
   /// The dataset name is used as metadata to identify the volume
   /// in the Flocker control service.
-  late String datasetName;
+  String? datasetName;
 
   /// Unique identifier for the Flocker dataset.
   /// 
   /// The UUID uniquely identifies a specific dataset in the Flocker cluster.
   /// This ID is used to ensure the correct dataset is mounted.
-  late String datasetUUID;
+  String? datasetUUID;
 
   factory FlockerVolumeSource.fromJson(Map<String, dynamic> json) =>
       _$FlockerVolumeSourceFromJson(json);

@@ -8,12 +8,15 @@ part of 'ephemeral_volume_source.dart';
 
 EphemeralVolumeSource _$EphemeralVolumeSourceFromJson(
         Map<String, dynamic> json) =>
-    EphemeralVolumeSource()
-      ..volumeClaimTemplate = PersistentVolumeClaimTemplate.fromJson(
-          json['volumeClaimTemplate'] as Map<String, dynamic>);
+    EphemeralVolumeSource(
+      volumeClaimTemplate: _volumeClaimTemplateFromJson(
+          json['volumeClaimTemplate'] as Map<String, dynamic>?),
+    );
 
 Map<String, dynamic> _$EphemeralVolumeSourceToJson(
         EphemeralVolumeSource instance) =>
     <String, dynamic>{
-      'volumeClaimTemplate': instance.volumeClaimTemplate,
+      if (_volumeClaimTemplateToJson(instance.volumeClaimTemplate)
+          case final value?)
+        'volumeClaimTemplate': value,
     };

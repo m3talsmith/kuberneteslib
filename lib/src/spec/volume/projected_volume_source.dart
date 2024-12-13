@@ -5,6 +5,12 @@ import 'volume_projection.dart';
 
 part 'projected_volume_source.g.dart';
 
+List<Map<String, dynamic>>? _sourcesToJson(List<VolumeProjection>? sources) =>
+    sources?.map((source) => source.toJson()).toList();
+
+List<VolumeProjection>? _sourcesFromJson(List<dynamic>? sources) =>
+    sources?.map((source) => VolumeProjection.fromJson(source)).toList();
+
 /// Represents a projected volume in Kubernetes for combining multiple volume sources.
 ///
 /// ProjectedVolumeSource enables pods to combine multiple volume sources into a
@@ -57,7 +63,7 @@ class ProjectedVolumeSource {
   /// 
   /// Required: Contains the volume sources to project into a single directory.
   /// Sources can include Secrets, ConfigMaps, DownwardAPI, and ServiceAccountTokens.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, toJson: _sourcesToJson, fromJson: _sourcesFromJson)
   List<VolumeProjection>? sources;
 
   factory ProjectedVolumeSource.fromJson(Map<String, dynamic> json) =>

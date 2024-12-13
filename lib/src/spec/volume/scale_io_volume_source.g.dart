@@ -12,8 +12,7 @@ ScaleIOVolumeSource _$ScaleIOVolumeSourceFromJson(Map<String, dynamic> json) =>
       gateway: json['gateway'] as String,
       protectionDomain: json['protectionDomain'] as String,
       readOnly: json['readOnly'] as bool,
-      secretRef: LocalObjectReference.fromJson(
-          json['secretRef'] as Map<String, dynamic>),
+      secretRef: _secretRefFromJson(json['secretRef'] as Map<String, dynamic>?),
       sslEnabled: json['sslEnabled'] as bool,
       storageMode: json['storageMode'] as String,
       storagePool: json['storagePool'] as String,
@@ -28,7 +27,8 @@ Map<String, dynamic> _$ScaleIOVolumeSourceToJson(
       'gateway': instance.gateway,
       'protectionDomain': instance.protectionDomain,
       'readOnly': instance.readOnly,
-      'secretRef': instance.secretRef,
+      if (_secretRefToJson(instance.secretRef) case final value?)
+        'secretRef': value,
       'sslEnabled': instance.sslEnabled,
       'storageMode': instance.storageMode,
       'storagePool': instance.storagePool,

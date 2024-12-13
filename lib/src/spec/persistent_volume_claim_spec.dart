@@ -7,6 +7,30 @@ import 'typed_object_reference.dart';
 
 part 'persistent_volume_claim_spec.g.dart';
 
+Map<String, dynamic>? _dataSourceToJson(TypedLocalObjectReference? ref) =>
+    ref?.toJson();
+
+TypedLocalObjectReference? _dataSourceFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : TypedLocalObjectReference.fromJson(json);
+
+Map<String, dynamic>? _dataSourceRefToJson(TypedObjectReference? ref) =>
+    ref?.toJson();
+
+TypedObjectReference? _dataSourceRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : TypedObjectReference.fromJson(json);
+
+Map<String, dynamic>? _resourcesToJson(ResourceRequirements? resources) =>
+    resources?.toJson();
+
+ResourceRequirements? _resourcesFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : ResourceRequirements.fromJson(json);
+
+Map<String, dynamic>? _selectorToJson(LabelSelector? selector) =>
+    selector?.toJson();
+
+LabelSelector? _selectorFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : LabelSelector.fromJson(json);
+
 /// Represents a PersistentVolumeClaim (PVC) specification in Kubernetes.
 ///
 /// PersistentVolumeClaimSpec defines the desired characteristics of a volume
@@ -49,50 +73,54 @@ class PersistentVolumeClaimSpec {
   /// - `ReadOnlyMany` (ROX): Volume can be mounted as read-only by many nodes
   /// - `ReadWriteMany` (RWX): Volume can be mounted as read-write by many nodes
   /// - `ReadWriteOncePod` (RWOP): Volume can be mounted as read-write by a single pod
-  late List<String> accessModes;
+  List<String>? accessModes;
 
   /// Reference to a volume snapshot or other data source in the same namespace.
   /// 
   /// Used for pre-populating the PVC with data from another source.
   /// Only one of dataSource or dataSourceRef can be specified.
-  late TypedLocalObjectReference dataSource;
+  @JsonKey(includeIfNull: false, toJson: _dataSourceToJson, fromJson: _dataSourceFromJson)
+  TypedLocalObjectReference? dataSource;
 
   /// Reference to a volume snapshot or other data source, potentially in another namespace.
   /// 
   /// Similar to dataSource but allows cross-namespace references.
   /// Only one of dataSource or dataSourceRef can be specified.
-  late TypedObjectReference dataSourceRef;
+  @JsonKey(includeIfNull: false, toJson: _dataSourceRefToJson, fromJson: _dataSourceRefFromJson)
+  TypedObjectReference? dataSourceRef;
 
   /// Resource requirements for the persistent volume claim.
   /// 
   /// Typically specifies storage size requirements using the 'requests' field.
   /// Example: {'storage': '10Gi'}
-  late ResourceRequirements resources;
+  @JsonKey(includeIfNull: false, toJson: _resourcesToJson, fromJson: _resourcesFromJson)
+  ResourceRequirements? resources;
 
   /// Label selector to filter potential persistent volumes.
   /// 
   /// Used to bind to specific PVs based on their labels.
   /// If specified, only volumes matching the selector can be bound.
-  late LabelSelector selector;
+  @JsonKey(includeIfNull: false, toJson: _selectorToJson, fromJson: _selectorFromJson)
+  LabelSelector? selector;
 
   /// Name of the desired StorageClass for this claim.
   /// 
   /// The StorageClass determines the provisioning behavior and type of storage.
   /// Use empty string for immediate volume binding, or null to use the default class.
-  late String storageClassName;
+  String? storageClassName;
 
   /// Defines how the volume should be formatted and mounted.
   /// 
   /// Values:
   /// - `Filesystem`: Traditional filesystem-based storage (default)
   /// - `Block`: Raw block device without a filesystem
-  late String volumeMode;
+  String? volumeMode;
 
   /// Name of a specific PersistentVolume to bind to.
   /// 
   /// If specified, binds exclusively to the named volume.
   /// Volume must exist and match other requirements (size, access modes, etc.).
-  late String volumeName;
+  String? volumeName;
 
   factory PersistentVolumeClaimSpec.fromJson(Map<String, dynamic> json) =>
       _$PersistentVolumeClaimSpecFromJson(json);
