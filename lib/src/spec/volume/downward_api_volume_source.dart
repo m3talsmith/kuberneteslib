@@ -3,6 +3,49 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'downward_api_volume_source.g.dart';
 
+dynamic _modeFromJson(dynamic value) {
+  if (value is String) {
+    return int.parse(value, radix: 8);
+  } else if (value is int) {
+    return _encodeMode(value);
+  }
+  return null;
+}
+
+dynamic _modeToJson(dynamic mode) {
+  if (mode is int) {
+    return _decodeMode(mode);
+  }
+  return mode;
+}
+
+int? _encodeMode(dynamic mode) {
+  if (mode is int) {
+    if (mode > 511) {
+      mode = '0${mode.toString()}';
+      mode = int.parse(mode, radix: 8);
+    }
+    return mode;
+  } else if (mode is String) {
+    return int.parse(mode, radix: 8);
+  }
+  return null;
+}
+
+String? _decodeMode(int? mode) {
+  if (mode == null) {
+    return null;
+  }
+  mode = _encodeMode(mode);
+  return mode?.toRadixString(8).padLeft(4, '0');
+}
+
+List<Map<String, dynamic>>? _itemsToJson(List<DownwardAPIVolumeFile>? items) =>
+    items?.map((item) => item.toJson()).toList();
+
+List<DownwardAPIVolumeFile>? _itemsFromJson(List<dynamic>? items) =>
+    items?.map((item) => DownwardAPIVolumeFile.fromJson(item)).toList();
+
 /// Represents a volume that exposes pod information as files using Kubernetes Downward API.
 ///
 /// DownwardAPIVolumeSource enables pods to access their own information without
@@ -37,7 +80,8 @@ part 'downward_api_volume_source.g.dart';
 /// for more details about Downward API volumes.
 @JsonSerializable()
 class DownwardAPIVolumeSource {
-  DownwardAPIVolumeSource();
+  DownwardAPIVolumeSource({dynamic defaultMode, this.items})
+      : defaultMode = _encodeMode(defaultMode);
 
   /// Default Unix permission mode for created files.
   /// 
@@ -47,13 +91,15 @@ class DownwardAPIVolumeSource {
   /// Common values:
   /// - 0644 (octal) / 420 (decimal): Read/write for owner, read-only for others
   /// - 0600 (octal) / 384 (decimal): Read/write for owner only
-  late int defaultMode;
+  @JsonKey(includeIfNull: false, fromJson: _modeFromJson, toJson: _modeToJson)
+  dynamic defaultMode;
 
   /// List of downward API volume file configurations.
   /// 
   /// Required: Represents the files to be exposed to the container through the downward API.
   /// Each item specifies a file path and the source of data to be exposed.
-  late List<DownwardAPIVolumeFile> items;
+  @JsonKey(includeIfNull: false, fromJson: _itemsFromJson, toJson: _itemsToJson)
+  List<DownwardAPIVolumeFile>? items;
 
   factory DownwardAPIVolumeSource.fromJson(Map<String, dynamic> json) =>
       _$DownwardAPIVolumeSourceFromJson(json);

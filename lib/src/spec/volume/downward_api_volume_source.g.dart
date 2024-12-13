@@ -8,15 +8,15 @@ part of 'downward_api_volume_source.dart';
 
 DownwardAPIVolumeSource _$DownwardAPIVolumeSourceFromJson(
         Map<String, dynamic> json) =>
-    DownwardAPIVolumeSource()
-      ..defaultMode = (json['defaultMode'] as num).toInt()
-      ..items = (json['items'] as List<dynamic>)
-          .map((e) => DownwardAPIVolumeFile.fromJson(e as Map<String, dynamic>))
-          .toList();
+    DownwardAPIVolumeSource(
+      defaultMode: _modeFromJson(json['defaultMode']),
+      items: _itemsFromJson(json['items'] as List?),
+    );
 
 Map<String, dynamic> _$DownwardAPIVolumeSourceToJson(
         DownwardAPIVolumeSource instance) =>
     <String, dynamic>{
-      'defaultMode': instance.defaultMode,
-      'items': instance.items,
+      if (_modeToJson(instance.defaultMode) case final value?)
+        'defaultMode': value,
+      if (_itemsToJson(instance.items) case final value?) 'items': value,
     };

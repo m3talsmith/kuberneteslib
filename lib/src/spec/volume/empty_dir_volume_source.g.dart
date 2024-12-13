@@ -10,9 +10,7 @@ EmptyDirVolumeSource _$EmptyDirVolumeSourceFromJson(
         Map<String, dynamic> json) =>
     EmptyDirVolumeSource()
       ..medium = json['medium'] as String?
-      ..sizeLimit = json['sizeLimit'] == null
-          ? null
-          : Quantity.fromJson(json['sizeLimit'] as Map<String, dynamic>);
+      ..sizeLimit = json['sizeLimit'] as String?;
 
 Map<String, dynamic> _$EmptyDirVolumeSourceToJson(
         EmptyDirVolumeSource instance) =>
