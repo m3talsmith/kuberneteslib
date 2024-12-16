@@ -53,9 +53,15 @@ analysis() async {
   }
 
   print('Running dart test');
-  process = await Process.run('dart', ['test', '.']);
+  process = await Process.run('dart', ['test', '--chain-stack-traces', '.']);
   if (process.stdout.isNotEmpty) {
     print('[stdout] ${process.stdout}');
+    if (process.stdout.contains('Some tests failed')) {
+      print('dart test failed');
+      exit(1);
+    } else {
+      print('dart test passed');
+    }
   }
   if (process.stderr.isNotEmpty) {
     if (process.stderr.contains('Warning:')) {

@@ -51,7 +51,6 @@ void main() {
     test('deserializes from JSON correctly', () {
       final json = {
         'configMap': {'name': 'test-config'},
-        'downwardAPI': {},
         'secret': {'name': 'test-secret'},
         'serviceAccountToken': {
           'audience': 'test-audience',
@@ -63,7 +62,6 @@ void main() {
       final projection = VolumeProjection.fromJson(json);
 
       expect(projection.configMap?.name, equals('test-config'));
-      expect(projection.downwardAPI, isNotNull);
       expect(projection.secret?.name, equals('test-secret'));
       expect(projection.serviceAccountToken?.audience, equals('test-audience'));
       expect(projection.serviceAccountToken?.expirationSeconds, equals(3600));

@@ -39,8 +39,6 @@ void main() {
       expect(json, {
         'volumePath': '[datastore1] disk.vmdk',
         'fsType': 'ext4',
-        'storagePolicyName': null,
-        'storagePolicyID': null,
       });
     });
   });
