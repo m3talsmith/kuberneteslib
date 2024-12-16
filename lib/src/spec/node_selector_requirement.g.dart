@@ -11,14 +11,13 @@ NodeSelectorRequirement _$NodeSelectorRequirementFromJson(
     NodeSelectorRequirement(
       key: json['key'] as String?,
       operator: json['operator'] as String?,
-      values:
-          (json['values'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      values: _valuesFromJson(json['values'] as List?),
     );
 
 Map<String, dynamic> _$NodeSelectorRequirementToJson(
         NodeSelectorRequirement instance) =>
     <String, dynamic>{
-      'key': instance.key,
-      'operator': instance.operator,
-      'values': instance.values,
+      if (instance.key case final value?) 'key': value,
+      if (instance.operator case final value?) 'operator': value,
+      if (_valuesToJson(instance.values) case final value?) 'values': value,
     };

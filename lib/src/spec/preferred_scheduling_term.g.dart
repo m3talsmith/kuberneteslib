@@ -8,14 +8,16 @@ part of 'preferred_scheduling_term.dart';
 
 PreferredSchedulingTerm _$PreferredSchedulingTermFromJson(
         Map<String, dynamic> json) =>
-    PreferredSchedulingTerm()
-      ..preference =
-          NodeSelectorTerm.fromJson(json['preference'] as Map<String, dynamic>)
-      ..weight = (json['weight'] as num).toInt();
+    PreferredSchedulingTerm(
+      preference: _nodeSelectorTermFromJson(
+          json['preference'] as Map<String, dynamic>?),
+      weight: (json['weight'] as num?)?.toInt(),
+    );
 
 Map<String, dynamic> _$PreferredSchedulingTermToJson(
         PreferredSchedulingTerm instance) =>
     <String, dynamic>{
-      'preference': instance.preference,
-      'weight': instance.weight,
+      if (_nodeSelectorTermToJson(instance.preference) case final value?)
+        'preference': value,
+      if (instance.weight case final value?) 'weight': value,
     };

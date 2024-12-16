@@ -4,6 +4,17 @@ import 'label_selector.dart';
 
 part 'pod_affinity_term.g.dart';
 
+Map<String, dynamic>? _labelSelectorToJson(LabelSelector? instance) =>
+    instance?.toJson();
+
+LabelSelector? _labelSelectorFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : LabelSelector.fromJson(json);
+
+List<String>? _namespacesFromJson(List<dynamic>? json) =>
+    json?.map((e) => e as String).toList();
+
+List<dynamic>? _namespacesToJson(List<String>? instance) => instance?.toList();
+
 /// Represents a pod affinity term in Kubernetes.
 ///
 /// PodAffinityTerm defines rules for pod placement based on the location of other pods.
@@ -34,34 +45,53 @@ part 'pod_affinity_term.g.dart';
 /// for more details about pod affinity.
 @JsonSerializable()
 class PodAffinityTerm {
-  PodAffinityTerm(): labelSelector = LabelSelector(), namespaceSelector = LabelSelector(), namespaces = [], topologyKey = '';
+  PodAffinityTerm({
+    this.labelSelector,
+    this.namespaceSelector,
+    this.namespaces,
+    this.topologyKey,
+  });
+
   /// Label selector for identifying target pods.
-  /// 
+  ///
   /// Defines which pods this affinity term applies to based on their labels.
   /// Must match for the affinity rule to take effect.
-  final LabelSelector labelSelector;
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _labelSelectorFromJson,
+      toJson: _labelSelectorToJson)
+  LabelSelector? labelSelector;
 
   /// Label selector for filtering namespaces to search in.
-  /// 
+  ///
   /// When specified, only namespaces matching these labels will be considered
   /// when looking for matching pods. Works in conjunction with [namespaces].
-  final LabelSelector namespaceSelector;
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _labelSelectorFromJson,
+      toJson: _labelSelectorToJson)
+  LabelSelector? namespaceSelector;
 
   /// List of specific namespaces to search for matching pods.
-  /// 
+  ///
   /// When specified, only these namespaces will be considered.
   /// If empty and namespaceSelector is null, defaults to the pod's namespace.
-  final List<String> namespaces;
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _namespacesFromJson,
+      toJson: _namespacesToJson)
+  List<String>? namespaces;
 
   /// The node topology key used for pod distribution.
-  /// 
+  ///
   /// Pods matching the affinity rules will be scheduled relative to each other
   /// based on this topology domain. Common values:
   /// - kubernetes.io/hostname
   /// - topology.kubernetes.io/zone
   /// - topology.kubernetes.io/region
-  final String topologyKey;
-  
+  @JsonKey(includeIfNull: false)
+  String? topologyKey;
+
   factory PodAffinityTerm.fromJson(Map<String, dynamic> json) =>
       _$PodAffinityTermFromJson(json);
 

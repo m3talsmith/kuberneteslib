@@ -8,7 +8,8 @@ part of 'volume_projection.dart';
 
 VolumeProjection _$VolumeProjectionFromJson(Map<String, dynamic> json) =>
     VolumeProjection()
-      ..configMap = _configMapFromJson(json['configMap'])
+      ..configMap =
+          _configMapFromJson(json['configMap'] as Map<String, dynamic>?)
       ..downwardAPI =
           _downwardAPIFromJson(json['downwardAPI'] as Map<String, dynamic>?)
       ..secret = _secretFromJson(json['secret'] as Map<String, dynamic>?)

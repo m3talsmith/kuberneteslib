@@ -7,18 +7,19 @@ part of 'node_selector_term.dart';
 // **************************************************************************
 
 NodeSelectorTerm _$NodeSelectorTermFromJson(Map<String, dynamic> json) =>
-    NodeSelectorTerm()
-      ..matchExpressions = (json['matchExpressions'] as List<dynamic>?)
-          ?.map((e) =>
-              NodeSelectorRequirement.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..matchFields = (json['matchFields'] as List<dynamic>?)
-          ?.map((e) =>
-              NodeSelectorRequirement.fromJson(e as Map<String, dynamic>))
-          .toList();
+    NodeSelectorTerm(
+      matchExpressions:
+          _nodeSelectorRequirementFromJson(json['matchExpressions'] as List?),
+      matchFields:
+          _nodeSelectorRequirementFromJson(json['matchFields'] as List?),
+    );
 
 Map<String, dynamic> _$NodeSelectorTermToJson(NodeSelectorTerm instance) =>
     <String, dynamic>{
-      'matchExpressions': instance.matchExpressions,
-      'matchFields': instance.matchFields,
+      if (_nodeSelectorRequirementToJson(instance.matchExpressions)
+          case final value?)
+        'matchExpressions': value,
+      if (_nodeSelectorRequirementToJson(instance.matchFields)
+          case final value?)
+        'matchFields': value,
     };

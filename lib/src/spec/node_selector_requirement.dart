@@ -2,6 +2,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'node_selector_requirement.g.dart';
 
+List<String>? _valuesFromJson(List<dynamic>? json) =>
+    json?.map((e) => e as String).toList();
+
+List<dynamic>? _valuesToJson(List<String>? instance) => instance?.toList();
+
 /// Represents a node selector requirement in Kubernetes.
 ///
 /// NodeSelectorRequirement defines criteria for selecting nodes based on their
@@ -40,25 +45,29 @@ class NodeSelectorRequirement {
   NodeSelectorRequirement({this.key, this.operator, this.values});
 
   /// The label or field key that the selector applies to.
-  /// 
+  ///
   /// Examples:
   /// - 'kubernetes.io/os'
   /// - 'node.kubernetes.io/instance-type'
   /// - 'topology.kubernetes.io/zone'
+  @JsonKey(includeIfNull: false)
   String? key;
 
   /// The operator that relates the key with values.
-  /// 
+  ///
   /// Must be one of: In, NotIn, Exists, DoesNotExist, Gt, Lt
   /// Determines how the requirement selects nodes.
+  @JsonKey(includeIfNull: false)
   String? operator;
 
   /// The array of values to select nodes by.
-  /// 
+  ///
   /// The meaning depends on the operator:
   /// - For In and NotIn: List of values to match against
   /// - For Exists and DoesNotExist: Must be empty
   /// - For Gt and Lt: Must contain exactly one value
+  @JsonKey(
+      includeIfNull: false, fromJson: _valuesFromJson, toJson: _valuesToJson)
   List<String>? values;
 
   factory NodeSelectorRequirement.fromJson(Map<String, dynamic> json) =>

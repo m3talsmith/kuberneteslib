@@ -4,6 +4,12 @@ import 'pod_affinity_term.dart';
 
 part 'weighted_pod_affinity_term.g.dart';
 
+Map<String, dynamic>? _podAffinityTermToJson(PodAffinityTerm? instance) =>
+    instance?.toJson();
+
+PodAffinityTerm? _podAffinityTermFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : PodAffinityTerm.fromJson(json);
+
 /// Represents a weighted pod affinity term in Kubernetes scheduling.
 ///
 /// WeightedPodAffinityTerm enables defining pod affinity preferences with
@@ -33,21 +39,25 @@ part 'weighted_pod_affinity_term.g.dart';
 /// for more details about pod affinity scheduling.
 @JsonSerializable()
 class WeightedPodAffinityTerm {
-  WeightedPodAffinityTerm(): podAffinityTerm = PodAffinityTerm(), weight = 0;
+  WeightedPodAffinityTerm({this.podAffinityTerm, this.weight});
 
   /// The pod affinity term associated with the weight.
-  /// 
+  ///
   /// Defines the matching criteria for pod affinity scheduling.
-  final PodAffinityTerm podAffinityTerm;
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _podAffinityTermFromJson,
+      toJson: _podAffinityTermToJson)
+  PodAffinityTerm? podAffinityTerm;
 
   /// Weight associated with this pod affinity term.
-  /// 
+  ///
   /// Higher weights indicate stronger preferences in scheduling decisions.
   /// The weight must be in the range 1-100.
-  final int weight;
+  int? weight;
 
   factory WeightedPodAffinityTerm.fromJson(Map<String, dynamic> json) =>
       _$WeightedPodAffinityTermFromJson(json);
-  
+
   Map<String, dynamic> toJson() => _$WeightedPodAffinityTermToJson(this);
 }

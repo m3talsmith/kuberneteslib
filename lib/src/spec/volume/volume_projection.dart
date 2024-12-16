@@ -19,16 +19,17 @@ Map<String, dynamic>? _downwardAPIToJson(DownwardAPIProjection? ref) =>
 DownwardAPIProjection? _downwardAPIFromJson(Map<String, dynamic>? json) =>
     json == null ? null : DownwardAPIProjection.fromJson(json);
 
-Map<String, dynamic>? _secretToJson(SecretProjection? ref) =>
-    ref?.toJson();
+Map<String, dynamic>? _secretToJson(SecretProjection? ref) => ref?.toJson();
 
 SecretProjection? _secretFromJson(Map<String, dynamic>? json) =>
     json == null ? null : SecretProjection.fromJson(json);
 
-Map<String, dynamic>? _serviceAccountTokenToJson(ServiceAccountTokenProjection? ref) =>
+Map<String, dynamic>? _serviceAccountTokenToJson(
+        ServiceAccountTokenProjection? ref) =>
     ref?.toJson();
 
-ServiceAccountTokenProjection? _serviceAccountTokenFromJson(Map<String, dynamic>? json) =>
+ServiceAccountTokenProjection? _serviceAccountTokenFromJson(
+        Map<String, dynamic>? json) =>
     json == null ? null : ServiceAccountTokenProjection.fromJson(json);
 
 /// Represents a volume projection configuration in Kubernetes.
@@ -72,31 +73,41 @@ class VolumeProjection {
   VolumeProjection();
 
   /// ConfigMap projection configuration.
-  /// 
+  ///
   /// Optional: Projects specific keys from a ConfigMap into the volume.
   /// Commonly used for application configuration files.
-  @JsonKey(includeIfNull: false, toJson: _configMapToJson, fromJson: _configMapFromJson)
+  @JsonKey(
+      includeIfNull: false,
+      toJson: _configMapToJson,
+      fromJson: _configMapFromJson)
   ConfigMapProjection? configMap;
 
   /// Downward API projection configuration.
-  /// 
+  ///
   /// Optional: Projects pod and container information into the volume.
   /// Useful for accessing metadata about the running pod.
-  @JsonKey(includeIfNull: false, toJson: _downwardAPIToJson, fromJson: _downwardAPIFromJson)
+  @JsonKey(
+      includeIfNull: false,
+      toJson: _downwardAPIToJson,
+      fromJson: _downwardAPIFromJson)
   DownwardAPIProjection? downwardAPI;
 
   /// Secret projection configuration.
-  /// 
+  ///
   /// Optional: Projects sensitive data from a Secret into the volume.
   /// Commonly used for credentials and certificates.
-  @JsonKey(includeIfNull: false, toJson: _secretToJson, fromJson: _secretFromJson)
+  @JsonKey(
+      includeIfNull: false, toJson: _secretToJson, fromJson: _secretFromJson)
   SecretProjection? secret;
 
   /// ServiceAccount token projection configuration.
-  /// 
+  ///
   /// Optional: Projects a service account token into the volume.
   /// Used for authenticating with the Kubernetes API.
-  @JsonKey(includeIfNull: false, toJson: _serviceAccountTokenToJson, fromJson: _serviceAccountTokenFromJson)
+  @JsonKey(
+      includeIfNull: false,
+      toJson: _serviceAccountTokenToJson,
+      fromJson: _serviceAccountTokenFromJson)
   ServiceAccountTokenProjection? serviceAccountToken;
 
   factory VolumeProjection.fromJson(Map<String, dynamic> json) =>

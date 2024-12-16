@@ -4,6 +4,17 @@ import 'node_selector_requirement.dart';
 
 part 'node_selector_term.g.dart';
 
+List<NodeSelectorRequirement>? _nodeSelectorRequirementFromJson(
+        List<dynamic>? json) =>
+    json
+        ?.map(
+            (e) => NodeSelectorRequirement.fromJson(e as Map<String, dynamic>))
+        .toList();
+
+List<Map<String, dynamic>>? _nodeSelectorRequirementToJson(
+        List<NodeSelectorRequirement>? requirements) =>
+    requirements?.map((e) => e.toJson()).toList();
+
 /// Represents a node selector term in Kubernetes.
 ///
 /// NodeSelectorTerm combines multiple node selection requirements into a single term.
@@ -44,21 +55,32 @@ part 'node_selector_term.g.dart';
 /// for more details about node selection.
 @JsonSerializable()
 class NodeSelectorTerm {
-  NodeSelectorTerm();
+  NodeSelectorTerm({
+    this.matchExpressions,
+    this.matchFields,
+  });
 
   /// A list of node label selector requirements.
-  /// 
+  ///
   /// These requirements are based on node labels and are evaluated as a logical AND.
   /// Each requirement specifies a key, operator, and values for matching node labels.
   /// If empty, this criterion is ignored.
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _nodeSelectorRequirementFromJson,
+      toJson: _nodeSelectorRequirementToJson)
   List<NodeSelectorRequirement>? matchExpressions;
 
   /// A list of node field selector requirements.
-  /// 
+  ///
   /// These requirements are based on node fields (e.g., metadata.name,
   /// metadata.namespace) and are evaluated as a logical AND. Each requirement
   /// specifies a key, operator, and values for matching node fields.
   /// If empty, this criterion is ignored.
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _nodeSelectorRequirementFromJson,
+      toJson: _nodeSelectorRequirementToJson)
   List<NodeSelectorRequirement>? matchFields;
 
   factory NodeSelectorTerm.fromJson(Map<String, dynamic> json) =>
