@@ -64,6 +64,7 @@ class Resource implements ResourceBase {
     this.kind,
     this.namespace,
     this.auth,
+    this.apiVersion,
   });
 
   /// The API version of the resource.

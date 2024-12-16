@@ -23,11 +23,6 @@ import 'package:kuberneteslib/kuberneteslib.dart';
 /// The template handles JSON serialization/deserialization with proper type
 /// conversion for all resource fields including specs and status information.
 class ResourceTemplate extends Resource {
-  /// The API version for this resource (e.g., 'v1', 'apps/v1', 'batch/v1').
-  /// Defaults to 'v1' for core API resources.
-  @override
-  final String apiVersion;
-
   /// Creates a new [ResourceTemplate] with required fields.
   ///
   /// Parameters:
@@ -37,8 +32,8 @@ class ResourceTemplate extends Resource {
   ResourceTemplate(
       {required String kind,
       required ObjectMeta metadata,
-      this.apiVersion = 'v1'})
-      : super(kind: kind, metadata: metadata);
+      String apiVersion = 'v1'})
+      : super(kind: kind, metadata: metadata, apiVersion: apiVersion);
 
   /// Creates a [ResourceTemplate] from a JSON map.
   ///
