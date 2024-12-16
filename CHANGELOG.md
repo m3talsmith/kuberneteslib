@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.4.83
+
+- Added pre-commit hook to run analysis, format, and tests
+
 ## 0.4.82
 
 - Added tests for all volume types
