@@ -25,6 +25,7 @@ import 'package:kuberneteslib/kuberneteslib.dart';
 class ResourceTemplate extends Resource {
   /// The API version for this resource (e.g., 'v1', 'apps/v1', 'batch/v1').
   /// Defaults to 'v1' for core API resources.
+  @override
   final String apiVersion;
 
   /// Creates a new [ResourceTemplate] with required fields.
