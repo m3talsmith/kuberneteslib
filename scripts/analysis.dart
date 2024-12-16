@@ -31,7 +31,7 @@ analysis() async {
   process = await Process.run('dart', ['analyze', '.']);
   if (process.stdout.isNotEmpty) {
     print('[stdout] ${process.stdout}');
-    final exp = RegExp(r'(\d+) issues found');
+    final exp = RegExp(r'(\d+) issue(s)? found');
     final issues = exp.allMatches(process.stdout);
     if (issues.isNotEmpty && issues.first.group(1) != '0') {
       print('dart analyze failed. Try running `dart fix --apply`');
