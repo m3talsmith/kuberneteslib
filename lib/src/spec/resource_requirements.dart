@@ -41,13 +41,13 @@ class ResourceRequirements {
   ResourceRequirements();
 
   /// Resource claims required by the container/pod.
-  /// 
+  ///
   /// Used to request external resources like GPUs or specialized hardware.
   @JsonKey(includeIfNull: false)
   List<ResourceClaim>? claims;
 
   /// Maximum resource limits enforced on the container/pod.
-  /// 
+  ///
   /// Common resources:
   /// - 'cpu': CPU cores (e.g., '1' = 1 core, '500m' = 0.5 cores)
   /// - 'memory': RAM (e.g., '256Mi', '1Gi')
@@ -56,7 +56,7 @@ class ResourceRequirements {
   Map<String, dynamic>? limits;
 
   /// Minimum resource requests guaranteed to the container/pod.
-  /// 
+  ///
   /// Common resources:
   /// - 'cpu': CPU cores (e.g., '1' = 1 core, '500m' = 0.5 cores)
   /// - 'memory': RAM (e.g., '256Mi', '1Gi')

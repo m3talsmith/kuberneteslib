@@ -1,7 +1,7 @@
 import 'package:yaml/yaml.dart';
 
 /// Converts a YAML node to its corresponding Dart type.
-/// 
+///
 /// Handles conversion of:
 /// - YamlMap to Map<String, dynamic>
 /// - YamlList to List<dynamic>
@@ -21,7 +21,7 @@ dynamic _convertNode(dynamic v) {
 }
 
 /// Converts a [YamlMap] to a Dart [Map<String, dynamic>].
-/// 
+///
 /// Used internally to convert YAML structures to Dart structures.
 Map<String, dynamic> fromYamlMap(YamlMap nodes) {
   var map = <String, dynamic>{};

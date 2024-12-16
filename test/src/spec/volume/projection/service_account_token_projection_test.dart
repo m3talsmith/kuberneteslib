@@ -30,7 +30,7 @@ void main() {
       };
 
       final projection = ServiceAccountTokenProjection.fromJson(json);
-      
+
       expect(projection.audience, 'https://api.example.com');
       expect(projection.expirationSeconds, 7200);
       expect(projection.path, '/var/run/secrets/tokens/api-token');
@@ -51,8 +51,8 @@ void main() {
 
     test('null values are excluded from JSON', () {
       final projection = ServiceAccountTokenProjection();
-      
+
       expect(projection.toJson(), isEmpty);
     });
   });
-} 
+}

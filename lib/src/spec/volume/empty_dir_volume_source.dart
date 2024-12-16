@@ -31,7 +31,7 @@ class EmptyDirVolumeSource {
   EmptyDirVolumeSource();
 
   /// Storage medium backing the directory.
-  /// 
+  ///
   /// Optional: Specifies what type of storage medium should back this directory.
   /// Values:
   /// - "" (empty string): Node's default storage medium
@@ -39,7 +39,7 @@ class EmptyDirVolumeSource {
   String? medium;
 
   /// Total amount of local storage required.
-  /// 
+  ///
   /// Optional: Specifies the maximum size of the empty directory volume.
   /// The directory will be created on the node's storage medium,
   /// either the default medium or memory if specified.

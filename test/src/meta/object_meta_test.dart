@@ -3,12 +3,11 @@ import 'package:kuberneteslib/src/meta/object_meta.dart';
 
 void main() {
   group('ObjectMeta', () {
-
     test('serializes to JSON with minimal properties', () {
       final meta = ObjectMeta()..name = 'test-object';
-      
+
       final json = meta.toJson();
-      
+
       expect(json, {
         'name': 'test-object',
       });
@@ -18,9 +17,9 @@ void main() {
       final json = {
         'name': 'test-object',
       };
-      
+
       final meta = ObjectMeta.fromJson(json);
-      
+
       expect(meta.name, equals('test-object'));
     });
 
@@ -64,12 +63,12 @@ void main() {
       final meta = ObjectMeta()
         ..name = 'test-object'
         ..labels = {'app': 'web'};
-      
+
       final json = meta.toJson();
-      
+
       expect(json.containsKey('namespace'), isFalse);
       expect(json.containsKey('annotations'), isFalse);
       expect(json.containsKey('deletionTimestamp'), isFalse);
     });
   });
-} 
+}

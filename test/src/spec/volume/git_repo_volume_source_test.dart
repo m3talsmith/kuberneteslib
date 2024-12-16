@@ -16,7 +16,7 @@ void main() {
       };
 
       final source = GitRepoVolumeSource.fromJson(json);
-      
+
       expect(source.directory, '/target');
       expect(source.repository, 'https://github.com/example/repo.git');
       expect(source.revision, 'main');
@@ -29,7 +29,7 @@ void main() {
         ..revision = 'main';
 
       final json = source.toJson();
-      
+
       expect(json, {
         'directory': '/target',
         'repository': 'https://github.com/example/repo.git',
@@ -51,4 +51,4 @@ void main() {
       expect(source1.toJson(), equals(source2.toJson()));
     });
   });
-} 
+}

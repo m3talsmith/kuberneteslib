@@ -14,12 +14,14 @@ void main() {
       final config = Config(
         currentContext: 'test-context',
         contexts: [
-          Context(name: 'test-context', cluster: 'test-cluster', user: 'test-user')
+          Context(
+              name: 'test-context', cluster: 'test-cluster', user: 'test-user')
         ],
         clusters: [
           Cluster(
             name: 'test-cluster',
-            certificateAuthorityData: base64.encode(utf8.encode('test-ca-data')),
+            certificateAuthorityData:
+                base64.encode(utf8.encode('test-ca-data')),
           )
         ],
         users: [
@@ -45,12 +47,13 @@ void main() {
         name: 'test-cluster',
         certificateAuthorityData: base64.encode(utf8.encode('test-ca-data')),
       );
-      
+
       final json = auth.toJson();
       final deserialized = Cluster.fromJson(json);
-      
+
       expect(deserialized.name, equals(auth.name));
-      expect(deserialized.certificateAuthorityData, equals(auth.certificateAuthorityData));
+      expect(deserialized.certificateAuthorityData,
+          equals(auth.certificateAuthorityData));
     });
   });
-} 
+}

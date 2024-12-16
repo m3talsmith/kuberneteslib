@@ -18,10 +18,10 @@ void main() {
     test('first and last', () {
       final config1 = Config()..currentContext = 'context1';
       final config2 = Config()..currentContext = 'context2';
-      
+
       configs.add(config1);
       configs.add(config2);
-      
+
       expect(configs.first?.currentContext, 'context1');
       expect(configs.last?.currentContext, 'context2');
     });
@@ -112,4 +112,4 @@ displayName: Test Config
       expect(Config.fromYaml(''), null);
     });
   });
-} 
+}

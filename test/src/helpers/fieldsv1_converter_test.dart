@@ -5,7 +5,7 @@ import 'package:kuberneteslib/kuberneteslib.dart';
 void main() {
   group('FieldV1Converter', () {
     const converter = FieldV1Converter();
-    
+
     test('fromJson converts Map to FieldsV1', () {
       final json = {
         'f:spec': {
@@ -13,9 +13,9 @@ void main() {
           'f:replicas': {},
         }
       };
-      
+
       final result = converter.fromJson(json);
-      
+
       expect(result, isA<FieldsV1>());
       expect(result.toJson(), equals(json));
     });
@@ -27,11 +27,11 @@ void main() {
           'f:replicas': {},
         }
       });
-      
+
       final result = converter.toJson(fieldsV1);
-      
+
       expect(result, isA<Map<String, dynamic>>());
       expect(result, equals(fieldsV1.fields));
     });
   });
-} 
+}

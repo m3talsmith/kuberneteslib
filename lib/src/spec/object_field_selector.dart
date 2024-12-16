@@ -38,13 +38,13 @@ class ObjectFieldSelector {
   ObjectFieldSelector({this.apiVersion, this.fieldPath});
 
   /// API version of the referenced object.
-  /// 
+  ///
   /// Typically 'v1' for core Kubernetes resources.
   /// Must match the API version of the referenced resource.
   String? apiVersion;
 
   /// Path to the desired field in the specified API version.
-  /// 
+  ///
   /// Examples:
   /// - 'metadata.name': Pod name
   /// - 'metadata.namespace': Pod namespace

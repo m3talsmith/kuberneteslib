@@ -31,38 +31,43 @@ part 'container_port.g.dart';
 /// for more details about container ports.
 @JsonSerializable()
 class ContainerPort {
-  ContainerPort({this.containerPort, this.hostIP, this.hostPort, this.name, this.protocol});
+  ContainerPort(
+      {this.containerPort,
+      this.hostIP,
+      this.hostPort,
+      this.name,
+      this.protocol});
 
   /// The port number to expose from the container.
-  /// 
+  ///
   /// Required: The port number that the application inside the container
   /// is listening on. Must be a valid port number (1-65535).
   @JsonKey(includeIfNull: false)
   int? containerPort;
 
   /// The host IP to bind the external port to.
-  /// 
+  ///
   /// Optional: The IP address on the host to bind to.
   /// Default is to bind to all IP addresses (0.0.0.0).
   @JsonKey(includeIfNull: false)
   String? hostIP;
 
   /// The port number on the host to bind to.
-  /// 
+  ///
   /// Optional: If specified, this must be a valid port number (1-65535).
   /// Note that enabling hostPort may require elevated privileges.
   @JsonKey(includeIfNull: false)
   int? hostPort;
 
   /// The name for this port.
-  /// 
+  ///
   /// Optional: If specified, this must be a DNS_LABEL name.
   /// Used for service discovery and references in other resources.
   @JsonKey(includeIfNull: false)
   String? name;
 
   /// The network protocol for this port.
-  /// 
+  ///
   /// Optional: Must be UDP, TCP, or SCTP.
   /// Defaults to TCP if not specified.
   @JsonKey(includeIfNull: false)

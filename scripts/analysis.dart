@@ -5,6 +5,15 @@ analysis() async {
   ProcessResult process = await Process.run('dart', ['format', '.']);
   if (process.stdout.isNotEmpty) {
     print(process.stdout);
+    if (process.stdout.contains('0 changed')) {
+      print('dart format passed');
+    } else {
+      final formattedFiles = process.stdout.split('\n');
+      if (formattedFiles.isNotEmpty) {
+        await Process.run('git', ['add', ...formattedFiles]);
+        await Process.run('git', ['commit', '--amend', '-a', '--no-verify']);
+      }
+    }
   }
   if (process.stderr.isNotEmpty) {
     if (process.stderr.contains('Warning:')) {

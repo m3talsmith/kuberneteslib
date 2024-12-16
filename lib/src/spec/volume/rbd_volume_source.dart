@@ -45,50 +45,53 @@ class RBDVolumeSource {
   RBDVolumeSource();
 
   /// The filesystem type to mount.
-  /// 
+  ///
   /// Required: Must be a filesystem type supported by the host operating system.
   /// Examples: "ext4", "xfs", "ntfs"
   String? fsType;
 
   /// The rados image name.
-  /// 
+  ///
   /// Required: Name of the RBD image in the pool.
   /// Example: "foo-image"
   String? image;
 
   /// Path to key ring for RBDUser authentication.
-  /// 
+  ///
   /// Optional: Defaults to /etc/ceph/keyring.
   /// Contains authentication keys for the Ceph cluster.
   String? keyring;
 
   /// A collection of Ceph monitors.
-  /// 
+  ///
   /// Required: List of Ceph monitor addresses for accessing the RADOS cluster.
   /// Format: ["<ip>:<port>", ...]
   List<String>? monitors;
 
   /// The rados pool name.
-  /// 
+  ///
   /// Optional: Name of the RADOS pool containing the RBD image.
   /// Defaults to 'rbd'.
   String? pool;
 
   /// Controls read-only access to the volume.
-  /// 
+  ///
   /// Optional: When true, the volume will be mounted read-only.
   /// Defaults to false.
   bool? readOnly;
 
   /// Reference to the authentication secret for RBD user.
-  /// 
+  ///
   /// Optional: References a Kubernetes secret containing Ceph authentication credentials.
   /// The secret must exist in the same namespace as the pod.
-  @JsonKey(includeIfNull: false, toJson: _secretRefToJson, fromJson: _secretRefFromJson)
+  @JsonKey(
+      includeIfNull: false,
+      toJson: _secretRefToJson,
+      fromJson: _secretRefFromJson)
   LocalObjectReference? secretRef;
 
   /// The rados user name.
-  /// 
+  ///
   /// Optional: Name of the RADOS user for authentication.
   /// Defaults to 'admin'.
   String? user;

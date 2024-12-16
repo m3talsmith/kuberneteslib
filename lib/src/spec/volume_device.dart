@@ -32,7 +32,7 @@ class VolumeDevice {
   VolumeDevice({required this.devicePath, required this.name});
 
   /// Path inside the container at which the device will be mounted.
-  /// 
+  ///
   /// Examples:
   /// - '/dev/xvdf'
   /// - '/dev/sda'
@@ -40,7 +40,7 @@ class VolumeDevice {
   String devicePath;
 
   /// Name of the volume that should be mounted as a device.
-  /// 
+  ///
   /// Must match the name of a persistentVolumeClaim in the pod.
   String name;
 

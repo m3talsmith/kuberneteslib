@@ -26,10 +26,12 @@ void main() {
       expect(restored.fsType, equals('ext4'));
       expect(restored.readOnly, isTrue);
       expect(restored.nodePublishSecretRef?.name, equals('secret-name'));
-      expect(restored.volumeAttributes, equals({
-        'size': '10Gi',
-        'type': 'gp3',
-      }));
+      expect(
+          restored.volumeAttributes,
+          equals({
+            'size': '10Gi',
+            'type': 'gp3',
+          }));
     });
 
     test('handles empty volumeAttributes', () {
@@ -71,12 +73,14 @@ void main() {
         ..nodePublishSecretRef = (LocalObjectReference()..name = 'gcp-secret')
         ..volumeAttributes = {
           'type': 'pd-standard',
-          'disk-encryption-kms-key': 'projects/my-project/locations/global/keyRings/my-kr/cryptoKeys/my-key',
+          'disk-encryption-kms-key':
+              'projects/my-project/locations/global/keyRings/my-kr/cryptoKeys/my-key',
         };
 
       expect(source.driver, equals('pd.csi.storage.gke.io'));
       expect(source.volumeAttributes?['type'], equals('pd-standard'));
-      expect(source.volumeAttributes?.containsKey('disk-encryption-kms-key'), isTrue);
+      expect(source.volumeAttributes?.containsKey('disk-encryption-kms-key'),
+          isTrue);
     });
   });
-} 
+}

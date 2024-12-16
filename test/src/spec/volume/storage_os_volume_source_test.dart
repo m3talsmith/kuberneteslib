@@ -100,4 +100,4 @@ void main() {
       expect(deserialized.serviceAccountToken, isNull);
     });
   });
-} 
+}

@@ -51,28 +51,28 @@ class User {
   User({this.name, this.clientCertificateData, this.clientKeyData, this.exec});
 
   /// The name identifier for this user configuration.
-  /// 
+  ///
   /// This name is referenced by [Context] configurations to specify which
   /// user credentials to use for cluster authentication.
   @JsonKey(includeIfNull: false, includeToJson: false)
   final String? name;
 
   /// PEM-encoded certificate data for client certificate authentication.
-  /// 
+  ///
   /// This certificate is presented to the Kubernetes API server to prove
   /// the client's identity. Must be used in conjunction with [clientKeyData].
   @JsonKey(includeIfNull: false, name: 'client-certificate-data')
   final String? clientCertificateData;
 
   /// PEM-encoded private key data for client certificate authentication.
-  /// 
+  ///
   /// This private key is used to sign requests to the Kubernetes API server.
   /// Must be used in conjunction with [clientCertificateData].
   @JsonKey(includeIfNull: false, name: 'client-key-data')
   final String? clientKeyData;
 
   /// Configuration for executable-based authentication.
-  /// 
+  ///
   /// When specified, the
   @JsonKey(includeIfNull: false)
   final Exec? exec;

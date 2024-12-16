@@ -44,16 +44,19 @@ ObjectMeta? _metadataFromJson(Map<String, dynamic>? json) =>
 @JsonSerializable()
 class PersistentVolumeClaimTemplate {
   /// Metadata for the PVC template.
-  /// 
+  ///
   /// Defines the base metadata for each PVC created from this template.
   /// StatefulSet will append a unique identifier to the name for each pod.
   /// Example: If template name is "data" and StatefulSet name is "mysql",
   /// PVCs will be named "data-mysql-0", "data-mysql-1", etc.
-  @JsonKey(includeIfNull: false, toJson: _metadataToJson, fromJson: _metadataFromJson)
+  @JsonKey(
+      includeIfNull: false,
+      toJson: _metadataToJson,
+      fromJson: _metadataFromJson)
   ObjectMeta? metadata;
 
   /// Specification for the PVCs created from this template.
-  /// 
+  ///
   /// Defines the characteristics that each PVC should have, including:
   /// - Storage size and class
   /// - Access modes
@@ -72,5 +75,7 @@ class PersistentVolumeClaimTemplate {
   Map<String, dynamic> toJson() => _$PersistentVolumeClaimTemplateToJson(this);
 }
 
-Map<String, dynamic>? _specToJson(PersistentVolumeClaimSpec? spec) => spec?.toJson();
-PersistentVolumeClaimSpec? _specFromJson(Map<String, dynamic>? json) => json == null ? null : PersistentVolumeClaimSpec.fromJson(json);
+Map<String, dynamic>? _specToJson(PersistentVolumeClaimSpec? spec) =>
+    spec?.toJson();
+PersistentVolumeClaimSpec? _specFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : PersistentVolumeClaimSpec.fromJson(json);

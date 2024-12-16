@@ -40,33 +40,33 @@ class HTTPGetAction {
   HTTPGetAction();
 
   /// The hostname to connect to.
-  /// 
+  ///
   /// Optional: Defaults to the pod IP. You probably want to set
   /// "Host" in httpHeaders instead.
   @JsonKey(includeIfNull: false)
   String? host;
 
   /// Custom headers to set in the request.
-  /// 
+  ///
   /// HTTP headers to set in the request. HTTP allows repeated headers.
   @JsonKey(includeIfNull: false)
   List<HTTPHeader>? httpHeaders;
 
   /// Path to access on the HTTP server.
-  /// 
+  ///
   /// Optional: Defaults to '/'.
   @JsonKey(includeIfNull: false)
   String? path;
 
   /// Port number or name to access on the container.
-  /// 
+  ///
   /// Required: Number must be in the range 1 to 65535.
   /// Name must be an IANA_SVC_NAME.
   @JsonKey(includeIfNull: false)
   dynamic port;
 
   /// Scheme to use for connecting to the host.
-  /// 
+  ///
   /// Optional: Defaults to HTTP. Possible values are HTTP and HTTPS.
   @JsonKey(includeIfNull: false)
   String? scheme;

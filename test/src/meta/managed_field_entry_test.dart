@@ -10,15 +10,16 @@ void main() {
     });
 
     test('preserves FieldsV1 data in JSON conversion', () {
-      final fieldsV1 = FieldsV1()..fields = {
-        'metadata': {
-          'f:labels': {
-            '.': {},
-            'f:app': {},
-            'f:environment': {},
+      final fieldsV1 = FieldsV1()
+        ..fields = {
+          'metadata': {
+            'f:labels': {
+              '.': {},
+              'f:app': {},
+              'f:environment': {},
+            }
           }
-        }
-      };
+        };
 
       final entry = ManagedFieldEntry()
         ..apiVersion = 'v1'
@@ -61,7 +62,7 @@ void main() {
     test('handles UTC times', () {
       final utcTime = DateTime.utc(2024, 1, 1, 12, 0);
       final entry = ManagedFieldEntry()..time = utcTime;
-      
+
       final json = entry.toJson();
       expect(json['time'], '2024-01-01T12:00:00.000Z');
     });
@@ -69,20 +70,20 @@ void main() {
     test('handles local times', () {
       final localTime = DateTime(2024, 1, 1, 12, 0);
       final entry = ManagedFieldEntry()..time = localTime;
-      
+
       final json = entry.toJson();
       final decoded = ManagedFieldEntry.fromJson(json);
-      
+
       expect(decoded.time.toLocal(), localTime.toLocal());
     });
 
     test('preserves microseconds in time', () {
       final preciseTime = DateTime.parse('2024-01-01T12:00:00.123456Z');
       final entry = ManagedFieldEntry()..time = preciseTime;
-      
+
       final json = entry.toJson();
       final decoded = ManagedFieldEntry.fromJson(json);
-      
+
       expect(decoded.time.microsecond, preciseTime.microsecond);
     });
   });
@@ -94,18 +95,17 @@ void main() {
         ..fieldsType = 'FieldsV1'
         ..manager = 'kubectl'
         ..operation = 'Apply'
-        ..fieldsV1 = (FieldsV1()..fields = {
-          'spec': {
-            'f:replicas': {},
-            'f:template': {
-              'f:metadata': {
-                'f:labels': {
-                  'f:app': {}
+        ..fieldsV1 = (FieldsV1()
+          ..fields = {
+            'spec': {
+              'f:replicas': {},
+              'f:template': {
+                'f:metadata': {
+                  'f:labels': {'f:app': {}}
                 }
               }
             }
-          }
-        });
+          });
 
       expect(entry.manager, 'kubectl');
       expect(entry.operation, 'Apply');
@@ -119,20 +119,21 @@ void main() {
         ..manager = 'kube-controller-manager'
         ..operation = 'Update'
         ..subresource = 'status'
-        ..fieldsV1 = (FieldsV1()..fields = {
-          'status': {
-            'f:availableReplicas': {},
-            'f:readyReplicas': {},
-            'f:replicas': {}
-          }
-        });
+        ..fieldsV1 = (FieldsV1()
+          ..fields = {
+            'status': {
+              'f:availableReplicas': {},
+              'f:readyReplicas': {},
+              'f:replicas': {}
+            }
+          });
 
       expect(entry.manager, 'kube-controller-manager');
       expect(entry.operation, 'Update');
       expect(entry.subresource, 'status');
       expect(entry.fieldsV1.fields, contains('status'));
     });
-  }); 
+  });
 
   group('error handling', () {
     test('handles missing fields in JSON', () {
@@ -147,7 +148,8 @@ void main() {
 
       expect(
         () => ManagedFieldEntry.fromJson(incompleteJson),
-        throwsA(isA<TypeError>()), // or whatever exception your generated code throws
+        throwsA(isA<
+            TypeError>()), // or whatever exception your generated code throws
       );
     });
 
@@ -163,7 +165,8 @@ void main() {
 
       expect(
         () => ManagedFieldEntry.fromJson(jsonWithNulls),
-        throwsA(isA<TypeError>()), // or whatever exception your generated code throws
+        throwsA(isA<
+            TypeError>()), // or whatever exception your generated code throws
       );
     });
   });
@@ -173,29 +176,24 @@ void main() {
       final entry = ManagedFieldEntry()
         ..apiVersion = 'v1'
         ..fieldsType = 'FieldsV1'
-        ..fieldsV1 = (FieldsV1()..fields = {
-          'spec': {
-            'f:template': {
-              'f:spec': {
-                'f:containers': {
-                  'k:{"name":"main"}': {
-                    'f:image': {},
-                    'f:resources': {
-                      'f:limits': {
-                        'f:cpu': {},
-                        'f:memory': {}
-                      },
-                      'f:requests': {
-                        'f:cpu': {},
-                        'f:memory': {}
+        ..fieldsV1 = (FieldsV1()
+          ..fields = {
+            'spec': {
+              'f:template': {
+                'f:spec': {
+                  'f:containers': {
+                    'k:{"name":"main"}': {
+                      'f:image': {},
+                      'f:resources': {
+                        'f:limits': {'f:cpu': {}, 'f:memory': {}},
+                        'f:requests': {'f:cpu': {}, 'f:memory': {}}
                       }
                     }
                   }
                 }
               }
             }
-          }
-        })
+          })
         ..manager = 'kubectl'
         ..operation = 'Apply'
         ..time = DateTime.now();
@@ -232,19 +230,20 @@ void main() {
       final entry = ManagedFieldEntry()
         ..apiVersion = 'custom.k8s.io/v1'
         ..fieldsType = 'FieldsV1'
-        ..fieldsV1 = (FieldsV1()..fields = {
-          'status': {
-            'f:conditions': {
-              'k:{"type":"Ready"}': {
-                'f:lastTransitionTime': {},
-                'f:message': {},
-                'f:reason': {},
-                'f:status': {},
-                'f:type': {}
+        ..fieldsV1 = (FieldsV1()
+          ..fields = {
+            'status': {
+              'f:conditions': {
+                'k:{"type":"Ready"}': {
+                  'f:lastTransitionTime': {},
+                  'f:message': {},
+                  'f:reason': {},
+                  'f:status': {},
+                  'f:type': {}
+                }
               }
             }
-          }
-        })
+          })
         ..manager = 'custom-controller'
         ..operation = 'Update'
         ..subresource = 'status'
@@ -258,13 +257,14 @@ void main() {
       final entry = ManagedFieldEntry()
         ..apiVersion = 'v1'
         ..fieldsType = 'FieldsV1'
-        ..fieldsV1 = (FieldsV1()..fields = {
-          'metadata': {
-            'f:annotations': {
-              'f:webhook.validation.example.com/validated': {}
+        ..fieldsV1 = (FieldsV1()
+          ..fields = {
+            'metadata': {
+              'f:annotations': {
+                'f:webhook.validation.example.com/validated': {}
+              }
             }
-          }
-        })
+          })
         ..manager = 'validation-webhook'
         ..operation = 'Update'
         ..time = DateTime.now();
@@ -280,16 +280,13 @@ void main() {
       final entry = ManagedFieldEntry()
         ..apiVersion = 'v1'
         ..fieldsType = 'FieldsV1'
-        ..fieldsV1 = (FieldsV1()..fields = {
-          'metadata': {
-            'f:labels': {
-              'f:environment': {}
-            }
-          },
-          'spec': {
-            'f:replicas': {}
-          }
-        })
+        ..fieldsV1 = (FieldsV1()
+          ..fields = {
+            'metadata': {
+              'f:labels': {'f:environment': {}}
+            },
+            'spec': {'f:replicas': {}}
+          })
         ..manager = 'kubectl-client-side-apply'
         ..operation = 'Apply'
         ..time = DateTime.now();
@@ -299,7 +296,7 @@ void main() {
       expect(entry.fieldsV1.fields['metadata']['f:labels'], isNotNull);
       expect(entry.fieldsV1.fields['spec']['f:replicas'], isNotNull);
     });
-  }); 
+  });
 
   group('comparison and equality', () {
     test('same entries with same time are equal', () {
@@ -307,7 +304,10 @@ void main() {
       final entry1 = ManagedFieldEntry()
         ..apiVersion = 'v1'
         ..fieldsType = 'FieldsV1'
-        ..fieldsV1 = (FieldsV1()..fields = {'spec': {'f:replicas': {}}})
+        ..fieldsV1 = (FieldsV1()
+          ..fields = {
+            'spec': {'f:replicas': {}}
+          })
         ..manager = 'kubectl'
         ..operation = 'Apply'
         ..time = time;
@@ -315,7 +315,10 @@ void main() {
       final entry2 = ManagedFieldEntry()
         ..apiVersion = 'v1'
         ..fieldsType = 'FieldsV1'
-        ..fieldsV1 = (FieldsV1()..fields = {'spec': {'f:replicas': {}}})
+        ..fieldsV1 = (FieldsV1()
+          ..fields = {
+            'spec': {'f:replicas': {}}
+          })
         ..manager = 'kubectl'
         ..operation = 'Apply'
         ..time = time;
@@ -328,7 +331,10 @@ void main() {
       final entry1 = ManagedFieldEntry()
         ..apiVersion = 'v1'
         ..fieldsType = 'FieldsV1'
-        ..fieldsV1 = (FieldsV1()..fields = {'spec': {'f:replicas': {}}})
+        ..fieldsV1 = (FieldsV1()
+          ..fields = {
+            'spec': {'f:replicas': {}}
+          })
         ..manager = 'kubectl'
         ..operation = 'Apply'
         ..time = time;
@@ -336,7 +342,10 @@ void main() {
       final entry2 = ManagedFieldEntry()
         ..apiVersion = 'v1'
         ..fieldsType = 'FieldsV1'
-        ..fieldsV1 = (FieldsV1()..fields = {'spec': {'f:image': {}}})
+        ..fieldsV1 = (FieldsV1()
+          ..fields = {
+            'spec': {'f:image': {}}
+          })
         ..manager = 'kubectl'
         ..operation = 'Apply'
         ..time = time;
@@ -350,16 +359,17 @@ void main() {
       final entry = ManagedFieldEntry()
         ..apiVersion = 'v1'
         ..fieldsType = 'FieldsV1'
-        ..fieldsV1 = (FieldsV1()..fields = {
-          'metadata': {
-            'f:annotations': {
-              'f:example.com/special@chars': {},
-              'f:example.com/with spaces': {},
-              'f:example.com/with.dots': {},
-              'f:example.com/with-dashes': {},
+        ..fieldsV1 = (FieldsV1()
+          ..fields = {
+            'metadata': {
+              'f:annotations': {
+                'f:example.com/special@chars': {},
+                'f:example.com/with spaces': {},
+                'f:example.com/with.dots': {},
+                'f:example.com/with-dashes': {},
+              }
             }
-          }
-        })
+          })
         ..manager = 'kubectl'
         ..operation = 'Apply'
         ..time = DateTime.now();
@@ -383,14 +393,15 @@ void main() {
       final entry = ManagedFieldEntry()
         ..apiVersion = 'v1'
         ..fieldsType = 'FieldsV1'
-        ..fieldsV1 = (FieldsV1()..fields = {
-          'metadata': {
-            'f:labels': {
-              'f:environment-🌍': {},
-              'f:status-✅': {},
+        ..fieldsV1 = (FieldsV1()
+          ..fields = {
+            'metadata': {
+              'f:labels': {
+                'f:environment-🌍': {},
+                'f:status-✅': {},
+              }
             }
-          }
-        })
+          })
         ..manager = 'kubectl-unicode'
         ..operation = 'Apply'
         ..time = DateTime.now();
@@ -407,5 +418,5 @@ void main() {
         isNotNull,
       );
     });
-  }); 
-} 
+  });
+}

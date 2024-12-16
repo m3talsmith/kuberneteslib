@@ -32,7 +32,7 @@ class Toleration {
   Toleration();
 
   /// The taint effect to match.
-  /// 
+  ///
   /// Values:
   /// - 'NoSchedule': Prevents scheduling of new pods
   /// - 'PreferNoSchedule': Tries to avoid scheduling new pods
@@ -40,25 +40,25 @@ class Toleration {
   String? effect;
 
   /// The taint key that this toleration matches.
-  /// 
+  ///
   /// Examples: 'node-role.kubernetes.io/master', 'dedicated', 'gpu'
   String? key;
 
   /// The operator that relates the key to the value.
-  /// 
+  ///
   /// Values:
   /// - 'Exists': Key must exist (value ignored)
   /// - 'Equal': Key and value must match exactly
   String? operator;
 
   /// Duration in seconds the pod can run on a node with matching NoExecute taint.
-  /// 
+  ///
   /// Only applies when effect is 'NoExecute'.
   /// After this time, pod will be evicted.
   int? tolerationSeconds;
 
   /// The taint value to match.
-  /// 
+  ///
   /// Required if operator is 'Equal'.
   /// Ignored if operator is 'Exists'.
   String? value;

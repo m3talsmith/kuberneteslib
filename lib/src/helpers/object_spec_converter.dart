@@ -13,9 +13,10 @@ import '../spec/object_spec.dart';
 /// @ObjectSpecConverter()
 /// ObjectSpec? spec;
 /// ```
-class ObjectSpecConverter implements JsonConverter<ObjectSpec, Map<String, dynamic>> {
+class ObjectSpecConverter
+    implements JsonConverter<ObjectSpec, Map<String, dynamic>> {
   const ObjectSpecConverter();
-  
+
   @override
   ObjectSpec fromJson(Map<String, dynamic> json) {
     return Spec.fromJson(json, kind: json['kind']).spec!;

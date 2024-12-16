@@ -13,7 +13,7 @@ void main() {
 
     test('adds correct authorization header', () async {
       final request = Request('GET', Uri.parse('http://example.com'));
-      
+
       // Intercept the request before it's actually sent
       try {
         await client.send(request);
@@ -27,18 +27,18 @@ void main() {
 
     test('adds correct content-type header for PATCH requests', () async {
       final request = Request('PATCH', Uri.parse('http://example.com'));
-      
+
       try {
         await client.send(request);
       } catch (_) {}
 
-      expect(request.headers['Content-Type'], 
+      expect(request.headers['Content-Type'],
           equals('application/merge-patch+json'));
     });
 
     test('adds correct content-type header for non-PATCH requests', () async {
       final request = Request('POST', Uri.parse('http://example.com'));
-      
+
       try {
         await client.send(request);
       } catch (_) {}
@@ -53,7 +53,7 @@ void main() {
       );
 
       final request = Request('GET', Uri.parse('http://example.com'));
-      
+
       expect(
         () => expiredClient.send(request),
         throwsA(isA<Exception>().having(
@@ -71,7 +71,7 @@ void main() {
       );
 
       final request = Request('GET', Uri.parse('http://example.com'));
-      
+
       // Should not throw expiration exception
       try {
         await validClient.send(request);
@@ -89,7 +89,7 @@ void main() {
         );
 
         final json = client.toJson();
-        
+
         expect(json['token'], equals(testToken));
         expect(json['expirationTimestamp'], isNotNull);
       });
@@ -102,11 +102,11 @@ void main() {
         };
 
         final client = BearerClient.fromJson(json);
-        
+
         expect(client.token, equals(testToken));
-        expect(client.expirationTimestamp?.toIso8601String(), 
+        expect(client.expirationTimestamp?.toIso8601String(),
             equals(timestamp.toIso8601String()));
       });
     });
   });
-} 
+}

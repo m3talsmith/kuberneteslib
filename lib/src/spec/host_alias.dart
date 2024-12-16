@@ -33,13 +33,13 @@ class HostAlias {
         ip = '';
 
   /// List of hostnames to be mapped to the IP address.
-  /// 
+  ///
   /// Each hostname will resolve to the specified IP address when looked up
   /// from within the pod.
   List<String> hostnames;
 
   /// The IP address that the hostnames will resolve to.
-  /// 
+  ///
   /// Must be a valid IPv4 or IPv6 address.
   String ip;
 

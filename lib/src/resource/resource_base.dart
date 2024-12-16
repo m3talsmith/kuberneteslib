@@ -10,7 +10,7 @@
 /// ```dart
 /// class Pod extends ResourceBase {
 ///   Pod() : super();
-///   
+///
 ///   // Resource-specific implementation
 /// }
 /// ```
@@ -19,7 +19,7 @@
 /// to provide a complete representation of Kubernetes resources.
 abstract class ResourceBase {
   /// Creates a new instance of a Kubernetes resource.
-  /// 
+  ///
   /// Subclasses should implement their specific initialization logic
   /// while calling this constructor using `super()`.
   ResourceBase();

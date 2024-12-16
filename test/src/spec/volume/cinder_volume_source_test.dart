@@ -47,8 +47,7 @@ void main() {
     });
 
     test('json serialization excludes null values', () {
-      final source = CinderVolumeSource()
-        ..volumeID = 'vol-123456';
+      final source = CinderVolumeSource()..volumeID = 'vol-123456';
 
       final json = source.toJson();
       expect(json, {
@@ -59,4 +58,4 @@ void main() {
       expect(json.containsKey('secretRef'), isFalse);
     });
   });
-} 
+}

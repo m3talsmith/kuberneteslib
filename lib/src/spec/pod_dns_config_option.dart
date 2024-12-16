@@ -31,7 +31,7 @@ class PodDNSConfigOption {
   PodDNSConfigOption();
 
   /// The name of the DNS configuration option.
-  /// 
+  ///
   /// Common option names include:
   /// - 'ndots': Number of dots in name to trigger absolute lookup
   /// - 'timeout': DNS query timeout
@@ -40,7 +40,7 @@ class PodDNSConfigOption {
   late String name;
 
   /// The value for the DNS configuration option.
-  /// 
+  ///
   /// The interpretation depends on the option name. Examples:
   /// - For 'ndots': A number like "5"
   /// - For 'timeout': Time in seconds

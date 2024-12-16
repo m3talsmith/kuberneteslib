@@ -31,7 +31,7 @@ void main() {
         ];
 
       final json = source.toJson();
-      
+
       expect(json, {
         'defaultMode': 0644,
         'secretName': 'app-secrets',
@@ -61,7 +61,7 @@ void main() {
       };
 
       final source = SecretVolumeSource.fromJson(json);
-      
+
       expect(source.defaultMode, equals(0644));
       expect(source.secretName, equals('app-secrets'));
       expect(source.optional, isTrue);
@@ -74,9 +74,9 @@ void main() {
     test('handles null values correctly', () {
       final source = SecretVolumeSource();
       final json = source.toJson();
-      
+
       expect(json, isEmpty);
-      
+
       final deserialized = SecretVolumeSource.fromJson({});
       expect(deserialized.defaultMode, isNull);
       expect(deserialized.secretName, isNull);
@@ -84,4 +84,4 @@ void main() {
       expect(deserialized.items, isNull);
     });
   });
-} 
+}

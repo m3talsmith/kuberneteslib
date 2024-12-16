@@ -30,7 +30,7 @@ class PodReadinessGate {
   PodReadinessGate();
 
   /// The condition type that must be true for pod readiness.
-  /// 
+  ///
   /// This field references a condition that will be added to the pod's conditions
   /// array. The pod will be considered ready only when the specified condition
   /// exists and is equal to "True". Common patterns include:

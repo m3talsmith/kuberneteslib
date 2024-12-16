@@ -5,7 +5,7 @@ import 'package:kuberneteslib/kuberneteslib.dart';
 /// This exception is thrown when a function requires authentication credentials
 /// to interact with a Kubernetes cluster but the necessary authentication details
 /// are not provided. This typically occurs in scenarios such as:
-/// 
+///
 /// - Attempting to make authenticated API requests without providing cluster credentials
 /// - Missing or invalid authentication configuration in the kubeconfig file
 /// - Trying to access secured endpoints without proper authorization setup

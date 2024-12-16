@@ -32,21 +32,21 @@ class SecretKeySelector {
   SecretKeySelector();
 
   /// The key to select from the secret.
-  /// 
+  ///
   /// Must be a valid key name in the referenced secret.
   /// Common examples: 'username', 'password', 'api-key', 'tls.crt'
   @JsonKey(includeIfNull: false)
   String? key;
 
   /// Name of the secret containing the key.
-  /// 
+  ///
   /// The secret must exist in the same namespace as the pod
   /// referencing this selector.
   @JsonKey(includeIfNull: false)
   String? name;
 
   /// Controls whether the secret and key must exist.
-  /// 
+  ///
   /// When true:
   /// - Missing secrets or keys won't cause errors
   /// - Returns null if secret or key not found

@@ -3,7 +3,7 @@
 /// FieldsV1 is used by the Kubernetes API server to track which fields in an object
 /// have been modified by different managers (e.g., controllers, users, or other processes).
 /// This tracking enables:
-/// 
+///
 /// - Server-side field validation
 /// - Strategic merge patch operations
 /// - Conflict detection during updates

@@ -12,7 +12,8 @@ void main() {
     });
 
     test('should be throwable', () {
-      expect(() => throw MissingAuthException(), throwsA(isA<MissingAuthException>()));
+      expect(() => throw MissingAuthException(),
+          throwsA(isA<MissingAuthException>()));
     });
   });
-} 
+}

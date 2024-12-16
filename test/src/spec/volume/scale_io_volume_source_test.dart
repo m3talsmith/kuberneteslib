@@ -35,7 +35,7 @@ void main() {
       );
 
       final json = source.toJson();
-      
+
       expect(json, {
         'fsType': 'ext4',
         'gateway': 'https://localhost:443/api',
@@ -65,7 +65,7 @@ void main() {
       };
 
       final source = ScaleIOVolumeSource.fromJson(json);
-      
+
       expect(source.fsType, equals('ext4'));
       expect(source.gateway, equals('https://localhost:443/api'));
       expect(source.protectionDomain, equals('default'));
@@ -78,4 +78,4 @@ void main() {
       expect(source.volumeName, equals('vol-1'));
     });
   });
-} 
+}

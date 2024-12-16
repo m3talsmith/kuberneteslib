@@ -40,28 +40,29 @@ List<KeyToPath>? _itemsFromJson(List<dynamic>? items) =>
 @JsonSerializable()
 class SecretProjection {
   SecretProjection({this.items, this.name, this.optional});
-  
+
   /// Optional mappings of Secret keys to specific paths.
-  /// 
+  ///
   /// If not specified, each key-value pair in the Secret's Data field will be
   /// projected as a file using the key as the filename.
   @JsonKey(includeIfNull: false, toJson: _itemsToJson, fromJson: _itemsFromJson)
-  List<KeyToPath>? items; 
+  List<KeyToPath>? items;
 
   /// Name of the Secret to project.
-  /// 
+  ///
   /// The Secret must exist in the same namespace as the Pod.
   @JsonKey(includeIfNull: false)
   String? name;
 
   /// Controls whether the Secret must exist.
-  /// 
+  ///
   /// When true, the volume mount will succeed even if the Secret doesn't exist
   /// or has missing keys. Defaults to false.
   @JsonKey(includeIfNull: false)
   bool? optional;
 
-  factory SecretProjection.fromMap(Map<String, dynamic> data) => SecretProjection.fromJson(data);
+  factory SecretProjection.fromMap(Map<String, dynamic> data) =>
+      SecretProjection.fromJson(data);
 
   factory SecretProjection.fromJson(Map<String, dynamic> json) =>
       _$SecretProjectionFromJson(json);

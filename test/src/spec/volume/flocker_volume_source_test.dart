@@ -18,7 +18,7 @@ void main() {
 
     test('has correct property values', () {
       expect(flockerVolume.datasetName, equals('mysql-data'));
-      expect(flockerVolume.datasetUUID, 
+      expect(flockerVolume.datasetUUID,
           equals('b4e9d2d8-3719-11e7-be82-0242ac110004'));
     });
 
@@ -31,8 +31,8 @@ void main() {
       final fromJson = FlockerVolumeSource.fromJson(json);
 
       expect(fromJson.datasetName, equals('postgres-data'));
-      expect(fromJson.datasetUUID, 
-          equals('a1b2c3d4-5678-90ef-ghij-klmnopqrstuv'));
+      expect(
+          fromJson.datasetUUID, equals('a1b2c3d4-5678-90ef-ghij-klmnopqrstuv'));
     });
   });
-} 
+}

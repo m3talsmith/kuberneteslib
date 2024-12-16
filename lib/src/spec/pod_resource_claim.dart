@@ -34,13 +34,13 @@ class PodResourceClaim {
   PodResourceClaim();
 
   /// The name that uniquely identifies this resource claim within the pod.
-  /// 
+  ///
   /// This name is used to reference the claim from container specifications
   /// and must be unique within the pod.
   late String name;
 
   /// The source configuration for obtaining this resource.
-  /// 
+  ///
   /// Specifies how the resource should be allocated or referenced,
   /// such as from an existing ResourceClaim or created dynamically.
   late ClaimSource source;

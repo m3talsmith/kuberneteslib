@@ -37,19 +37,19 @@
 /// - `status/status.dart`: Status information handling
 ///
 /// ## Examples
-/// 
+///
 /// ### Basic Cluster Connection and Pod Listing
 /// ```dart
 /// Future<void> main() async {
 ///   // Initialize cluster configuration from default kubectl config
 ///   final config = await KubernetesConfig.fromKubeConfig();
-///   
+///
 ///   // Create cluster client
 ///   final cluster = KubernetesCluster(config);
-///   
+///
 ///   // List all pods in the 'default' namespace
 ///   final pods = await cluster.listPods(namespace: 'default');
-///   
+///
 ///   // Print pod information
 ///   for (final pod in pods) {
 ///     print('Pod: ${pod.metadata.name}');
@@ -57,7 +57,7 @@
 ///     print('Node: ${pod.spec.nodeName}');
 ///     print('---');
 ///   }
-///   
+///
 ///   // Create a new pod
 ///   final newPod = PodSpec(
 ///     containers: [
@@ -70,7 +70,7 @@
 ///       ),
 ///     ],
 ///   );
-///   
+///
 ///   await cluster.createPod(
 ///     metadata: ObjectMeta(
 ///       name: 'example-nginx',
@@ -78,7 +78,7 @@
 ///     ),
 ///     spec: newPod,
 ///   );
-///   
+///
 ///   // Watch pod status changes
 ///   final podWatch = cluster.watchPod('example-nginx', namespace: 'default');
 ///   podWatch.listen((event) {
@@ -86,12 +86,12 @@
 ///   });
 /// }
 /// ```
-/// 
+///
 /// ### Working with Deployments
 /// ```dart
 /// Future<void> createDeployment() async {
 ///   final cluster = await KubernetesCluster.fromKubeConfig();
-///   
+///
 ///   final deployment = Deployment(
 ///     metadata: ObjectMeta(
 ///       name: 'example-deployment',
@@ -127,7 +127,7 @@
 ///       ),
 ///     ),
 ///   );
-///   
+///
 ///   await cluster.createDeployment(deployment);
 /// }
 /// ```

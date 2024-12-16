@@ -26,7 +26,7 @@ void main() {
         ];
 
       final json = source.toJson();
-      
+
       expect(json, {
         'defaultMode': 420,
         'sources': [
@@ -54,7 +54,7 @@ void main() {
       };
 
       final source = ProjectedVolumeSource.fromJson(json);
-      
+
       expect(source.defaultMode, equals(420));
       expect(source.sources, hasLength(1));
       expect(source.sources![0].secret?.name, equals('my-secret'));
@@ -64,14 +64,10 @@ void main() {
       final source = ProjectedVolumeSource()
         ..defaultMode = 420
         ..sources = [
+          VolumeProjection()..secret = (SecretProjection()..name = 'secret-1'),
           VolumeProjection()
-            ..secret = (SecretProjection()
-              ..name = 'secret-1'),
-          VolumeProjection()
-            ..configMap = (ConfigMapProjection()
-              ..name = 'config-1'),
-          VolumeProjection()
-            ..downwardAPI = DownwardAPIProjection(),
+            ..configMap = (ConfigMapProjection()..name = 'config-1'),
+          VolumeProjection()..downwardAPI = DownwardAPIProjection(),
           VolumeProjection()
             ..serviceAccountToken = (ServiceAccountTokenProjection()
               ..audience = 'api'
@@ -86,7 +82,8 @@ void main() {
       expect(deserialized.sources![0].secret?.name, equals('secret-1'));
       expect(deserialized.sources![1].configMap?.name, equals('config-1'));
       expect(deserialized.sources![2].downwardAPI, isNotNull);
-      expect(deserialized.sources![3].serviceAccountToken?.audience, equals('api'));
+      expect(deserialized.sources![3].serviceAccountToken?.audience,
+          equals('api'));
     });
 
     test('handles empty sources list', () {
@@ -101,9 +98,9 @@ void main() {
     test('omits null values in JSON', () {
       final source = ProjectedVolumeSource();
       final json = source.toJson();
-      
+
       expect(json.containsKey('defaultMode'), isFalse);
       expect(json.containsKey('sources'), isFalse);
     });
   });
-} 
+}

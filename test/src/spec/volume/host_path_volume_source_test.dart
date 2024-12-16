@@ -15,7 +15,7 @@ void main() {
       };
 
       final source = HostPathVolumeSource.fromJson(json);
-      
+
       expect(source.path, '/var/log');
       expect(source.type, 'DirectoryOrCreate');
     });
@@ -26,7 +26,7 @@ void main() {
         ..type = 'DirectoryOrCreate';
 
       final json = source.toJson();
-      
+
       expect(json, {
         'path': '/var/log',
         'type': 'DirectoryOrCreate',
@@ -45,4 +45,4 @@ void main() {
       expect(source1.toJson(), equals(source2.toJson()));
     });
   });
-} 
+}

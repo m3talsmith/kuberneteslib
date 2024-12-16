@@ -38,28 +38,28 @@ class EnvVarSource {
   EnvVarSource();
 
   /// Reference to a specific key in a ConfigMap.
-  /// 
+  ///
   /// Optional: When specified, the environment variable will take its value from
   /// the referenced key in the ConfigMap.
   @JsonKey(includeIfNull: false)
   ConfigMapKeySelector? configMapKeyRef;
 
   /// Reference to a field in the pod specification.
-  /// 
+  ///
   /// Optional: When specified, the environment variable will take its value from
   /// the referenced pod field (e.g., metadata.name, status.podIP).
   @JsonKey(includeIfNull: false)
   ObjectFieldSelector? fieldRef;
 
   /// Reference to a container resource value.
-  /// 
+  ///
   /// Optional: When specified, the environment variable will take its value from
   /// the referenced container resource (e.g., limits.cpu, requests.memory).
   @JsonKey(includeIfNull: false)
   ResourceFieldSelector? resourceFieldRef;
 
   /// Reference to a specific key in a Secret.
-  /// 
+  ///
   /// Optional: When specified, the environment variable will take its value from
   /// the referenced key in the Secret.
   @JsonKey(includeIfNull: false)
@@ -67,6 +67,6 @@ class EnvVarSource {
 
   factory EnvVarSource.fromJson(Map<String, dynamic> json) =>
       _$EnvVarSourceFromJson(json);
-  
+
   Map<String, dynamic> toJson() => _$EnvVarSourceToJson(this);
 }

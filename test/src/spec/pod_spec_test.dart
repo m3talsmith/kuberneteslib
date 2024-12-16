@@ -70,20 +70,18 @@ void main() {
     test('handles null values correctly', () {
       final podSpec = PodSpec();
       final json = podSpec.toJson();
-      
+
       expect(json.containsKey('containers'), isFalse);
       expect(json.containsKey('dnsConfig'), isFalse);
       expect(json.containsKey('securityContext'), isFalse);
     });
 
     test('handles complex node selector configuration', () {
-      final podSpec = PodSpec(
-        nodeSelector: {
-          'kubernetes.io/os': 'linux',
-          'disk': 'ssd',
-          'cpu': 'high-performance'
-        }
-      );
+      final podSpec = PodSpec(nodeSelector: {
+        'kubernetes.io/os': 'linux',
+        'disk': 'ssd',
+        'cpu': 'high-performance'
+      });
 
       final json = podSpec.toJson();
       expect(json['nodeSelector'], isNotNull);
@@ -93,32 +91,28 @@ void main() {
     });
 
     test('serializes and deserializes init containers', () {
-      final podSpec = PodSpec(
-        initContainers: [
-          Container()
-            ..name = 'init-db'
-            ..image = 'busybox'
-            ..command = ['sh', '-c', 'echo initializing']
-        ]
-      );
+      final podSpec = PodSpec(initContainers: [
+        Container()
+          ..name = 'init-db'
+          ..image = 'busybox'
+          ..command = ['sh', '-c', 'echo initializing']
+      ]);
 
       final json = podSpec.toJson();
       final deserializedSpec = PodSpec.fromJson(json);
-      
+
       expect(deserializedSpec.initContainers?.length, equals(1));
       expect(deserializedSpec.initContainers?[0].name, equals('init-db'));
       expect(deserializedSpec.initContainers?[0].image, equals('busybox'));
-      expect(deserializedSpec.initContainers?[0].command, 
-        equals(['sh', '-c', 'echo initializing']));
+      expect(deserializedSpec.initContainers?[0].command,
+          equals(['sh', '-c', 'echo initializing']));
     });
 
     test('handles image pull secrets configuration', () {
-      final podSpec = PodSpec(
-        imagePullSecrets: [
-          LocalObjectReference()..name = 'registry-secret',
-          LocalObjectReference()..name = 'docker-registry'
-        ]
-      );
+      final podSpec = PodSpec(imagePullSecrets: [
+        LocalObjectReference()..name = 'registry-secret',
+        LocalObjectReference()..name = 'docker-registry'
+      ]);
 
       final json = podSpec.toJson();
       expect(json['imagePullSecrets'], hasLength(2));
@@ -147,13 +141,13 @@ void main() {
         }
       };
       final deserializedSpec = PodSpec.fromJson(json);
-      
+
       expect(deserializedSpec.affinity, isNotNull);
       final requirement = (deserializedSpec.affinity as NodeAffinity?)
           ?.requiredDuringSchedulingIgnoredDuringExecution
           ?.nodeSelectorTerms[0]
           .matchExpressions?[0];
-      
+
       expect(requirement?.key, equals('kubernetes.io/e2e-az-name'));
       expect(requirement?.operator, equals('In'));
       expect(requirement?.values, contains('e2e-az1'));
@@ -164,17 +158,16 @@ void main() {
         'volumes': [
           {
             'name': 'config-volume',
-            'configMap': {
-              'name': 'app-config'
-            }
+            'configMap': {'name': 'app-config'}
           }
         ]
       };
       final deserializedSpec = PodSpec.fromJson(json);
-      
+
       expect(deserializedSpec.volumes?.length, equals(1));
       expect(deserializedSpec.volumes?[0].name, equals('config-volume'));
-      expect(deserializedSpec.volumes?[0].configMap?.name, equals('app-config'));
+      expect(
+          deserializedSpec.volumes?[0].configMap?.name, equals('app-config'));
     });
   });
 }

@@ -38,21 +38,21 @@ class LifecycleHandler {
   LifecycleHandler();
 
   /// The exec action to be performed, if specified.
-  /// 
+  ///
   /// Optional: Executes a command within the container.
   /// Only one of exec, httpGet, or tcpSocket may be specified.
   @JsonKey(includeIfNull: false)
   ExecAction? exec;
 
   /// The HTTP GET action to be performed, if specified.
-  /// 
+  ///
   /// Optional: Performs an HTTP GET request to verify container status.
   /// Only one of exec, httpGet, or tcpSocket may be specified.
   @JsonKey(includeIfNull: false)
   HTTPGetAction? httpGet;
 
   /// The TCP socket action to be performed, if specified.
-  /// 
+  ///
   /// Optional: Attempts to open a socket to verify container status.
   /// Only one of exec, httpGet, or tcpSocket may be specified.
   @JsonKey(includeIfNull: false)

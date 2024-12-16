@@ -22,7 +22,7 @@ void main() {
           ..readOnly = true;
 
         final json = nfsVolume.toJson();
-        
+
         expect(json, {
           'server': 'nfs.example.com',
           'path': '/exports/data',
@@ -38,11 +38,11 @@ void main() {
         };
 
         final nfsVolume = NFSVolumeSource.fromJson(json);
-        
+
         expect(nfsVolume.server, equals('nfs.example.com'));
         expect(nfsVolume.path, equals('/exports/data'));
         expect(nfsVolume.readOnly, equals(true));
       });
     });
   });
-} 
+}

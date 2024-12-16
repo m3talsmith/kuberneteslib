@@ -36,35 +36,35 @@ class QuobyteVolumeSource {
   QuobyteVolumeSource();
 
   /// The group to map volume access to.
-  /// 
+  ///
   /// Required: Specifies the group name or GID for volume access control.
   String? group;
 
   /// Controls read-only access to the volume.
-  /// 
+  ///
   /// When true, the volume will be mounted read-only.
   /// When false, the volume will be mounted with read-write permissions.
   bool? readOnly;
 
   /// The Quobyte registry addresses for volume management.
-  /// 
+  ///
   /// Required: Format is "host:port" or multiple entries comma separated.
   /// Example: "registry-1:7861,registry-2:7861"
   String? registry;
 
   /// The tenant for volume access.
-  /// 
+  ///
   /// Optional: Specifies the tenant for multi-tenant environments.
   /// If not specified, the default tenant will be used.
   String? tenant;
 
   /// The user to map volume access to.
-  /// 
+  ///
   /// Required: Specifies the username or UID for volume access control.
   String? user;
 
   /// The name of the Quobyte volume to mount.
-  /// 
+  ///
   /// Required: Must be a valid volume name in the Quobyte storage system.
   String? volume;
 

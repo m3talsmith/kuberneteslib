@@ -31,14 +31,14 @@ class SecretEnvSource {
   SecretEnvSource();
 
   /// Name of the secret in the pod's namespace.
-  /// 
+  ///
   /// The secret being referenced must exist in the same namespace as the pod.
   /// All key-value pairs in the secret will be exposed as environment variables.
   @JsonKey(includeIfNull: false)
   String? name;
 
   /// Controls whether the secret must exist.
-  /// 
+  ///
   /// When true:
   /// - Missing secrets won't cause an error
   /// - Pod startup continues if secret is not found

@@ -7,7 +7,8 @@ void main() {
       final cluster = Cluster(
         name: 'test-cluster',
         server: 'https://api.test.com:6443',
-        certificateAuthorityData: 'dGVzdC1jZXJ0LWRhdGE=', // base64 encoded "test-cert-data"
+        certificateAuthorityData:
+            'dGVzdC1jZXJ0LWRhdGE=', // base64 encoded "test-cert-data"
       );
 
       expect(cluster.name, equals('test-cluster'));
@@ -37,7 +38,8 @@ void main() {
 
         expect(cluster.name, equals('test-cluster'));
         expect(cluster.server, equals('https://api.test.com:6443'));
-        expect(cluster.certificateAuthorityData, equals('dGVzdC1jZXJ0LWRhdGE='));
+        expect(
+            cluster.certificateAuthorityData, equals('dGVzdC1jZXJ0LWRhdGE='));
       });
 
       test('toJson correctly serializes to nested format', () {
@@ -49,13 +51,15 @@ void main() {
 
         final json = cluster.toJson();
 
-        expect(json, equals({
-          'name': 'test-cluster',
-          'cluster': {
-            'server': 'https://api.test.com:6443',
-            'certificate-authority-data': 'dGVzdC1jZXJ0LWRhdGE=',
-          },
-        }));
+        expect(
+            json,
+            equals({
+              'name': 'test-cluster',
+              'cluster': {
+                'server': 'https://api.test.com:6443',
+                'certificate-authority-data': 'dGVzdC1jZXJ0LWRhdGE=',
+              },
+            }));
       });
 
       test('toJson excludes null values', () {
@@ -67,12 +71,14 @@ void main() {
 
         final json = cluster.toJson();
 
-        expect(json, equals({
-          'name': 'test-cluster',
-          'cluster': {
-            'server': 'https://api.test.com:6443',
-          },
-        }));
+        expect(
+            json,
+            equals({
+              'name': 'test-cluster',
+              'cluster': {
+                'server': 'https://api.test.com:6443',
+              },
+            }));
       });
     });
 
@@ -122,11 +128,12 @@ void main() {
           certificateAuthorityData: 'dGVzdC1jZXJ0LWRhdGE=',
         );
 
-        // While not strictly equal (no operator== override), 
+        // While not strictly equal (no operator== override),
         // they should have the same properties
         expect(cluster1.name, equals(cluster2.name));
         expect(cluster1.server, equals(cluster2.server));
-        expect(cluster1.certificateAuthorityData, equals(cluster2.certificateAuthorityData));
+        expect(cluster1.certificateAuthorityData,
+            equals(cluster2.certificateAuthorityData));
 
         expect(cluster1.name, isNot(equals(cluster3.name)));
       });
@@ -176,7 +183,8 @@ void main() {
         );
 
         expect(cluster1.server, equals(cluster2.server));
-        expect(cluster1.certificateAuthorityData, isNot(equals(cluster2.certificateAuthorityData)));
+        expect(cluster1.certificateAuthorityData,
+            isNot(equals(cluster2.certificateAuthorityData)));
       });
 
       test('serialization roundtrip', () {
@@ -191,8 +199,9 @@ void main() {
 
         expect(deserialized.name, equals(original.name));
         expect(deserialized.server, equals(original.server));
-        expect(deserialized.certificateAuthorityData, equals(original.certificateAuthorityData));
+        expect(deserialized.certificateAuthorityData,
+            equals(original.certificateAuthorityData));
       });
     });
   });
-} 
+}

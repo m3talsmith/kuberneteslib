@@ -31,14 +31,14 @@ class Capabilities {
   Capabilities();
 
   /// List of capabilities to add to the container.
-  /// 
+  ///
   /// Optional: Specifies Linux capabilities to be added to the container.
   /// Common values include: NET_ADMIN, SYS_TIME, SYS_ADMIN
   @JsonKey(includeIfNull: false)
   List<String>? add;
 
   /// List of capabilities to remove from the container.
-  /// 
+  ///
   /// Optional: Specifies Linux capabilities to be removed from the container.
   /// Use ['ALL'] to drop all capabilities.
   @JsonKey(includeIfNull: false)

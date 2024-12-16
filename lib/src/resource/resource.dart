@@ -17,6 +17,7 @@ import '../status/status.dart';
 import 'resource_kind.dart';
 
 part 'resource.g.dart';
+
 /// Represents a Kubernetes resource with full API interaction capabilities.
 ///
 /// The Resource class is the core component for interacting with Kubernetes resources,
@@ -56,7 +57,7 @@ part 'resource.g.dart';
 @JsonSerializable()
 class Resource implements ResourceBase {
   /// Creates a new Resource instance.
-  /// 
+  ///
   /// All fields are optional to support different resource types and use cases.
   Resource({
     this.metadata,
@@ -90,6 +91,7 @@ class Resource implements ResourceBase {
   /// The namespace where this resource exists.
   @JsonKey(includeIfNull: false)
   String? namespace;
+
   /// Authentication configuration for API operations.
   @JsonKey(includeIfNull: false, fromJson: _authFromJson, includeToJson: false)
   ClusterAuth? auth;
@@ -334,10 +336,7 @@ class Resource implements ResourceBase {
     final uri = Uri.parse('${auth.cluster!.server!}$resourcePath');
 
     final response = await auth.post(uri, body: jsonEncode(resource.toJson()));
-    
-    
-    
-    
+
     if (response.statusCode > 299) {
       return null;
     }
@@ -358,7 +357,7 @@ class Resource implements ResourceBase {
   Future<Resource?> update() async {
     if (auth == null) throw MissingAuthException();
     if (kind == null) throw ArgumentError('kind is required');
-    
+
     final api = Resource.getApi(resourceKind: kind!);
     final resourceKindPluralized = kind!.toLowerCase().toPluralForm();
 
@@ -368,10 +367,7 @@ class Resource implements ResourceBase {
     final uri = Uri.parse('${auth!.cluster!.server!}$resourcePath');
 
     final response = await auth!.patch(uri, body: jsonEncode(toJson()));
-    
-    
-    
-    
+
     if (response.statusCode > 299) {
       return null;
     }
@@ -387,17 +383,14 @@ class Resource implements ResourceBase {
 
     Resource? resource;
 
-    final foundResource = resources.firstWhere((r) => r.metadata?.name == metadata?.name, orElse: () => Resource());
+    final foundResource = resources.firstWhere(
+        (r) => r.metadata?.name == metadata?.name,
+        orElse: () => Resource());
 
     if (foundResource.metadata?.name != metadata?.name) {
-      
-      
       resource = await Resource.create(auth: auth, resource: this);
-      
     } else {
-      
       resource = await update();
-      
     }
 
     return resource;
@@ -431,7 +424,7 @@ class Resource implements ResourceBase {
     if (auth == null) throw MissingAuthException();
     if (kind == null) throw ArgumentError('kind is required');
     namespace ??= (metadata?.namespace ?? 'default');
-    
+
     final api = Resource.getApi(resourceKind: kind!);
 
     var resourceKindPluralized = kind!.toLowerCase().toPluralForm();
@@ -478,7 +471,10 @@ spec:
   }
 
   factory Resource.fromJson(Map<String, dynamic> json) {
-    json['kind'] ??= (json.containsKey('metadata') && json['metadata']!.containsKey('kind')) ? json['metadata']['kind'] : 'unknown' ;
+    json['kind'] ??=
+        (json.containsKey('metadata') && json['metadata']!.containsKey('kind'))
+            ? json['metadata']['kind']
+            : 'unknown';
     return _$ResourceFromJson(json);
   }
 

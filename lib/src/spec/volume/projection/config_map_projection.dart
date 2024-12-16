@@ -36,7 +36,7 @@ class ConfigMapProjection {
   ConfigMapProjection();
 
   /// Optional key-to-path mappings for ConfigMap data.
-  /// 
+  ///
   /// If not specified, each key-value pair in the ConfigMap's Data field will be
   /// projected into the volume as a file whose name is the key and content is
   /// the value.
@@ -44,13 +44,13 @@ class ConfigMapProjection {
   List<KeyToPath>? items;
 
   /// Name of the ConfigMap to project.
-  /// 
+  ///
   /// The ConfigMap must exist in the same namespace as the Pod.
   @JsonKey(includeIfNull: false)
   String? name;
 
   /// Controls whether the ConfigMap must exist.
-  /// 
+  ///
   /// When true, the volume mount will succeed even if the ConfigMap doesn't exist
   /// or has missing keys. Defaults to false.
   @JsonKey(includeIfNull: false)
@@ -66,7 +66,7 @@ class ConfigMapProjection {
 }
 
 List<KeyToPath>? _itemsFromJson(List<dynamic>? json) =>
-  json?.map((e) => KeyToPath.fromJson(e as Map<String, dynamic>)).toList();
+    json?.map((e) => KeyToPath.fromJson(e as Map<String, dynamic>)).toList();
 
 List<Map<String, dynamic>>? _itemsToJson(List<KeyToPath>? items) =>
-  items?.map((e) => e.toJson()).toList();
+    items?.map((e) => e.toJson()).toList();

@@ -53,8 +53,7 @@ void main() {
     });
 
     test('omits null values in JSON serialization', () {
-      final projection = ConfigMapProjection()
-        ..name = 'test-config';
+      final projection = ConfigMapProjection()..name = 'test-config';
 
       final json = projection.toJson();
       expect(json, {
@@ -114,7 +113,7 @@ void main() {
 
     test('fromMap handles missing optional fields', () {
       final map = {'name': 'test-config'};
-      
+
       final projection = ConfigMapProjection.fromMap(map);
       expect(projection.name, equals('test-config'));
       expect(projection.optional, isNull);
@@ -155,11 +154,11 @@ void main() {
           KeyToPath()
             ..key = 'config.json'
             ..path = 'app/config.json'
-            ..mode = -1  // Invalid mode
+            ..mode = -1 // Invalid mode
         ];
 
       final json = projection.toJson();
       expect(json['items'][0]['mode'], equals(-1));
     });
   });
-} 
+}

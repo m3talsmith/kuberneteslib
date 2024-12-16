@@ -37,14 +37,14 @@ class PodDNSConfig {
   PodDNSConfig();
 
   /// List of DNS server IP addresses for the pod.
-  /// 
+  ///
   /// These nameservers are used in the order specified. If this field is empty,
   /// the pod inherits the name server settings from the node.
   /// Example: ['8.8.8.8', '8.8.4.4']
   List<String>? nameservers;
 
   /// List of DNS resolver options for the pod.
-  /// 
+  ///
   /// Allows fine-grained control over DNS resolution behavior through
   /// name-value pairs. Common options include:
   /// - ndots: minimum number of dots in name for absolute lookup
@@ -53,7 +53,7 @@ class PodDNSConfig {
   List<PodDNSConfigOption>? options;
 
   /// List of DNS search domains for hostname lookup in the pod.
-  /// 
+  ///
   /// These search domains are used to expand short names into fully qualified
   /// domain names. They are tried in the order specified.
   /// Example: ['ns1.svc.cluster.local', 'svc.cluster.local', 'cluster.local']

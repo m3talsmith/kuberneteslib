@@ -33,31 +33,31 @@ class FCVolumeSource {
   FCVolumeSource();
 
   /// Filesystem type to mount on the volume.
-  /// 
+  ///
   /// Must be a filesystem type supported by the host operating system.
   /// Examples: 'ext4', 'xfs', 'ntfs'
   late String fsType;
 
   /// Fibre Channel target logical unit number.
-  /// 
+  ///
   /// The unique identifier for a logical unit of storage
   /// presented by the FC target.
   late int lun;
 
   /// Controls read-only access to the volume.
-  /// 
+  ///
   /// When true, the volume will be mounted read-only.
   /// Defaults to false (read/write).
   late bool readOnly;
 
   /// Fibre Channel target World Wide Names (WWN).
-  /// 
+  ///
   /// List of FC target worldwide names (WWNs) that identify
   /// the storage devices to use.
   late List<String> targetWWNs;
 
   /// Optional Fibre Channel World Wide Identifiers (WWID).
-  /// 
+  ///
   /// List of FC volume world wide identifiers (wwids).
   /// Either wwids or combination of targetWWNs and lun must be set.
   late List<String> wwids;

@@ -41,14 +41,14 @@ class PodSecurityContext {
   PodSecurityContext();
 
   /// The GID (Group ID) to be used for all containers in the pod.
-  /// 
+  ///
   /// Used for volume access and file permissions when mounting volumes.
   /// Containers will run with this FSGroup unless overridden at container level.
   @JsonKey(includeIfNull: false)
   int? fsGroup;
 
   /// Defines behavior of changing ownership and permission of the volume.
-  /// 
+  ///
   /// Values:
   /// - "OnRootMismatch": Change permissions only if not owned by fsGroup
   /// - "Always": Always change permissions (default)
@@ -56,50 +56,50 @@ class PodSecurityContext {
   String? fsGroupChangePolicy;
 
   /// The GID (Group ID) to run the entrypoint of container processes.
-  /// 
+  ///
   /// Defaults to runtime default if unset. May be overridden by containers.
   @JsonKey(includeIfNull: false)
   int? runAsGroup;
 
   /// Requires that containers must run as non-root users.
-  /// 
+  ///
   /// If true, the Kubelet validates at runtime that container processes
   /// don't run as UID 0 (root).
   @JsonKey(includeIfNull: false)
   bool? runAsNonRoot;
 
   /// The UID (User ID) to run container processes.
-  /// 
+  ///
   /// Defaults to runtime default if unset. May be overridden by containers.
   @JsonKey(includeIfNull: false)
   int? runAsUser;
 
   /// SELinux context applied to all containers.
-  /// 
+  ///
   /// If unspecified, the container runtime allocates a random SELinux context.
   @JsonKey(includeIfNull: false)
   SELinuxOptions? seLinuxOptions;
 
   /// Seccomp profile applied to all containers.
-  /// 
+  ///
   /// Controls which system calls the container processes can make.
   @JsonKey(includeIfNull: false)
   SeccompProfile? seccompProfile;
 
   /// Additional groups applied to container processes.
-  /// 
+  ///
   /// Supplementary groups in addition to the primary GID specified in runAsGroup.
   @JsonKey(includeIfNull: false)
   List<int>? supplementalGroups;
 
   /// Sysctls applied to the pod.
-  /// 
+  ///
   /// List of kernel parameters to be applied to the pod.
   @JsonKey(includeIfNull: false)
   List<Sysctl>? sysctls;
 
   /// Windows-specific security settings.
-  /// 
+  ///
   /// Only applicable when running on Windows nodes.
   @JsonKey(includeIfNull: false)
   WindowsSecurityContextOptions? windowsOptions;

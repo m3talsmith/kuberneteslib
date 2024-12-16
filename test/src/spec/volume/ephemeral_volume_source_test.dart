@@ -22,15 +22,19 @@ void main() {
         ..volumeClaimTemplate = (PersistentVolumeClaimTemplate()
           ..spec = (PersistentVolumeClaimSpec()
             ..accessModes = ['ReadWriteOnce']
-            ..resources = (ResourceRequirements()
-              ..requests = {'storage': '10Gi'})));
+            ..resources =
+                (ResourceRequirements()..requests = {'storage': '10Gi'})));
 
       final json = source.toJson();
-      
+
       expect(json, isA<Map<String, dynamic>>());
       expect(json['volumeClaimTemplate'], isNotNull);
-      expect(json['volumeClaimTemplate']['spec']['accessModes'], ['ReadWriteOnce']);
-      expect(json['volumeClaimTemplate']['spec']['resources']['requests']['storage'], '10Gi');
+      expect(json['volumeClaimTemplate']['spec']['accessModes'],
+          ['ReadWriteOnce']);
+      expect(
+          json['volumeClaimTemplate']['spec']['resources']['requests']
+              ['storage'],
+          '10Gi');
     });
 
     test('deserializes from JSON', () {
@@ -46,11 +50,14 @@ void main() {
       };
 
       final source = EphemeralVolumeSource.fromJson(json);
-      
+
       expect(source, isA<EphemeralVolumeSource>());
       expect(source.volumeClaimTemplate, isNotNull);
       expect(source.volumeClaimTemplate!.spec!.accessModes, ['ReadWriteOnce']);
-      expect(source.volumeClaimTemplate!.spec!.resources!.requests!['storage'].toString(), '10Gi');
+      expect(
+          source.volumeClaimTemplate!.spec!.resources!.requests!['storage']
+              .toString(),
+          '10Gi');
     });
   });
-} 
+}

@@ -31,23 +31,25 @@ class PhotonPersistentDiskVolumeSource {
   PhotonPersistentDiskVolumeSource();
 
   /// The filesystem type to mount.
-  /// 
+  ///
   /// Must be a filesystem type supported by the host operating system.
   /// Examples: "ext4", "xfs", "ntfs".
-  /// 
+  ///
   /// Optional: If not specified, the default filesystem type
   /// configured in the Kubernetes cluster will be used.
   late String fsType;
 
   /// ID that identifies the Photon Controller persistent disk.
-  /// 
+  ///
   /// Required: This ID must correspond to an existing persistent disk resource
   /// in the Photon Platform. The disk must be created before it can be used
   /// as a volume source.
   late String pdID;
 
-  factory PhotonPersistentDiskVolumeSource.fromJson(Map<String, dynamic> json) =>
+  factory PhotonPersistentDiskVolumeSource.fromJson(
+          Map<String, dynamic> json) =>
       _$PhotonPersistentDiskVolumeSourceFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PhotonPersistentDiskVolumeSourceToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$PhotonPersistentDiskVolumeSourceToJson(this);
 }

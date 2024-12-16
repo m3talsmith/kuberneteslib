@@ -30,21 +30,21 @@ class ServiceAccountTokenProjection {
   ServiceAccountTokenProjection();
 
   /// The intended audience of the token.
-  /// 
+  ///
   /// Identifies who should accept this token. If not specified,
   /// the token's audience will default to the Kubernetes API server.
   @JsonKey(includeIfNull: false)
   String? audience;
 
   /// Token validity duration in seconds.
-  /// 
+  ///
   /// Controls how long the projected token will remain valid.
   /// If not specified, defaults to 1 hour (3600 seconds).
   @JsonKey(includeIfNull: false)
   int? expirationSeconds;
 
   /// The relative path where the token will be mounted.
-  /// 
+  ///
   /// Required field that specifies where in the projected volume
   /// the token file should be created.
   @JsonKey(includeIfNull: false)

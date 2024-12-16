@@ -31,13 +31,13 @@ class GRPCAction {
   GRPCAction();
 
   /// The port number of the gRPC service.
-  /// 
+  ///
   /// Required: The container port number where the gRPC service is listening.
   /// This must be a valid port number (1-65535).
   late int port;
 
   /// The name of the gRPC service to probe.
-  /// 
+  ///
   /// Required: The fully qualified name of the gRPC service.
   /// Format: "package.service"
   /// Example: "grpc.health.v1.Health"

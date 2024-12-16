@@ -21,7 +21,7 @@ void main() {
         ..secretRef = (LocalObjectReference()..name = 'ceph-secret');
 
       final json = source.toJson();
-      
+
       expect(json, {
         'monitors': ['10.16.154.78:6789', '10.16.154.82:6789'],
         'image': 'foo-image',
@@ -47,8 +47,9 @@ void main() {
       };
 
       final source = RBDVolumeSource.fromJson(json);
-      
-      expect(source.monitors, equals(['10.16.154.78:6789', '10.16.154.82:6789']));
+
+      expect(
+          source.monitors, equals(['10.16.154.78:6789', '10.16.154.82:6789']));
       expect(source.image, equals('foo-image'));
       expect(source.pool, equals('rbd'));
       expect(source.user, equals('admin'));
@@ -71,11 +72,10 @@ void main() {
       final json = source.toJson();
       final deserialized = RBDVolumeSource.fromJson(json);
 
-      expect(deserialized.monitors, equals([
-        '10.16.154.78:6789',
-        '10.16.154.82:6789',
-        '10.16.154.83:6789'
-      ]));
+      expect(
+          deserialized.monitors,
+          equals(
+              ['10.16.154.78:6789', '10.16.154.82:6789', '10.16.154.83:6789']));
     });
   });
-} 
+}

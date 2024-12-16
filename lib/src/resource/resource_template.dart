@@ -28,43 +28,44 @@ class ResourceTemplate extends Resource {
   final String apiVersion;
 
   /// Creates a new [ResourceTemplate] with required fields.
-  /// 
+  ///
   /// Parameters:
   /// - [kind]: The type of resource (e.g., 'Pod', 'Deployment')
   /// - [metadata]: Resource metadata (name, namespace, labels, etc.)
   /// - [apiVersion]: API version, defaults to 'v1'
-  ResourceTemplate({
-    required String kind,
-    required ObjectMeta metadata,
-    this.apiVersion = 'v1'
-  }) : super(kind: kind, metadata: metadata);
+  ResourceTemplate(
+      {required String kind,
+      required ObjectMeta metadata,
+      this.apiVersion = 'v1'})
+      : super(kind: kind, metadata: metadata);
 
   /// Creates a [ResourceTemplate] from a JSON map.
-  /// 
+  ///
   /// Handles conversion of all nested objects including:
   /// - Metadata
   /// - Specifications based on resource kind
   /// - Status information
   /// - Authentication details
-  factory ResourceTemplate.fromJson(Map<String, dynamic> json) => ResourceTemplate(
-      kind: json['kind'] as String,
-      metadata: ObjectMeta.fromJson(json['metadata'] as Map<String, dynamic>),
-      apiVersion: json['apiVersion'] as String? ?? 'v1',
-    )
-      ..spec = json['spec'] == null
-          ? null
-          : Spec.fromJson(json['spec'] as Map<String, dynamic>,
-              kind: json['kind'])
-      ..status = json['status'] == null
-          ? null
-          : Status.fromJson(json['status'] as Map<String, dynamic>)
-      ..namespace = json['namespace'] as String?
-      ..auth = json['auth'] == null
-          ? null
-          : ClusterAuth.fromJson(json['auth'] as Map<String, dynamic>);
+  factory ResourceTemplate.fromJson(Map<String, dynamic> json) =>
+      ResourceTemplate(
+        kind: json['kind'] as String,
+        metadata: ObjectMeta.fromJson(json['metadata'] as Map<String, dynamic>),
+        apiVersion: json['apiVersion'] as String? ?? 'v1',
+      )
+        ..spec = json['spec'] == null
+            ? null
+            : Spec.fromJson(json['spec'] as Map<String, dynamic>,
+                kind: json['kind'])
+        ..status = json['status'] == null
+            ? null
+            : Status.fromJson(json['status'] as Map<String, dynamic>)
+        ..namespace = json['namespace'] as String?
+        ..auth = json['auth'] == null
+            ? null
+            : ClusterAuth.fromJson(json['auth'] as Map<String, dynamic>);
 
   /// Converts this [ResourceTemplate] to a JSON map.
-  /// 
+  ///
   /// Only includes non-null fields in the output to maintain
   /// clean and minimal JSON representations.
   @override

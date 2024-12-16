@@ -34,7 +34,7 @@ void main() {
       final source = AWSElasticBlockStoreVolumeSource()
         ..fsType = 'xfs'
         ..volumeID = 'vol-1234567890abcdef0';
-      
+
       expect(source.fsType, equals('xfs'));
     });
 
@@ -43,7 +43,7 @@ void main() {
         ..fsType = 'ext4'
         ..volumeID = 'vol-1234567890abcdef0'
         ..partition = 2;
-      
+
       expect(source.partition, equals(2));
     });
 
@@ -52,8 +52,8 @@ void main() {
         ..fsType = 'ext4'
         ..volumeID = 'vol-1234567890abcdef0'
         ..readOnly = false;
-      
+
       expect(source.readOnly, isFalse);
     });
   });
-} 
+}

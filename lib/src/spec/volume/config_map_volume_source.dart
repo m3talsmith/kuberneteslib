@@ -36,27 +36,27 @@ class ConfigMapVolumeSource {
   ConfigMapVolumeSource();
 
   /// Optional Unix permission mode bits for created files.
-  /// 
+  ///
   /// Must be a value between 0 and 0777 (octal) or 0 and 511 (decimal).
   /// Defaults to 0644 if not specified.
   @JsonKey(includeIfNull: false)
   int? defaultMode;
 
   /// Optional list of ConfigMap keys to selectively mount.
-  /// 
+  ///
   /// Allows mapping specific ConfigMap keys to custom paths in the volume.
   /// If omitted, all keys are mounted at their original names.
   @JsonKey(includeIfNull: false)
   List<KeyToPath>? items;
 
   /// Name of the ConfigMap to mount.
-  /// 
+  ///
   /// Must exist in the same namespace as the pod.
   @JsonKey(includeIfNull: false)
   String? name;
 
   /// Controls whether the ConfigMap must exist.
-  /// 
+  ///
   /// When false, the ConfigMap must exist or pod startup will fail.
   /// When true, a missing ConfigMap is allowed.
   @JsonKey(includeIfNull: false)

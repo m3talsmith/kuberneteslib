@@ -40,8 +40,7 @@ void main() {
     });
 
     test('supports optional fields', () {
-      final minimalProjection = SecretProjection()
-        ..name = 'minimal-secret';
+      final minimalProjection = SecretProjection()..name = 'minimal-secret';
 
       final json = minimalProjection.toJson();
       expect(json, {
@@ -62,4 +61,4 @@ void main() {
       expect(projection.optional, isFalse);
     });
   });
-} 
+}

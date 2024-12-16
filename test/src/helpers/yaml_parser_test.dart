@@ -10,10 +10,10 @@ void main() {
         age: 30
         isStudent: true
       ''';
-      
+
       final yaml = loadYaml(yamlString) as YamlMap;
       final result = fromYamlMap(yaml);
-      
+
       expect(result, {
         'name': 'John',
         'age': 30,
@@ -29,10 +29,10 @@ void main() {
             city: New York
             country: USA
       ''';
-      
+
       final yaml = loadYaml(yamlString) as YamlMap;
       final result = fromYamlMap(yaml);
-      
+
       expect(result, {
         'person': {
           'name': 'John',
@@ -51,10 +51,10 @@ void main() {
           - banana
           - orange
       ''';
-      
+
       final yaml = loadYaml(yamlString) as YamlMap;
       final result = fromYamlMap(yaml);
-      
+
       expect(result, {
         'fruits': ['apple', 'banana', 'orange'],
       });
@@ -72,10 +72,10 @@ void main() {
               - painting
               - swimming
       ''';
-      
+
       final yaml = loadYaml(yamlString) as YamlMap;
       final result = fromYamlMap(yaml);
-      
+
       expect(result, {
         'users': [
           {
@@ -95,14 +95,14 @@ void main() {
         emptyMap: {}
         emptyList: []
       ''';
-      
+
       final yaml = loadYaml(yamlString) as YamlMap;
       final result = fromYamlMap(yaml);
-      
+
       expect(result, {
         'emptyMap': {},
         'emptyList': [],
       });
     });
   });
-} 
+}

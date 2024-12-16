@@ -42,7 +42,7 @@ class DownwardAPIProjection {
   DownwardAPIProjection({this.items});
 
   /// List of files to project into the volume.
-  /// 
+  ///
   /// Each item specifies a mapping between a source of pod data and its desired
   /// location within the projected volume. Sources can include:
   /// - Pod metadata fields

@@ -30,24 +30,24 @@ class AzureFileVolumeSource {
   AzureFileVolumeSource();
 
   /// Controls read-only access to the volume.
-  /// 
+  ///
   /// When true, the volume will be mounted read-only.
   /// Defaults to false (read/write).
   late bool readOnly;
 
   /// Name of the Secret containing Azure storage credentials.
-  /// 
+  ///
   /// The secret must contain 'azurestorageaccountname' and
   /// 'azurestorageaccountkey' fields.
   late String secretName;
 
   /// Name of the Azure File share to mount.
-  /// 
+  ///
   /// This share must exist in the configured Azure Storage Account.
   late String shareName;
 
   /// Creates an [AzureFileVolumeSource] from a map of data.
-  /// 
+  ///
   /// The map must contain the following keys:
   /// - 'readOnly': bool
   /// - 'secretName': String

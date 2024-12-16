@@ -47,13 +47,13 @@ class HostPathVolumeSource {
   HostPathVolumeSource();
 
   /// Path on the host that will be mounted into the pod.
-  /// 
+  ///
   /// The path must be absolute and if the path is a symlink,
   /// it will follow the link to the real path.
   late String path;
 
   /// Type for the host path volume.
-  /// 
+  ///
   /// Determines validation and creation behavior for the path.
   /// Must be one of: "", "DirectoryOrCreate", "Directory", "FileOrCreate",
   /// "File", "Socket", "CharDevice", or "BlockDevice".

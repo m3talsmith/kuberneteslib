@@ -11,13 +11,10 @@ void main() {
     test('serializes from JSON correctly', () {
       final json = {
         'f:metadata': {
-          'f:labels': {
-            'f:app': {},
-            'f:environment': {}
-          }
+          'f:labels': {'f:app': {}, 'f:environment': {}}
         }
       };
-      
+
       final fields = FieldsV1.fromJson(json);
       expect(fields.toJson(), equals(json));
     });
@@ -25,23 +22,17 @@ void main() {
     test('handles complex nested structures', () {
       final json = {
         'f:metadata': {
-          'f:labels': {
-            'f:app': {},
-            'f:environment': {}
-          }
+          'f:labels': {'f:app': {}, 'f:environment': {}}
         },
         'f:spec': {
           'f:containers': {
-            'k:{"name":"main"}': {
-              'f:image': {},
-              'f:ports': {}
-            }
+            'k:{"name":"main"}': {'f:image': {}, 'f:ports': {}}
           }
         }
       };
-      
+
       final fields = FieldsV1.fromJson(json);
       expect(fields.toJson(), equals(json));
     });
   });
-} 
+}

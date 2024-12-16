@@ -3,10 +3,12 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'ephemeral_volume_source.g.dart';
 
-Map<String, dynamic>? _volumeClaimTemplateToJson(PersistentVolumeClaimTemplate? template) =>
+Map<String, dynamic>? _volumeClaimTemplateToJson(
+        PersistentVolumeClaimTemplate? template) =>
     template?.toJson();
 
-PersistentVolumeClaimTemplate? _volumeClaimTemplateFromJson(Map<String, dynamic>? json) =>
+PersistentVolumeClaimTemplate? _volumeClaimTemplateFromJson(
+        Map<String, dynamic>? json) =>
     json == null ? null : PersistentVolumeClaimTemplate.fromJson(json);
 
 /// Represents an ephemeral volume in Kubernetes that is dynamically provisioned.
@@ -42,11 +44,14 @@ class EphemeralVolumeSource {
   });
 
   /// PVC template for the ephemeral volume.
-  /// 
+  ///
   /// This template defines the PersistentVolumeClaim that will be automatically
   /// created and deleted with the pod. The claim is provisioned by the cluster's
   /// dynamic volume provisioner based on the specified storage class.
-  @JsonKey(includeIfNull: false, toJson: _volumeClaimTemplateToJson, fromJson: _volumeClaimTemplateFromJson)
+  @JsonKey(
+      includeIfNull: false,
+      toJson: _volumeClaimTemplateToJson,
+      fromJson: _volumeClaimTemplateFromJson)
   PersistentVolumeClaimTemplate? volumeClaimTemplate;
 
   factory EphemeralVolumeSource.fromJson(Map<String, dynamic> json) =>

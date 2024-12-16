@@ -19,7 +19,7 @@ void main() {
           ..fsType = 'ext4';
 
         final json = photonDisk.toJson();
-        
+
         expect(json, {
           'pdID': 'disk-123456',
           'fsType': 'ext4',
@@ -33,10 +33,10 @@ void main() {
         };
 
         final photonDisk = PhotonPersistentDiskVolumeSource.fromJson(json);
-        
+
         expect(photonDisk.pdID, equals('disk-123456'));
         expect(photonDisk.fsType, equals('ext4'));
       });
     });
   });
-} 
+}

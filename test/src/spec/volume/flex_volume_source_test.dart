@@ -10,10 +10,7 @@ void main() {
       flexVolume = FlexVolumeSource()
         ..driver = 'vendor/storage-driver'
         ..fsType = 'ext4'
-        ..options = {
-          'volumeID': 'vol123',
-          'size': '100Gi'
-        }
+        ..options = {'volumeID': 'vol123', 'size': '100Gi'}
         ..readOnly = false
         ..secretRef = (LocalObjectReference()..name = 'storage-secret');
     });
@@ -26,10 +23,8 @@ void main() {
     test('has correct property values', () {
       expect(flexVolume.driver, equals('vendor/storage-driver'));
       expect(flexVolume.fsType, equals('ext4'));
-      expect(flexVolume.options, equals({
-        'volumeID': 'vol123',
-        'size': '100Gi'
-      }));
+      expect(
+          flexVolume.options, equals({'volumeID': 'vol123', 'size': '100Gi'}));
       expect(flexVolume.readOnly, isFalse);
       expect(flexVolume.secretRef.name, equals('storage-secret'));
     });
@@ -38,13 +33,9 @@ void main() {
       final json = {
         'driver': 'custom/driver',
         'fsType': 'xfs',
-        'options': {
-          'key': 'value'
-        },
+        'options': {'key': 'value'},
         'readOnly': true,
-        'secretRef': {
-          'name': 'test-secret'
-        }
+        'secretRef': {'name': 'test-secret'}
       };
 
       final fromJson = FlexVolumeSource.fromJson(json);
@@ -56,4 +47,4 @@ void main() {
       expect(fromJson.secretRef.name, equals('test-secret'));
     });
   });
-} 
+}

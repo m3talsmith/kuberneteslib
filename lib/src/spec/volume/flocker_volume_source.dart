@@ -31,13 +31,13 @@ class FlockerVolumeSource {
   FlockerVolumeSource();
 
   /// Name of the Flocker dataset.
-  /// 
+  ///
   /// The dataset name is used as metadata to identify the volume
   /// in the Flocker control service.
   String? datasetName;
 
   /// Unique identifier for the Flocker dataset.
-  /// 
+  ///
   /// The UUID uniquely identifies a specific dataset in the Flocker cluster.
   /// This ID is used to ensure the correct dataset is mounted.
   String? datasetUUID;

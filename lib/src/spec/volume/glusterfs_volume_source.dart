@@ -31,19 +31,19 @@ class GlusterfsVolumeSource {
   GlusterfsVolumeSource();
 
   /// The endpoint name that contains GlusterFS pod and service details.
-  /// 
+  ///
   /// Required: References the endpoints object that contains the GlusterFS
   /// cluster network information.
   late String endpoint;
 
   /// The GlusterFS volume path.
-  /// 
+  ///
   /// Required: The path to the GlusterFS volume that should be mounted.
   /// Example: 'myvolume' or 'myvolume/mydir'.
   late String path;
 
   /// Controls read-only access to the volume.
-  /// 
+  ///
   /// When true, the volume will be mounted read-only.
   /// Defaults to false (read/write).
   late bool readOnly;

@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:kuberneteslib/src/resource/resource_template.dart';
 import 'package:kuberneteslib/src/meta/object_meta.dart';
+
 void main() {
   group('ResourceTemplate', () {
     test('creates with required parameters', () {
@@ -84,4 +85,4 @@ void main() {
       expect(template.auth, isNull);
     });
   });
-} 
+}

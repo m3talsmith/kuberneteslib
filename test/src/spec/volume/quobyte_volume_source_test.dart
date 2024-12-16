@@ -18,7 +18,7 @@ void main() {
         ..readOnly = false;
 
       final json = source.toJson();
-      
+
       expect(json, {
         'registry': 'registry.example.com:7861',
         'volume': 'testVolume',
@@ -40,7 +40,7 @@ void main() {
       };
 
       final source = QuobyteVolumeSource.fromJson(json);
-      
+
       expect(source.registry, equals('registry.example.com:7861'));
       expect(source.volume, equals('testVolume'));
       expect(source.user, equals('admin'));
@@ -62,4 +62,4 @@ void main() {
       expect(deserialized.registry, equals('registry-1:7861,registry-2:7861'));
     });
   });
-} 
+}

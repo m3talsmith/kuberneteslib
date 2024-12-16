@@ -32,13 +32,13 @@ class ResourceFieldSelector {
   ResourceFieldSelector({this.containerName, this.divisor, this.resource});
 
   /// The name of the container to extract the resource value from.
-  /// 
+  ///
   /// If omitted, the first container in the pod will be used.
   @JsonKey(includeIfNull: false)
   String? containerName;
 
   /// The divisor to apply to the resource value.
-  /// 
+  ///
   /// Common formats:
   /// - Memory: "1Mi", "1Gi"
   /// - CPU: "1m", "1"
@@ -47,7 +47,7 @@ class ResourceFieldSelector {
   dynamic divisor;
 
   /// The resource type to extract from the container.
-  /// 
+  ///
   /// Common values:
   /// - 'limits.cpu': CPU limit
   /// - 'requests.memory': Memory request

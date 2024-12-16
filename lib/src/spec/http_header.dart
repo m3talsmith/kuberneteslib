@@ -31,13 +31,13 @@ class HTTPHeader {
   HTTPHeader();
 
   /// The name of the HTTP header.
-  /// 
+  ///
   /// Required: Must be a valid HTTP header name as per RFC 7230.
   /// Example: 'Accept', 'Authorization', 'Content-Type'
   late String name;
 
   /// The value of the HTTP header.
-  /// 
+  ///
   /// Required: The header value to be sent with the HTTP request.
   /// Example: 'application/json', 'Bearer token123'
   late String value;

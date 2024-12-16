@@ -42,7 +42,10 @@ class ScaleIOVolumeSource {
 
   /// Reference to the secret object containing sensitive information
   /// such as ScaleIO user credentials.
-  @JsonKey(includeIfNull: false, toJson: _secretRefToJson, fromJson: _secretRefFromJson)
+  @JsonKey(
+      includeIfNull: false,
+      toJson: _secretRefToJson,
+      fromJson: _secretRefFromJson)
   LocalObjectReference? secretRef;
 
   /// Flag to enable/disable SSL communication with Gateway.

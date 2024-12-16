@@ -33,14 +33,14 @@ class SELinuxOptions {
   SELinuxOptions();
 
   /// The SELinux level label for Multi-Level Security (MLS).
-  /// 
+  ///
   /// Format: 'sensitivity[:category,...]'
   /// Example: 's0:c123,c456'
   @JsonKey(includeIfNull: false)
   String? level;
 
   /// The SELinux role label for Role-Based Access Control (RBAC).
-  /// 
+  ///
   /// Common values:
   /// - 'system_r'
   /// - 'user_r'
@@ -49,7 +49,7 @@ class SELinuxOptions {
   String? role;
 
   /// The SELinux type label for Type Enforcement (TE).
-  /// 
+  ///
   /// Common values:
   /// - 'container_t'
   /// - 'spc_t'
@@ -58,7 +58,7 @@ class SELinuxOptions {
   String? type;
 
   /// The SELinux user context.
-  /// 
+  ///
   /// Common values:
   /// - 'system_u'
   /// - 'user_u'

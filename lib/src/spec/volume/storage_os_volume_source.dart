@@ -43,34 +43,37 @@ class StorageOSVolumeSource {
   StorageOSVolumeSource();
 
   /// The filesystem type to mount.
-  /// 
+  ///
   /// Required: Must be a filesystem type supported by the host operating system.
   /// Examples: "ext4", "xfs", "ntfs"
   @JsonKey(includeIfNull: false)
   String? fsType;
 
   /// Controls read-only access to the volume.
-  /// 
+  ///
   /// When true, the volume will be mounted read-only.
   /// When false, the volume will be mounted with read-write permissions.
   @JsonKey(includeIfNull: false)
   bool? readOnly;
 
   /// Reference to the secret containing StorageOS credentials.
-  /// 
+  ///
   /// Required: References a Kubernetes secret containing the StorageOS API credentials.
   /// The secret must exist in the same namespace as the pod.
-  @JsonKey(includeIfNull: false, toJson: _secretRefToJson, fromJson: _secretRefFromJson)
+  @JsonKey(
+      includeIfNull: false,
+      toJson: _secretRefToJson,
+      fromJson: _secretRefFromJson)
   LocalObjectReference? secretRef;
 
   /// The name of the StorageOS volume.
-  /// 
+  ///
   /// Required: Must be a valid volume name in the StorageOS system.
   @JsonKey(includeIfNull: false)
   String? volumeName;
 
   /// The namespace where the StorageOS volume resides.
-  /// 
+  ///
   /// Required: Specifies the StorageOS namespace for the volume.
   /// Usually matches the Kubernetes namespace but can be different.
   @JsonKey(includeIfNull: false)

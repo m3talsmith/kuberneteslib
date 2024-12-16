@@ -5,7 +5,7 @@ void main() {
   group('Exec', () {
     test('creates instance with default values', () {
       final exec = Exec();
-      
+
       expect(exec.command, equals('doctl'));
       expect(exec.arguments, isNull);
       expect(exec.apiVersion, equals('client.authentication.k8s.io/v1beta1'));
@@ -24,7 +24,8 @@ void main() {
       );
 
       expect(exec.command, equals('aws'));
-      expect(exec.arguments, equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
+      expect(exec.arguments,
+          equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
       expect(exec.apiVersion, equals('v2'));
       expect(exec.env, equals('AWS_PROFILE=default'));
       expect(exec.interactiveMode, equals('Never'));
@@ -43,9 +44,10 @@ void main() {
         );
 
         final json = exec.toJson();
-        
+
         expect(json['command'], equals('aws'));
-        expect(json['arguments'], equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
+        expect(json['arguments'],
+            equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
         expect(json['apiVersion'], equals('v2'));
         expect(json['env'], equals('AWS_PROFILE=default'));
         expect(json['interactiveMode'], equals('Never'));
@@ -65,7 +67,8 @@ void main() {
         final exec = Exec.fromJson(json);
 
         expect(exec.command, equals('aws'));
-        expect(exec.arguments, equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
+        expect(exec.arguments,
+            equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
         expect(exec.apiVersion, equals('v2'));
         expect(exec.env, equals('AWS_PROFILE=default'));
         expect(exec.interactiveMode, equals('Never'));
@@ -84,11 +87,12 @@ void main() {
       );
 
       final json = result.toJson();
-      
+
       expect(json['kind'], equals('ExecCredential'));
-      expect(json['apiVersion'], equals('client.authentication.k8s.io/v1beta1'));
+      expect(
+          json['apiVersion'], equals('client.authentication.k8s.io/v1beta1'));
       expect(json['spec']['interactive'], isFalse);
       expect(json['status']['token'], equals('test-token'));
     });
   });
-} 
+}

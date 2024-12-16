@@ -46,7 +46,7 @@ class SecretVolumeSource {
   SecretVolumeSource();
 
   /// Default Unix permission mode for secret files.
-  /// 
+  ///
   /// Optional: Defaults to 0644 if not specified.
   /// Must be a value between 0 and 0777.
   /// Can be overridden by individual items' mode settings.
@@ -54,7 +54,7 @@ class SecretVolumeSource {
   int? defaultMode;
 
   /// Mapping of secret keys to specific paths.
-  /// 
+  ///
   /// Optional: If specified, only the listed keys will be projected into the
   /// specified paths. If unspecified, all keys will be mounted using the key
   /// name as the file name.
@@ -62,7 +62,7 @@ class SecretVolumeSource {
   List<KeyToPath>? items;
 
   /// Controls whether the Secret must exist.
-  /// 
+  ///
   /// Optional: Defaults to false.
   /// When true, volume mounting will fail if the secret doesn't exist.
   /// When false, volume will mount successfully even if the secret is missing.
@@ -70,7 +70,7 @@ class SecretVolumeSource {
   bool? optional;
 
   /// Name of the Secret resource.
-  /// 
+  ///
   /// Required: Must be the name of a Secret in the same namespace as the pod.
   /// The Secret must exist for the volume mount to succeed unless optional is true.
   @JsonKey(includeIfNull: false)

@@ -58,4 +58,4 @@ void main() {
       expect(source.shareName, equals('test-share'));
     });
   });
-} 
+}

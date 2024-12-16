@@ -22,7 +22,7 @@ void main() {
           ..readOnly = false;
 
         final json = portworxVolume.toJson();
-        
+
         expect(json, {
           'volumeID': 'pxd-123',
           'fsType': 'xfs',
@@ -38,11 +38,11 @@ void main() {
         };
 
         final portworxVolume = PortworxVolumeSource.fromJson(json);
-        
+
         expect(portworxVolume.volumeID, equals('pxd-123'));
         expect(portworxVolume.fsType, equals('ext4'));
         expect(portworxVolume.readOnly, isTrue);
       });
     });
   });
-} 
+}

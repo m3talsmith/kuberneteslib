@@ -25,7 +25,7 @@ void main() {
       };
 
       final source = ISCSIVolumeSource.fromJson(json);
-      
+
       expect(source.chapAuthDiscovery, true);
       expect(source.chapAuthSession, true);
       expect(source.fsType, 'ext4');
@@ -54,7 +54,7 @@ void main() {
         ..targetPortal = '10.0.0.1:3260';
 
       final json = source.toJson();
-      
+
       expect(json, {
         'chapAuthDiscovery': true,
         'chapAuthSession': true,
@@ -100,4 +100,4 @@ void main() {
       expect(source1.toJson(), equals(source2.toJson()));
     });
   });
-} 
+}

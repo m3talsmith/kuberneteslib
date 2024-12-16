@@ -38,7 +38,7 @@ class Lifecycle {
   Lifecycle();
 
   /// Handler to be executed after the container starts.
-  /// 
+  ///
   /// This handler runs asynchronously with respect to the container's main process
   /// and is executed after the container is created. The container's status will
   /// be marked as unhealthy and be restarted if the handler fails.
@@ -46,7 +46,7 @@ class Lifecycle {
   LifecycleHandler? postStart;
 
   /// Handler to be executed before the container stops.
-  /// 
+  ///
   /// This handler runs synchronously before the container is terminated,
   /// blocking the container's termination until the handler completes or until
   /// the termination grace period is reached.

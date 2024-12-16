@@ -29,7 +29,7 @@ void main() {
         ..readOnly = true;
 
       final json = source.toJson();
-      
+
       expect(json, {
         'fsType': 'ext4',
         'partition': 1,
@@ -56,11 +56,11 @@ void main() {
 
     test('supports empty/null values', () {
       final source = GCEPersistentDiskVolumeSource();
-      
+
       expect(source.fsType, isNull);
       expect(source.partition, isNull);
       expect(source.pdName, isNull);
       expect(source.readOnly, isNull);
     });
   });
-} 
+}

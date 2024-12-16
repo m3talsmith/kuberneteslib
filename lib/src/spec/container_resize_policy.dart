@@ -31,13 +31,13 @@ class ContainerResizePolicy {
   ContainerResizePolicy();
 
   /// The name of the resource that can be resized.
-  /// 
+  ///
   /// Required: Specifies which resource (e.g., 'cpu', 'memory') this policy applies to.
   /// Must match the resource name in the container's resource requirements.
   late String resourceName;
 
   /// The restart policy after a resize operation.
-  /// 
+  ///
   /// Required: Defines whether and how the container should restart after resizing.
   /// Valid values:
   /// - "NotRequired": No restart needed after resize

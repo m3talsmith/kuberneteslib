@@ -33,7 +33,7 @@ void main() {
           ..serviceAccountToken = ServiceAccountTokenProjection();
 
         final json = projection.toJson();
-        
+
         expect(json['configMap'], isNotNull);
         expect(json['downwardAPI'], isNotNull);
         expect(json['secret'], isNotNull);
@@ -73,4 +73,4 @@ void main() {
       });
     });
   });
-} 
+}

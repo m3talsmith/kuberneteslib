@@ -21,7 +21,8 @@ void main() {
       final json = cephfs.toJson();
       final fromJson = CephFSVolumeSource.fromJson(json);
 
-      expect(fromJson.monitors, equals(['10.16.154.78:6789', '10.16.154.82:6789']));
+      expect(fromJson.monitors,
+          equals(['10.16.154.78:6789', '10.16.154.82:6789']));
       expect(fromJson.path, equals('/mysql_data'));
       expect(fromJson.user, equals('admin'));
       expect(fromJson.secretFile, equals('/etc/ceph/user.keyring'));
@@ -30,8 +31,7 @@ void main() {
     });
 
     test('handles minimal configuration', () {
-      final cephfs = CephFSVolumeSource()
-        ..monitors = ['10.16.154.78:6789'];
+      final cephfs = CephFSVolumeSource()..monitors = ['10.16.154.78:6789'];
 
       final json = cephfs.toJson();
       expect(json['monitors'], equals(['10.16.154.78:6789']));
@@ -55,4 +55,4 @@ void main() {
       expect(json['readOnly'], isFalse);
     });
   });
-} 
+}

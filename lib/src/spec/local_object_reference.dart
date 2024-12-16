@@ -31,7 +31,7 @@ class LocalObjectReference {
   LocalObjectReference({this.name});
 
   /// The name of the referenced Kubernetes object.
-  /// 
+  ///
   /// Required: Must be a valid object name in the same namespace.
   /// The name must be unique within the namespace.
   String? name;

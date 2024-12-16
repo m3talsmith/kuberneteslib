@@ -31,7 +31,7 @@ import 'pod_spec.dart';
 /// for more details about resource specifications.
 class Spec {
   /// The actual resource specification instance.
-  /// 
+  ///
   /// Uses [ObjectSpecConverter] for JSON serialization/deserialization.
   @ObjectSpecConverter()
   ObjectSpec? spec;
@@ -39,17 +39,18 @@ class Spec {
   Spec({required this.spec});
 
   /// Creates a Spec instance from JSON based on the resource kind.
-  /// 
+  ///
   /// Parameters:
   /// - [data]: Raw JSON map containing the specification
   /// - [kind]: Type of Kubernetes resource being created
-  /// 
+  ///
   /// Currently supports:
   /// - Pod specifications (ResourceKind.pod)
   factory Spec.fromJson(Map<String, dynamic> data, {String? kind}) {
-    kind ??= (data.containsKey('metadata') && data['metadata']!.containsKey('kind'))
-        ? data['metadata']['kind']
-        : 'unknown';
+    kind ??=
+        (data.containsKey('metadata') && data['metadata']!.containsKey('kind'))
+            ? data['metadata']['kind']
+            : 'unknown';
 
     switch (ResourceKind.fromString(kind!)) {
       case ResourceKind.pod:

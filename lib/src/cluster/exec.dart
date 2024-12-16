@@ -43,26 +43,26 @@ class Exec {
   /// The command to execute (e.g., 'doctl')
   @JsonKey(includeIfNull: false)
   String? command;
-  
+
   /// List of command-line arguments to pass to the command
   @JsonKey(includeIfNull: false)
   List<String>? arguments;
-  
+
   /// The Kubernetes API version to use for authentication
   /// Defaults to 'client.authentication.k8s.io/v1beta1'
   @JsonKey(includeIfNull: false)
   String? apiVersion;
-  
+
   /// Environment variables to set during command execution
   /// Format should follow shell environment variable syntax
   @JsonKey(includeIfNull: false)
   String? env;
-  
+
   /// Controls how interactive mode behaves during command execution
   /// Possible values: 'Never', 'IfAvailable', 'Always'
   @JsonKey(includeIfNull: false)
   String? interactiveMode;
-  
+
   /// When true, includes additional cluster information in the execution context
   @JsonKey(includeIfNull: false)
   bool? provideClusterInfo;
@@ -98,25 +98,25 @@ class ExecResult {
 
   /// The type of the result, typically indicates the Kubernetes resource type
   final String kind;
-  
+
   /// The API version used for this result
   final String apiVersion;
-  
+
   /// The specification details of the execution
   final ExecSpec spec;
-  
+
   /// The status of the execution, including authentication tokens and expiration
   final ExecStatus status;
 
-  factory ExecResult.fromJson(Map<String, dynamic> json) => _$ExecResultFromJson(json);
+  factory ExecResult.fromJson(Map<String, dynamic> json) =>
+      _$ExecResultFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-    <String, dynamic>{
-      'kind': kind,
-      'apiVersion': apiVersion,
-      'spec': spec.toJson(),
-      'status': status.toJson(),
-    };
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'kind': kind,
+        'apiVersion': apiVersion,
+        'spec': spec.toJson(),
+        'status': status.toJson(),
+      };
 }
 
 /// Specifies the execution parameters used during authentication.
@@ -133,7 +133,8 @@ class ExecSpec {
   @JsonKey(includeIfNull: false)
   bool? interactive;
 
-  factory ExecSpec.fromJson(Map<String, dynamic> json) => _$ExecSpecFromJson(json);
+  factory ExecSpec.fromJson(Map<String, dynamic> json) =>
+      _$ExecSpecFromJson(json);
 
   Map<String, dynamic> toJson() => _$ExecSpecToJson(this);
 }
@@ -155,17 +156,18 @@ class ExecStatus {
   /// May be null if the token doesn't have an expiration
   @JsonKey(includeIfNull: false)
   DateTime? expirationTimestamp;
-  
+
   /// The authentication token obtained from the command execution
   /// This token is used for subsequent Kubernetes API authentication
   @JsonKey(includeIfNull: false)
   String? token;
 
-  factory ExecStatus.fromJson(Map<String, dynamic> json) => _$ExecStatusFromJson(json);
+  factory ExecStatus.fromJson(Map<String, dynamic> json) =>
+      _$ExecStatusFromJson(json);
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-      if (expirationTimestamp?.toIso8601String() != null)
-        'expirationTimestamp': expirationTimestamp?.toIso8601String(),
-      if (token != null) 'token': token,
-    };
+        if (expirationTimestamp?.toIso8601String() != null)
+          'expirationTimestamp': expirationTimestamp?.toIso8601String(),
+        if (token != null) 'token': token,
+      };
 }

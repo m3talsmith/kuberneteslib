@@ -31,14 +31,14 @@ class ConfigMapEnvSource {
   ConfigMapEnvSource();
 
   /// The name of the ConfigMap in the pod's namespace.
-  /// 
+  ///
   /// Required: References an existing ConfigMap to load environment variables from.
   /// The ConfigMap must exist in the same namespace as the pod.
   @JsonKey(includeIfNull: false)
   String? name;
 
   /// Whether the ConfigMap must exist.
-  /// 
+  ///
   /// Optional: Defaults to false. When true, the pod will start even if the
   /// ConfigMap doesn't exist or has missing keys. When false, the container
   /// will fail to start if the ConfigMap is missing or has missing keys.

@@ -46,13 +46,14 @@ class NodeSelector {
   NodeSelector() : nodeSelectorTerms = [];
 
   /// List of node selector terms that define the selection criteria.
-  /// 
+  ///
   /// Each term is evaluated independently, and the node must match all requirements
   /// within at least one term to be selected. Terms are combined using OR logic,
   /// while requirements within each term use AND logic.
   List<NodeSelectorTerm> nodeSelectorTerms;
 
-  factory NodeSelector.fromJson(Map<String, dynamic> json) => _$NodeSelectorFromJson(json);
+  factory NodeSelector.fromJson(Map<String, dynamic> json) =>
+      _$NodeSelectorFromJson(json);
 
   Map<String, dynamic> toJson() => _$NodeSelectorToJson(this);
 }

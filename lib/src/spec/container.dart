@@ -13,6 +13,7 @@ import 'volume_device.dart';
 import 'volume_mount.dart';
 
 part 'container.g.dart';
+
 /// Represents a container specification in Kubernetes.
 ///
 /// Container defines the runtime properties of a container within a pod.
@@ -49,7 +50,32 @@ part 'container.g.dart';
 /// for more details about container configuration.
 @JsonSerializable()
 class Container {
-  Container({this.args, this.command, this.env, this.envFrom, this.image, this.imagePullPolicy, this.lifecycle, this.livenessProbe, this.name, this.ports, this.readinessProbe, this.resizePolicy, this.resources, this.restartPolicy, this.securityContext, this.startupProbe, this.stdin, this.stdinOnce, this.terminationMessagePath, this.terminationMessagePolicy, this.tty, this.volumeDevices, this.volumeMounts, this.workingDir});
+  Container(
+      {this.args,
+      this.command,
+      this.env,
+      this.envFrom,
+      this.image,
+      this.imagePullPolicy,
+      this.lifecycle,
+      this.livenessProbe,
+      this.name,
+      this.ports,
+      this.readinessProbe,
+      this.resizePolicy,
+      this.resources,
+      this.restartPolicy,
+      this.securityContext,
+      this.startupProbe,
+      this.stdin,
+      this.stdinOnce,
+      this.terminationMessagePath,
+      this.terminationMessagePolicy,
+      this.tty,
+      this.volumeDevices,
+      this.volumeMounts,
+      this.workingDir});
+
   /// The arguments to pass to the container command
   @JsonKey(includeIfNull: false)
   List<String>? args;

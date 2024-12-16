@@ -42,27 +42,26 @@ class EnvVar {
   EnvVar();
 
   /// Name of the environment variable.
-  /// 
-  /// Required: Must be a C_IDENTIFIER (consisting of alphanumeric characters 
+  ///
+  /// Required: Must be a C_IDENTIFIER (consisting of alphanumeric characters
   /// or '_' and must start with an alphabetic character or '_').
   late String name;
 
   /// Direct string value for the environment variable.
-  /// 
+  ///
   /// Optional: Cannot be used if valueFrom is specified.
   /// The value will be used as-is for the environment variable.
   @JsonKey(includeIfNull: false)
   String? value;
 
   /// Source for the environment variable's value.
-  /// 
+  ///
   /// Optional: Cannot be used if value is specified.
   /// Allows referencing values from ConfigMaps, Secrets, and other sources.
   @JsonKey(includeIfNull: false)
   EnvVarSource? valueFrom;
 
-  factory EnvVar.fromJson(Map<String, dynamic> json) =>
-      _$EnvVarFromJson(json);
+  factory EnvVar.fromJson(Map<String, dynamic> json) => _$EnvVarFromJson(json);
 
   Map<String, dynamic> toJson() => _$EnvVarToJson(this);
 }

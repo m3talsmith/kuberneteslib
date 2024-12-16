@@ -30,7 +30,8 @@ void main() {
       final deserialized = AzureDiskVolumeSource.fromJson(json);
       expect(deserialized.cachingMode, equals('ReadWrite'));
       expect(deserialized.diskName, equals('my-azure-disk'));
-      expect(deserialized.diskURI, equals('/subscriptions/123/disks/my-azure-disk'));
+      expect(deserialized.diskURI,
+          equals('/subscriptions/123/disks/my-azure-disk'));
       expect(deserialized.fsType, equals('ext4'));
       expect(deserialized.kind, equals('Managed'));
       expect(deserialized.readOnly, isTrue);
@@ -41,7 +42,7 @@ void main() {
         ..cachingMode = 'None'
         ..diskName = 'test-disk'
         ..diskURI = '/subscriptions/123/disks/test-disk';
-      
+
       expect(source.cachingMode, equals('None'));
     });
 
@@ -50,7 +51,7 @@ void main() {
         ..kind = 'Shared'
         ..diskName = 'test-disk'
         ..diskURI = '/subscriptions/123/disks/test-disk';
-      
+
       expect(source.kind, equals('Shared'));
     });
 
@@ -59,7 +60,7 @@ void main() {
         ..fsType = 'xfs'
         ..diskName = 'test-disk'
         ..diskURI = '/subscriptions/123/disks/test-disk';
-      
+
       expect(source.fsType, equals('xfs'));
     });
 
@@ -68,8 +69,8 @@ void main() {
         ..readOnly = false
         ..diskName = 'test-disk'
         ..diskURI = '/subscriptions/123/disks/test-disk';
-      
+
       expect(source.readOnly, isFalse);
     });
   });
-} 
+}

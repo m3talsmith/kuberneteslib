@@ -36,31 +36,35 @@ LocalObjectReference? _secretRefFromJson(Map<String, dynamic>? json) =>
 
 @JsonSerializable()
 class CinderVolumeSource {
-  CinderVolumeSource({this.fsType, this.readOnly, this.secretRef, this.volumeID});
+  CinderVolumeSource(
+      {this.fsType, this.readOnly, this.secretRef, this.volumeID});
 
   /// The filesystem type to mount on the volume.
-  /// 
+  ///
   /// Must be supported by the host operating system.
   /// Common values: "ext4", "xfs", "ntfs"
   @JsonKey(includeIfNull: false)
   String? fsType;
 
   /// Controls read-only access to the volume.
-  /// 
+  ///
   /// When true, the volume will be mounted read-only.
   /// Defaults to false (read/write).
   @JsonKey(includeIfNull: false, defaultValue: false)
   bool? readOnly;
 
   /// Reference to the secret containing OpenStack credentials.
-  /// 
+  ///
   /// Contains authentication details needed to connect to the
   /// OpenStack Cinder service.
-  @JsonKey(toJson: _secretRefToJson, fromJson: _secretRefFromJson, includeIfNull: false)
+  @JsonKey(
+      toJson: _secretRefToJson,
+      fromJson: _secretRefFromJson,
+      includeIfNull: false)
   LocalObjectReference? secretRef;
 
   /// The unique identifier for the Cinder volume.
-  /// 
+  ///
   /// This ID must correspond to an existing volume in the
   /// OpenStack Cinder service.
   @JsonKey(includeIfNull: false)

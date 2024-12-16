@@ -19,7 +19,7 @@ void main() {
           ..readOnly = true;
 
         final json = pvcVolume.toJson();
-        
+
         expect(json, {
           'claimName': 'my-storage-claim',
           'readOnly': true,
@@ -33,7 +33,7 @@ void main() {
         };
 
         final pvcVolume = PersistentVolumeClaimVolumeSource.fromJson(json);
-        
+
         expect(pvcVolume.claimName, equals('my-storage-claim'));
         expect(pvcVolume.readOnly, equals(true));
       });
@@ -45,10 +45,10 @@ void main() {
         };
 
         final pvcVolume = PersistentVolumeClaimVolumeSource.fromMap(map);
-        
+
         expect(pvcVolume.claimName, equals('my-storage-claim'));
         expect(pvcVolume.readOnly, equals(true));
       });
     });
   });
-} 
+}

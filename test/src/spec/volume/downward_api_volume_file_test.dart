@@ -24,7 +24,7 @@ void main() {
       );
 
       final json = file.toJson();
-      
+
       expect(file.mode, equals(420));
       expect(json['mode'], equals('0644'));
       expect(json['fieldRef']['fieldPath'], equals('metadata.labels'));
@@ -81,4 +81,4 @@ void main() {
       expect(decoded.mode, equals(384)); // 0600 in decimal
     });
   });
-} 
+}

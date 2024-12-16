@@ -41,19 +41,19 @@ class Context {
   Context({this.cluster, this.user, this.name});
 
   /// The name of the cluster this context refers to.
-  /// 
+  ///
   /// This should match the name of a cluster defined in the kubeconfig.
   @JsonKey(includeIfNull: false)
   String? cluster;
 
   /// The name of the user for authentication.
-  /// 
+  ///
   /// This should match the name of a user defined in the kubeconfig.
   @JsonKey(includeIfNull: false)
   String? user;
 
   /// A unique identifier for this context.
-  /// 
+  ///
   /// This name is used to reference the context in the kubeconfig,
   /// particularly when setting the current-context.
   @JsonKey(includeIfNull: false, includeToJson: false)

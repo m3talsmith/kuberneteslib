@@ -30,14 +30,15 @@ void main() {
       final json = client.toJson();
       final deserializedClient = CertClient.fromJson(json);
 
-      expect(deserializedClient.clientCertificateAuthority, equals(testCertAuthority));
+      expect(deserializedClient.clientCertificateAuthority,
+          equals(testCertAuthority));
       expect(deserializedClient.clientCertificateData, equals(testCertData));
       expect(deserializedClient.clientKeyData, equals(testKeyData));
     });
 
     test('send sets correct headers for regular requests', () async {
       final request = Request('GET', Uri.parse('https://example.com'));
-      
+
       // This will throw due to invalid certificates, but we can still verify headers
       try {
         await client.send(request);
@@ -49,14 +50,15 @@ void main() {
 
     test('send sets correct headers for PATCH requests', () async {
       final request = Request('PATCH', Uri.parse('https://example.com'));
-      
+
       // This will throw due to invalid certificates, but we can still verify headers
       try {
         await client.send(request);
       } catch (_) {}
 
       expect(request.headers['user-agent'], equals('kuberneteslib'));
-      expect(request.headers['Content-Type'], equals('application/merge-patch+json'));
+      expect(request.headers['Content-Type'],
+          equals('application/merge-patch+json'));
     });
   });
-} 
+}

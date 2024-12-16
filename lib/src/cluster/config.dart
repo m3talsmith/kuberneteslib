@@ -343,7 +343,15 @@ class Configs {
 /// compatible with standard Kubernetes tools like `kubectl`.
 @JsonSerializable()
 class Config {
-  Config({this.apiVersion, this.clusters= const [], this.contexts= const [], this.currentContext, this.kind, this.preferences, this.users= const [], this.displayName});
+  Config(
+      {this.apiVersion,
+      this.clusters = const [],
+      this.contexts = const [],
+      this.currentContext,
+      this.kind,
+      this.preferences,
+      this.users = const [],
+      this.displayName});
 
   /// The Kubernetes API version for this config
   @JsonKey(includeIfNull: false)

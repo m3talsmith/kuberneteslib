@@ -49,13 +49,15 @@ void main() {
 
         final json = context.toJson();
 
-        expect(json, equals({
-          'name': 'test-context',
-          'context': {
-            'cluster': 'test-cluster',
-            'user': 'test-user',
-          }
-        }));
+        expect(
+            json,
+            equals({
+              'name': 'test-context',
+              'context': {
+                'cluster': 'test-cluster',
+                'user': 'test-user',
+              }
+            }));
       });
 
       test('toJson omits null values', () {
@@ -63,17 +65,16 @@ void main() {
 
         final json = context.toJson();
 
-        expect(json, equals({
-          'name': 'test-context',
-          'context': {},
-        }));
+        expect(
+            json,
+            equals({
+              'name': 'test-context',
+              'context': {},
+            }));
       });
 
       test('fromJson handles missing optional fields', () {
-        final json = {
-          'name': 'test-context',
-          'context': {}
-        };
+        final json = {'name': 'test-context', 'context': {}};
 
         final context = Context.fromJson(json);
 
@@ -83,4 +84,4 @@ void main() {
       });
     });
   });
-} 
+}

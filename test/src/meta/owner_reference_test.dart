@@ -3,7 +3,6 @@ import 'package:kuberneteslib/src/meta/owner_reference.dart';
 
 void main() {
   group('OwnerReference', () {
-
     test('serializes to JSON correctly', () {
       final ref = OwnerReference()
         ..apiVersion = 'apps/v1'
@@ -14,7 +13,7 @@ void main() {
         ..blockOwnerDeletion = true;
 
       final json = ref.toJson();
-      
+
       expect(json, {
         'apiVersion': 'apps/v1',
         'kind': 'Deployment',
@@ -36,7 +35,7 @@ void main() {
       };
 
       final ref = OwnerReference.fromJson(json);
-      
+
       expect(ref.apiVersion, 'apps/v1');
       expect(ref.kind, 'Deployment');
       expect(ref.name, 'nginx-deployment');
@@ -54,7 +53,7 @@ void main() {
       };
 
       final ref = OwnerReference.fromJson(json);
-      
+
       expect(ref.apiVersion, 'v1');
       expect(ref.kind, 'Pod');
       expect(ref.name, 'test-pod');
@@ -84,7 +83,7 @@ void main() {
       final ref1 = OwnerReference()
         ..apiVersion = 'v1'
         ..kind = 'Pod';
-      
+
       final ref2 = OwnerReference()
         ..apiVersion = 'apps/v1'
         ..kind = 'Deployment';
@@ -95,4 +94,4 @@ void main() {
       expect(ref2.kind, 'Deployment');
     });
   });
-} 
+}

@@ -35,21 +35,21 @@ class EnvFromSource {
   EnvFromSource();
 
   /// Reference to a ConfigMap to load environment variables from.
-  /// 
+  ///
   /// Optional: When specified, all key-value pairs from the referenced ConfigMap
   /// will be added as environment variables to the container.
   @JsonKey(includeIfNull: false)
   ConfigMapEnvSource? configMapRef;
 
   /// An optional prefix to add to all environment variable names.
-  /// 
+  ///
   /// Optional: When specified, this string will be prepended to all environment
   /// variable names loaded from the ConfigMap or Secret.
   @JsonKey(includeIfNull: false)
   String? prefix;
 
   /// Reference to a Secret to load environment variables from.
-  /// 
+  ///
   /// Optional: When specified, all key-value pairs from the referenced Secret
   /// will be added as environment variables to the container.
   @JsonKey(includeIfNull: false)

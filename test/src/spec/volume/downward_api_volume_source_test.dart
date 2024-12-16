@@ -25,16 +25,16 @@ void main() {
         ];
 
       final json = source.toJson();
-      
+
       expect(source.defaultMode, equals(420));
       expect(json['defaultMode'], equals('0644'));
       expect(json['items'], isList);
       expect(json['items'].length, equals(2));
-      
+
       final firstItem = json['items'][0];
       expect(firstItem['path'], equals('labels'));
       expect(firstItem['fieldRef']['fieldPath'], equals('metadata.labels'));
-      
+
       final secondItem = json['items'][1];
       expect(secondItem['path'], equals('cpu_limit'));
       expect(secondItem['resourceFieldRef']['resource'], equals('limits.cpu'));
@@ -56,15 +56,15 @@ void main() {
       };
 
       final source = DownwardAPIVolumeSource.fromJson(json);
-      
+
       expect(source.defaultMode, equals(420));
       expect(source.items?.length, equals(2));
-      
+
       expect(source.items?[0].path, equals('labels'));
       expect(source.items?[0].fieldRef?.fieldPath, equals('metadata.labels'));
-      
+
       expect(source.items?[1].path, equals('cpu_limit'));
       expect(source.items?[1].resourceFieldRef?.resource, equals('limits.cpu'));
     });
   });
-} 
+}

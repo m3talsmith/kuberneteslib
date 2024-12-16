@@ -31,19 +31,19 @@ class NFSVolumeSource {
   NFSVolumeSource();
 
   /// The path exported by the NFS server.
-  /// 
+  ///
   /// Required: The specific directory or file system that is exported
   /// by the NFS server. Must be an absolute path.
   late String path;
 
   /// Controls read-only access to the volume.
-  /// 
+  ///
   /// When true, the volume will be mounted read-only.
   /// Defaults to false (read/write).
   late bool readOnly;
 
   /// The hostname or IP address of the NFS server.
-  /// 
+  ///
   /// Required: The NFS server that exports the volume.
   /// Example: "nfs.example.com" or "192.168.1.100"
   late String server;

@@ -173,17 +173,22 @@ enum ResourceKind {
 
   /// Converts a string to a [ResourceKind].
   /// Returns [ResourceKind.unknown] if the string does not match any known resource kind.
-  static ResourceKind fromString(String value) => ResourceKind.values.firstWhere((e) => e.name == value, orElse: () => ResourceKind.unknown);
+  static ResourceKind fromString(String value) => ResourceKind.values
+      .firstWhere((e) => e.name == value, orElse: () => ResourceKind.unknown);
 
   /// Returns a sorted list of resource kinds excluding [ResourceKind.unknown].
-  static List<ResourceKind> sorted() => ResourceKind.values.where((e) => e != ResourceKind.unknown).toList();
+  static List<ResourceKind> sorted() =>
+      ResourceKind.values.where((e) => e != ResourceKind.unknown).toList();
 
   /// Returns a sorted list of resource kinds to ignore when listing resources.
-  static List<ResourceKind> get ignoreList => _ignoreList..sort((a, b) => a.name.compareTo(b.name));
+  static List<ResourceKind> get ignoreList =>
+      _ignoreList..sort((a, b) => a.name.compareTo(b.name));
 
   /// Returns a sorted list of resource kinds to ignore when showing resources.
-  static List<ResourceKind> get ignoreShow => _ignoreShow..sort((a, b) => a.name.compareTo(b.name));
+  static List<ResourceKind> get ignoreShow =>
+      _ignoreShow..sort((a, b) => a.name.compareTo(b.name));
 
   /// Returns a sorted list of resource kinds that are readable via the API.
-  static List<ResourceKind> get apiReadKinds => _apiReadKinds..sort((a, b) => a.name.compareTo(b.name));
+  static List<ResourceKind> get apiReadKinds =>
+      _apiReadKinds..sort((a, b) => a.name.compareTo(b.name));
 }

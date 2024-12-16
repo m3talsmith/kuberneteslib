@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'volume_projection.dart';
 
-
 part 'projected_volume_source.g.dart';
 
 List<Map<String, dynamic>>? _sourcesToJson(List<VolumeProjection>? sources) =>
@@ -52,7 +51,7 @@ class ProjectedVolumeSource {
   ProjectedVolumeSource();
 
   /// Default permission mode for all projected files.
-  /// 
+  ///
   /// Optional: Defaults to 0644 (rw-r--r--).
   /// Represents Unix permission bits in octal notation.
   /// Must be a value between 0 and 0777.
@@ -60,10 +59,11 @@ class ProjectedVolumeSource {
   int? defaultMode;
 
   /// List of volume projections to combine.
-  /// 
+  ///
   /// Required: Contains the volume sources to project into a single directory.
   /// Sources can include Secrets, ConfigMaps, DownwardAPI, and ServiceAccountTokens.
-  @JsonKey(includeIfNull: false, toJson: _sourcesToJson, fromJson: _sourcesFromJson)
+  @JsonKey(
+      includeIfNull: false, toJson: _sourcesToJson, fromJson: _sourcesFromJson)
   List<VolumeProjection>? sources;
 
   factory ProjectedVolumeSource.fromJson(Map<String, dynamic> json) =>

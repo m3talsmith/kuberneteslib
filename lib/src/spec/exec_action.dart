@@ -34,12 +34,12 @@ class ExecAction {
   ExecAction();
 
   /// The command to execute inside the container.
-  /// 
+  ///
   /// Required: The command and its arguments as a list of strings.
   /// Each element is a separate argument, similar to a command-line shell:
   /// - Element 0: The command to run
   /// - Elements 1+: Arguments to the command
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// command = ['ls', '-l', '/var/log']  // Executes "ls -l /var/log"

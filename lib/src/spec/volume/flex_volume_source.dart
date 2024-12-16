@@ -38,31 +38,31 @@ class FlexVolumeSource {
   FlexVolumeSource();
 
   /// The name of the FlexVolume driver to use.
-  /// 
+  ///
   /// Must be pre-installed on the nodes and registered with
   /// the kubelet. Example: "vendor/storage-driver"
   late String driver;
 
   /// The filesystem type to mount.
-  /// 
+  ///
   /// Must be a filesystem type supported by the host operating system.
   /// Examples: "ext4", "xfs", "ntfs"
   late String fsType;
 
   /// Additional options for the FlexVolume driver.
-  /// 
+  ///
   /// These are passed directly to the FlexVolume driver when mounting
   /// the volume. The available options depend on the specific driver.
   late Map<String, dynamic> options;
 
   /// Controls read-only access to the volume.
-  /// 
+  ///
   /// When true, the volume will be mounted read-only.
   /// Defaults to false (read/write).
   late bool readOnly;
 
   /// Reference to a secret containing sensitive information.
-  /// 
+  ///
   /// The secret will be passed to the FlexVolume driver during mount
   /// operations. Used for credentials or other sensitive data.
   late LocalObjectReference secretRef;

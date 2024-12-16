@@ -2,7 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../kuberneteslib.dart';
 
-class FieldV1Converter implements JsonConverter<FieldsV1, Map<String, dynamic>> {
+class FieldV1Converter
+    implements JsonConverter<FieldsV1, Map<String, dynamic>> {
   const FieldV1Converter();
 
   @override

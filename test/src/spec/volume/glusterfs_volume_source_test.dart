@@ -16,7 +16,7 @@ void main() {
       };
 
       final source = GlusterfsVolumeSource.fromJson(json);
-      
+
       expect(source.endpoint, 'glusterfs-cluster');
       expect(source.path, 'myvolume');
       expect(source.readOnly, true);
@@ -29,7 +29,7 @@ void main() {
         ..readOnly = true;
 
       final json = source.toJson();
-      
+
       expect(json, {
         'endpoint': 'glusterfs-cluster',
         'path': 'myvolume',
@@ -51,4 +51,4 @@ void main() {
       expect(source1.toJson(), equals(source2.toJson()));
     });
   });
-} 
+}

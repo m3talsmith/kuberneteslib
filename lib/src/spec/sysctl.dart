@@ -35,7 +35,7 @@ class Sysctl {
   });
 
   /// Name of the kernel parameter.
-  /// 
+  ///
   /// Common examples:
   /// - 'kernel.shm_rmid_forced'
   /// - 'net.ipv4.tcp_syncookies'
@@ -43,7 +43,7 @@ class Sysctl {
   String name;
 
   /// Value to set for the kernel parameter.
-  /// 
+  ///
   /// Must be a string representation of the desired value.
   /// Examples: '1', '60', '16384'
   String value;

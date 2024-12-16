@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 import '../object_field_selector.dart';
@@ -83,20 +82,25 @@ String? _decodeMode(int? mode) {
 
 @JsonSerializable()
 class DownwardAPIVolumeFile {
-  DownwardAPIVolumeFile({this.fieldRef, dynamic mode, this.path, this.resourceFieldRef}) : mode = _encodeMode(mode);
+  DownwardAPIVolumeFile(
+      {this.fieldRef, dynamic mode, this.path, this.resourceFieldRef})
+      : mode = _encodeMode(mode);
 
   /// Selects a field from the pod's metadata.
-  /// 
+  ///
   /// Supports various pod metadata fields including:
   /// - metadata.name: Pod name
   /// - metadata.namespace: Pod namespace
   /// - metadata.labels: Pod labels
   /// - metadata.annotations: Pod annotations
-  @JsonKey(includeIfNull: false, toJson: _fieldRefToJson, fromJson: _fieldRefFromJson)
+  @JsonKey(
+      includeIfNull: false,
+      toJson: _fieldRefToJson,
+      fromJson: _fieldRefFromJson)
   ObjectFieldSelector? fieldRef;
 
   /// Unix permission mode for the created file.
-  /// 
+  ///
   /// Must be an octal value between 0000 and 0777 or
   /// a decimal value between 0 and 511.
   /// Example: 0644 (rw-r--r--)
@@ -104,19 +108,22 @@ class DownwardAPIVolumeFile {
   dynamic mode;
 
   /// Path where the file will be created in the volume.
-  /// 
+  ///
   /// Must be a relative path, cannot contain '..' or
   /// start with '/'. Example: "pod/labels"
   @JsonKey(includeIfNull: false)
   String? path;
 
   /// Selects a container resource metric to expose.
-  /// 
+  ///
   /// Can reference:
   /// - CPU limits and requests
   /// - Memory limits and requests
   /// - Storage limits and requests
-  @JsonKey(includeIfNull: false, toJson: _resourceFieldRefToJson, fromJson: _resourceFieldRefFromJson)
+  @JsonKey(
+      includeIfNull: false,
+      toJson: _resourceFieldRefToJson,
+      fromJson: _resourceFieldRefFromJson)
   ResourceFieldSelector? resourceFieldRef;
 
   factory DownwardAPIVolumeFile.fromJson(Map<String, dynamic> json) =>

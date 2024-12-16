@@ -28,16 +28,18 @@ part 'claim_source.g.dart';
 /// for more details about resource claims.
 @JsonSerializable()
 class ClaimSource {
-  ClaimSource(): resourceClaimName = '', resourceClaimTemplate = '';
+  ClaimSource()
+      : resourceClaimName = '',
+        resourceClaimTemplate = '';
 
   /// The name of the resource claim to be used.
-  /// 
+  ///
   /// Required: Specifies an existing ResourceClaim to be used by the pod.
   /// The ResourceClaim must exist in the same namespace as the pod.
   final String resourceClaimName;
 
   /// The template for creating a new resource claim.
-  /// 
+  ///
   /// Required: References a ResourceClaimTemplate that will be used to create
   /// a new ResourceClaim for this pod.
   final String resourceClaimTemplate;

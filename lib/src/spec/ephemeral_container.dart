@@ -52,32 +52,32 @@ class EphemeralContainer {
         name = '';
 
   /// Command-line arguments for the container.
-  /// 
+  ///
   /// These arguments are passed to the container's entrypoint command.
   List<String> args;
 
   /// Entrypoint array for the container.
-  /// 
+  ///
   /// The command to run when the container starts.
   List<String> command;
 
   /// List of environment variables to set in the container.
-  /// 
+  ///
   /// Environment variables can be set directly or referenced from ConfigMaps/Secrets.
   List<EnvVar> env;
 
   /// List of sources to populate environment variables in the container.
-  /// 
+  ///
   /// Allows bulk loading of environment variables from ConfigMaps or Secrets.
   List<EnvFromSource> envFrom;
 
   /// Docker image name to use for this container.
-  /// 
+  ///
   /// Required: Specifies the container image to run.
   String image;
 
   /// Image pull policy for the container.
-  /// 
+  ///
   /// Can be one of: 'Always', 'Never', 'IfNotPresent'
   String imagePullPolicy;
 
@@ -85,12 +85,12 @@ class EphemeralContainer {
   Lifecycle lifecycle;
 
   /// Periodic probe of container liveness.
-  /// 
+  ///
   /// Container will be restarted if the probe fails.
   Probe livenessProbe;
 
   /// Name of the ephemeral container.
-  /// 
+  ///
   /// Required: Must be unique among all containers in the pod.
   String name;
 

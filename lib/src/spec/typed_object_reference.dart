@@ -31,7 +31,7 @@ part 'typed_object_reference.g.dart';
 @JsonSerializable()
 class TypedObjectReference {
   /// The API group of the referenced resource.
-  /// 
+  ///
   /// Examples:
   /// - 'apps' for Deployments
   /// - 'batch' for Jobs
@@ -39,7 +39,7 @@ class TypedObjectReference {
   String apiGroup;
 
   /// The kind of resource being referenced.
-  /// 
+  ///
   /// Examples:
   /// - 'Deployment'
   /// - 'StatefulSet'
@@ -50,7 +50,7 @@ class TypedObjectReference {
   String name;
 
   /// The namespace where the referenced resource exists.
-  /// 
+  ///
   /// If empty, defaults to the namespace of the referring object.
   String namespace;
 

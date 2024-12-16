@@ -31,21 +31,21 @@ class PersistentVolumeClaimVolumeSource {
   PersistentVolumeClaimVolumeSource();
 
   /// Name of the PersistentVolumeClaim in the pod's namespace.
-  /// 
+  ///
   /// Required: References an existing PVC in the same namespace.
   /// The volume will be mounted as specified in the claim.
   @JsonKey(includeIfNull: false)
   String? claimName;
 
   /// Controls read-only access to the volume.
-  /// 
+  ///
   /// Optional: Defaults to false (read/write).
   /// When true, the volume will be mounted read-only.
   @JsonKey(includeIfNull: false)
   bool? readOnly;
 
   /// Creates a PersistentVolumeClaimVolumeSource from a map structure.
-  /// 
+  ///
   /// Parameters:
   /// - [data]: Map containing 'claimName' and optional 'readOnly' values
   PersistentVolumeClaimVolumeSource.fromMap(Map<String, dynamic> data) {
@@ -53,8 +53,10 @@ class PersistentVolumeClaimVolumeSource {
     readOnly = data['readOnly'];
   }
 
-  factory PersistentVolumeClaimVolumeSource.fromJson(Map<String, dynamic> json) =>
+  factory PersistentVolumeClaimVolumeSource.fromJson(
+          Map<String, dynamic> json) =>
       _$PersistentVolumeClaimVolumeSourceFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PersistentVolumeClaimVolumeSourceToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$PersistentVolumeClaimVolumeSourceToJson(this);
 }

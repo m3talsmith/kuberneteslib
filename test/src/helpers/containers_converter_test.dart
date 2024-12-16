@@ -38,10 +38,12 @@ void main() {
       expect(containers.length, 2);
       expect(containers[0].name, 'container1');
       expect(containers[0].image, 'nginx:latest');
-      expect(jsonEncode(containers[0].ports), jsonEncode([ContainerPort(hostPort: 80, containerPort: 80)]));
+      expect(jsonEncode(containers[0].ports),
+          jsonEncode([ContainerPort(hostPort: 80, containerPort: 80)]));
       expect(containers[1].name, 'container2');
       expect(containers[1].image, 'redis:latest');
-      expect(jsonEncode(containers[1].ports), jsonEncode([ContainerPort(hostPort: 6379, containerPort: 6379)]));
+      expect(jsonEncode(containers[1].ports),
+          jsonEncode([ContainerPort(hostPort: 6379, containerPort: 6379)]));
     });
 
     test('toJson converts list of Containers to list of maps', () {
@@ -63,10 +65,12 @@ void main() {
       expect(json.length, 2);
       expect(json[0]['name'], 'container1');
       expect(json[0]['image'], 'nginx:latest');
-      expect(jsonEncode(json[0]['ports']), jsonEncode([ContainerPort(hostPort: 80, containerPort: 80)]));
+      expect(jsonEncode(json[0]['ports']),
+          jsonEncode([ContainerPort(hostPort: 80, containerPort: 80)]));
       expect(json[1]['name'], 'container2');
       expect(json[1]['image'], 'redis:latest');
-      expect(jsonEncode(json[1]['ports']), jsonEncode([ContainerPort(hostPort: 6379, containerPort: 6379)]));
+      expect(jsonEncode(json[1]['ports']),
+          jsonEncode([ContainerPort(hostPort: 6379, containerPort: 6379)]));
     });
   });
-} 
+}

@@ -22,7 +22,7 @@ void main() {
         command: 'aws',
         arguments: ['eks', 'get-token', '--cluster-name', 'test-cluster'],
       );
-      
+
       final user = User(
         name: 'exec-user',
         exec: exec,
@@ -43,14 +43,16 @@ void main() {
         );
 
         final json = user.toJson();
-        
-        expect(json, equals({
-          'name': 'cert-user',
-          'user': {
-            'client-certificate-data': 'test-certificate',
-            'client-key-data': 'test-key',
-          },
-        }));
+
+        expect(
+            json,
+            equals({
+              'name': 'cert-user',
+              'user': {
+                'client-certificate-data': 'test-certificate',
+                'client-key-data': 'test-key',
+              },
+            }));
       });
 
       test('serializes to JSON with exec auth', () {
@@ -63,10 +65,11 @@ void main() {
         );
 
         final json = user.toJson();
-        
+
         expect(json['name'], equals('exec-user'));
         expect(json['user']['exec']['command'], equals('aws'));
-        expect(json['user']['exec']['arguments'], equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
+        expect(json['user']['exec']['arguments'],
+            equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
       });
 
       test('deserializes from JSON with certificate auth', () {
@@ -92,7 +95,12 @@ void main() {
           'user': {
             'exec': {
               'command': 'aws',
-              'arguments': ['eks', 'get-token', '--cluster-name', 'test-cluster'],
+              'arguments': [
+                'eks',
+                'get-token',
+                '--cluster-name',
+                'test-cluster'
+              ],
             },
           },
         };
@@ -103,8 +111,9 @@ void main() {
         expect(user.clientCertificateData, isNull);
         expect(user.clientKeyData, isNull);
         expect(user.exec?.command, equals('aws'));
-        expect(user.exec?.arguments, equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
+        expect(user.exec?.arguments,
+            equals(['eks', 'get-token', '--cluster-name', 'test-cluster']));
       });
     });
   });
-} 
+}

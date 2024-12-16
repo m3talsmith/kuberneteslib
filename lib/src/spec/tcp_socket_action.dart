@@ -31,13 +31,13 @@ class TCPSocketAction {
   TCPSocketAction();
 
   /// The host name to connect to.
-  /// 
+  ///
   /// Optional: Defaults to pod IP if not specified.
   /// Examples: 'localhost', 'mysql-service', '10.0.0.1'
   late String host;
 
   /// The port number to connect to.
-  /// 
+  ///
   /// Can be specified as:
   /// - Integer (e.g., 80)
   /// - String (e.g., "http")

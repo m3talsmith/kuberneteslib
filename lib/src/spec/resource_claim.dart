@@ -30,7 +30,7 @@ class ResourceClaim {
   ResourceClaim();
 
   /// The name that identifies this resource claim.
-  /// 
+  ///
   /// This name is used to reference the claim when:
   /// - Binding resources to pods
   /// - Managing resource lifecycle

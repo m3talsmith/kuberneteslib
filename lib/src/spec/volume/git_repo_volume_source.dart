@@ -35,19 +35,19 @@ class GitRepoVolumeSource {
   GitRepoVolumeSource();
 
   /// Target directory for the Git repository.
-  /// 
+  ///
   /// Optional: If omitted, the repository will be cloned into the root directory.
   /// The directory will be created if it doesn't exist.
   late String directory;
 
   /// Git repository URL to clone.
-  /// 
+  ///
   /// Required: Must be a valid Git repository URL that is accessible from
   /// the Kubernetes cluster.
   late String repository;
 
   /// Git commit hash, branch, or tag to check out.
-  /// 
+  ///
   /// Optional: If omitted, defaults to 'master'.
   /// Can be any valid Git reference (commit SHA, branch name, tag).
   late String revision;

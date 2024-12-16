@@ -33,21 +33,21 @@ class PortworxVolumeSource {
   PortworxVolumeSource();
 
   /// The filesystem type to mount.
-  /// 
+  ///
   /// Must be a filesystem type supported by the host operating system.
   /// Common values include: "ext4", "xfs", "ntfs".
   /// Optional: Defaults to "ext4" if unspecified.
   late String fsType;
 
   /// Controls read-only access to the volume.
-  /// 
+  ///
   /// When true, the volume will be mounted read-only.
   /// When false, the volume will be mounted with read-write permissions.
   /// Optional: Defaults to false.
   late bool readOnly;
 
   /// Unique identifier for the Portworx volume.
-  /// 
+  ///
   /// Required: This ID must correspond to an existing Portworx volume.
   /// The volume must be created using Portworx before it can be used.
   late String volumeID;

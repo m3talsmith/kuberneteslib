@@ -30,11 +30,11 @@ class PodOS {
   PodOS();
 
   /// The name of the operating system for the pod.
-  /// 
+  ///
   /// Supported values:
   /// - 'linux': Linux-based containers (default)
   /// - 'windows': Windows-based containers
-  /// 
+  ///
   /// This field is used by the scheduler to select nodes with matching
   /// operating systems. Must match the OS field in the node specification.
   late String name;

@@ -36,42 +36,42 @@ class TopologySpreadConstraint {
   TopologySpreadConstraint();
 
   /// Selector to identify pods for spreading calculation.
-  /// 
+  ///
   /// Used to find matching pods when determining spread distribution.
   LabelSelector? labelSelector;
 
   /// Pod label keys to consider for spread calculation.
-  /// 
+  ///
   /// Alternative to labelSelector for simpler matching scenarios.
   List<String>? matchLabelKeys;
 
   /// Maximum allowed difference in pod count between domains.
-  /// 
+  ///
   /// For example, maxSkew=1 means domains can differ by at most 1 pod.
   int? maxSkew;
 
   /// Minimum number of domains pods should spread across.
-  /// 
+  ///
   /// Ensures pods are distributed across at least this many domains.
   int? minDomains;
 
   /// How to handle pod node affinity/selector in spread calculations.
-  /// 
+  ///
   /// Values: 'Honor', 'Ignore'
   String? nodeAffinityPolicy;
 
   /// How to handle node taints in spread calculations.
-  /// 
+  ///
   /// Values: 'Honor', 'Ignore'
   String? nodeTaintsPolicy;
 
   /// Node label key defining the topology domain.
-  /// 
+  ///
   /// Examples: 'topology.kubernetes.io/zone', 'kubernetes.io/hostname'
   String? topologyKey;
 
   /// Action when constraint cannot be satisfied.
-  /// 
+  ///
   /// Values:
   /// - 'DoNotSchedule': Prevents pod scheduling
   /// - 'ScheduleAnyway': Allows scheduling with best effort

@@ -32,25 +32,25 @@ class GCEPersistentDiskVolumeSource {
   GCEPersistentDiskVolumeSource();
 
   /// Filesystem type for mounting the volume.
-  /// 
+  ///
   /// Optional: Defaults to the default filesystem configured on the host.
   /// Must be a filesystem type supported by the host operating system.
   String? fsType;
 
   /// The partition number on the disk to mount.
-  /// 
+  ///
   /// Optional: If omitted, the default is to mount by volume name.
   /// Examples: For partition /dev/sda1, use 1.
   int? partition;
 
   /// Unique name of the PD resource in GCE.
-  /// 
+  ///
   /// Required: This is used to identify the disk in GCE.
   /// The volume name must be unique within the zone.
   String? pdName;
 
   /// Controls read-only access to the volume.
-  /// 
+  ///
   /// Optional: Defaults to false (read/write).
   /// ReadOnly here will force the ReadOnly setting in VolumeMounts.
   bool? readOnly;

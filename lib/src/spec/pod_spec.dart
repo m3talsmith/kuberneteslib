@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 import '../helpers/containers_converter.dart';
@@ -124,7 +123,10 @@ class PodSpec implements ObjectSpec {
 
   /// The list of containers that will run in this pod.
   /// At least one container is required.
-  @JsonKey(includeIfNull: false, fromJson: _containersFromJson, toJson: _containersToJson)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _containersFromJson,
+      toJson: _containersToJson)
   // @ContainersConverter()
   List<Container>? containers;
 
@@ -287,14 +289,15 @@ class PodSpec implements ObjectSpec {
   /// [data] should be a Map containing the pod specification fields as defined
   /// in the Kubernetes API. This constructor handles the deserialization of
   /// all nested objects and lists.
-  factory PodSpec.fromJson(Map<String, dynamic> data) => _$PodSpecFromJson(data);
+  factory PodSpec.fromJson(Map<String, dynamic> data) =>
+      _$PodSpecFromJson(data);
 
   @override
   Map<String, dynamic> toJson() => _$PodSpecToJson(this);
 }
 
 List<Container>? _containersFromJson(List<dynamic>? json) =>
-  json?.map((e) => Container.fromJson(e as Map<String, dynamic>)).toList();
+    json?.map((e) => Container.fromJson(e as Map<String, dynamic>)).toList();
 
 List<Map<String, dynamic>>? _containersToJson(List<Container>? containers) =>
-  containers?.map((e) => e.toJson()).toList();
+    containers?.map((e) => e.toJson()).toList();

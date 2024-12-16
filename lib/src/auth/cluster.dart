@@ -32,7 +32,7 @@ part 'cluster.g.dart';
 ///   final config = Config.fromYaml('<kubernetes cluster yaml>');
 ///   final auth = ClusterAuth.fromConfig(config);
 ///   await auth.ensureInitialization();
-///   
+///
 ///   // Make authenticated requests
 ///   final response = await auth.get(Uri.parse('https://api.example.com/v1/pods'));
 /// }
@@ -81,14 +81,14 @@ class ClusterAuth {
   /// Extracts and decodes the necessary certificate and authentication data from the config.
   /// This includes certificate authority data, client certificates, and private keys.
   ClusterAuth.fromConfig(Config config) {
-    final context = config.contexts.firstWhere((e) =>
-        (e.name != null && e.name == config.currentContext),
+    final context = config.contexts.firstWhere(
+        (e) => (e.name != null && e.name == config.currentContext),
         orElse: () => config.contexts.first);
-    cluster = config.clusters.firstWhere((e) =>
-        (e.name != null && e.name == context.cluster),
+    cluster = config.clusters.firstWhere(
+        (e) => (e.name != null && e.name == context.cluster),
         orElse: () => config.clusters.first);
-    user = config.users.firstWhere((e) =>
-        (e.name != null && e.name == context.user),
+    user = config.users.firstWhere(
+        (e) => (e.name != null && e.name == context.user),
         orElse: () => config.users.first);
 
     clientCertificateAuthority =

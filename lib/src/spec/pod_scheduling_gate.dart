@@ -30,7 +30,7 @@ class PodSchedulingGate {
   PodSchedulingGate();
 
   /// The name that identifies this scheduling gate.
-  /// 
+  ///
   /// This gate must be removed by name before the pod can be scheduled.
   /// Common patterns include:
   /// - 'infrastructure-ready': Infrastructure prerequisites

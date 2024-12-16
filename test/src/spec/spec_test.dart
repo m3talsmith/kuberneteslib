@@ -23,8 +23,10 @@ void main() {
       expect(spec, isA<PodSpec>());
       final specJson = spec.toJson();
       expect(specJson['containers'][0], isA<Map<String, dynamic>>());
-      expect(specJson['containers'][0]['name'], (json['containers'] as List<dynamic>?)?[0]['name']);
-      expect(specJson['containers'][0]['image'], (json['containers'] as List<dynamic>?)?[0]['image']);
+      expect(specJson['containers'][0]['name'],
+          (json['containers'] as List<dynamic>?)?[0]['name']);
+      expect(specJson['containers'][0]['image'],
+          (json['containers'] as List<dynamic>?)?[0]['image']);
     });
 
     test('converts PodSpec to JSON correctly', () {
@@ -95,4 +97,4 @@ void main() {
       expect(spec.toJson(), isEmpty);
     });
   });
-} 
+}

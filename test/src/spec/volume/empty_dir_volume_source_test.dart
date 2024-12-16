@@ -5,7 +5,7 @@ void main() {
   group('EmptyDirVolumeSource', () {
     test('creates instance with default values', () {
       final emptyDir = EmptyDirVolumeSource();
-      
+
       expect(emptyDir.medium, isNull);
       expect(emptyDir.sizeLimit, isNull);
     });
@@ -16,7 +16,7 @@ void main() {
         ..sizeLimit = '1Gi';
 
       final json = emptyDir.toJson();
-      
+
       expect(json, {
         'medium': 'Memory',
         'sizeLimit': '1Gi',
@@ -30,14 +30,14 @@ void main() {
       };
 
       final emptyDir = EmptyDirVolumeSource.fromJson(json);
-      
+
       expect(emptyDir.medium, equals('Memory'));
       expect(emptyDir.sizeLimit?.toString(), equals('1Gi'));
     });
 
     test('handles empty JSON correctly', () {
       final emptyDir = EmptyDirVolumeSource.fromJson({});
-      
+
       expect(emptyDir.medium, isNull);
       expect(emptyDir.sizeLimit, isNull);
     });
@@ -49,9 +49,9 @@ void main() {
       };
 
       final emptyDir = EmptyDirVolumeSource.fromJson(json);
-      
+
       expect(emptyDir.medium, isNull);
       expect(emptyDir.sizeLimit, isNull);
     });
   });
-} 
+}

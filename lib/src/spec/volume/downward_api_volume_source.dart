@@ -84,10 +84,10 @@ class DownwardAPIVolumeSource {
       : defaultMode = _encodeMode(defaultMode);
 
   /// Default Unix permission mode for created files.
-  /// 
+  ///
   /// Optional: mode bits used to set permissions on created files by default.
   /// Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511.
-  /// 
+  ///
   /// Common values:
   /// - 0644 (octal) / 420 (decimal): Read/write for owner, read-only for others
   /// - 0600 (octal) / 384 (decimal): Read/write for owner only
@@ -95,7 +95,7 @@ class DownwardAPIVolumeSource {
   dynamic defaultMode;
 
   /// List of downward API volume file configurations.
-  /// 
+  ///
   /// Required: Represents the files to be exposed to the container through the downward API.
   /// Each item specifies a file path and the source of data to be exposed.
   @JsonKey(includeIfNull: false, fromJson: _itemsFromJson, toJson: _itemsToJson)

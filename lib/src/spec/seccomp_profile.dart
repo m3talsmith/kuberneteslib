@@ -31,14 +31,14 @@ class SeccompProfile {
   SeccompProfile();
 
   /// Path to a custom seccomp profile on the host machine.
-  /// 
+  ///
   /// Only used when type is 'Localhost'. The profile must be pre-configured
   /// on each node where the container will run.
   @JsonKey(includeIfNull: false)
   String? localhostProfile;
 
   /// The type of seccomp profile to apply.
-  /// 
+  ///
   /// Values:
   /// - 'RuntimeDefault': Use runtime's default profile
   /// - 'Localhost': Use custom profile from localhostProfile

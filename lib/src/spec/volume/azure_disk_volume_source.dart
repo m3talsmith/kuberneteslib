@@ -33,7 +33,7 @@ class AzureDiskVolumeSource {
   AzureDiskVolumeSource();
 
   /// Host caching mode for the disk.
-  /// 
+  ///
   /// Possible values:
   /// - 'None': No caching
   /// - 'ReadOnly': Read-only caching
@@ -41,23 +41,23 @@ class AzureDiskVolumeSource {
   late String cachingMode;
 
   /// Name of the Azure Data Disk.
-  /// 
+  ///
   /// This must match the disk name in the Azure portal or CLI.
   late String diskName;
 
   /// The URI the data disk in the Azure environment.
-  /// 
+  ///
   /// Format: '/subscriptions/{sub-id}/resourcegroups/{group-name}/...'
   late String diskURI;
 
   /// The filesystem type to mount.
-  /// 
+  ///
   /// Must be a filesystem type supported by the host operating system.
   /// Common values: 'ext4', 'xfs', 'ntfs'
   late String fsType;
 
   /// The type of Azure Data Disk to use.
-  /// 
+  ///
   /// Possible values:
   /// - 'Shared': multiple VMs can share the disk
   /// - 'Dedicated': single VM access
@@ -65,7 +65,7 @@ class AzureDiskVolumeSource {
   late String kind;
 
   /// Forces the volume to be mounted read-only.
-  /// 
+  ///
   /// When true, the disk will be mounted with read-only access.
   /// Defaults to false (read/write).
   late bool readOnly;

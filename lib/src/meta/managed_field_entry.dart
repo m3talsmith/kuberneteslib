@@ -47,7 +47,7 @@ class ManagedFieldEntry {
   FieldsV1 fieldsV1;
 
   /// Identifier of the manager that modified these fields.
-  /// 
+  ///
   /// This could be:
   /// - A controller name (e.g., "kube-controller-manager")
   /// - A user name (e.g., "admin")
@@ -55,7 +55,7 @@ class ManagedFieldEntry {
   String manager;
 
   /// The type of operation performed by the manager.
-  /// 
+  ///
   /// Common values include:
   /// - "Apply": Fields modified through server-side apply
   /// - "Update": Direct updates to the object
@@ -63,7 +63,7 @@ class ManagedFieldEntry {
   String operation;
 
   /// The subresource that was modified, if any.
-  /// 
+  ///
   /// Examples:
   /// - "status" for status subresource updates
   /// - "scale" for scaling operations

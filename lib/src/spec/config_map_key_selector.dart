@@ -32,19 +32,19 @@ class ConfigMapKeySelector {
   ConfigMapKeySelector();
 
   /// The key to select from the ConfigMap.
-  /// 
+  ///
   /// Required: Specifies which key from the ConfigMap to select.
   /// The value of this key will be used in the context where the selector is defined.
   late String key;
 
   /// The name of the ConfigMap to select from.
-  /// 
+  ///
   /// Required: References the ConfigMap in the same namespace as the pod
   /// that contains the desired key.
   late String name;
 
   /// Whether the ConfigMap or key must exist.
-  /// 
+  ///
   /// Required: When true, the pod will start even if the ConfigMap or key
   /// doesn't exist. When false, the pod will fail to start if the ConfigMap
   /// or key is missing.
