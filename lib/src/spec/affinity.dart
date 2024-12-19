@@ -15,11 +15,33 @@ List<PreferredSchedulingTerm>? _preferredSchedulingTermFromJson(
         List<dynamic>? json) =>
     json?.map((e) => PreferredSchedulingTerm.fromJson(e)).toList();
 
+List<Map<String, dynamic>>? _weightedPodAffinityTermToJson(
+        List<WeightedPodAffinityTerm>? terms) =>
+    terms?.map((term) => term.toJson()).toList();
+
+List<WeightedPodAffinityTerm>? _weightedPodAffinityTermFromJson(
+        List<dynamic>? json) =>
+    json?.map((e) => WeightedPodAffinityTerm.fromJson(e)).toList();
+
+List<Map<String, dynamic>>? _podAffinityTermToJson(
+        List<PodAffinityTerm>? terms) =>
+    terms?.map((term) => term.toJson()).toList();
+
+List<PodAffinityTerm>? _podAffinityTermFromJson(List<dynamic>? json) =>
+    json?.map((e) => PodAffinityTerm.fromJson(e)).toList();
+
 Map<String, dynamic>? _nodeSelectorToJson(NodeSelector? selector) =>
     selector?.toJson();
 
 NodeSelector? _nodeSelectorFromJson(Map<String, dynamic>? json) =>
     json == null ? null : NodeSelector.fromJson(json);
+
+String? _affinityKindToJson(AffinityKind? kind) => kind?.name;
+
+Affinity? _affinityFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : Affinity.fromJson(json);
+
+Map<String, dynamic>? _affinityToJson(Affinity? instance) => instance?.toJson();
 
 /// Represents affinity rules in Kubernetes for pod scheduling.
 ///
@@ -143,7 +165,7 @@ class NodeAffinity implements Affinity {
   /// Preferred node scheduling requirements that the scheduler will try to meet
   /// but will not guarantee
   @JsonKey(
-      includeFromJson: true,
+      includeIfNull: false,
       fromJson: _preferredSchedulingTermFromJson,
       toJson: _preferredSchedulingTermToJson)
   List<PreferredSchedulingTerm>?
@@ -165,11 +187,14 @@ class NodeAffinity implements Affinity {
   Map<String, dynamic> toJson() => _$NodeAffinityToJson(this);
 
   @override
-  @JsonKey(includeToJson: true)
+  @JsonKey(includeToJson: true, toJson: _affinityKindToJson)
   AffinityKind? kind;
 
   @override
-  @JsonKey(includeToJson: true, includeFromJson: true)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _affinityFromJson,
+      toJson: _affinityToJson)
   Affinity? affinity;
 }
 
@@ -189,14 +214,24 @@ class PodAffinity implements Affinity {
 
   /// Preferred pod scheduling requirements that the scheduler will try to meet
   /// but will not guarantee
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _weightedPodAffinityTermFromJson,
+      toJson: _weightedPodAffinityTermToJson)
   List<WeightedPodAffinityTerm>?
       preferredDuringSchedulingIgnoredDuringExecution;
 
   /// Required pod scheduling requirements that must be met for pod scheduling
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _podAffinityTermFromJson,
+      toJson: _podAffinityTermToJson)
   List<PodAffinityTerm>? requiredDuringSchedulingIgnoredDuringExecution;
 
-  factory PodAffinity.fromJson(Map<String, dynamic> json) =>
-      _$PodAffinityFromJson(json);
+  factory PodAffinity.fromJson(Map<String, dynamic> json) {
+    final podAffinity = _$PodAffinityFromJson(json);
+    return podAffinity;
+  }
 
   @override
   Map<String, dynamic> toJson() => _$PodAffinityToJson(this);
@@ -225,10 +260,18 @@ class PodAntiAffinity implements Affinity {
 
   /// Preferred pod anti-affinity scheduling requirements that the scheduler will try to meet
   /// but will not guarantee
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _weightedPodAffinityTermFromJson,
+      toJson: _weightedPodAffinityTermToJson)
   List<WeightedPodAffinityTerm>?
       preferredDuringSchedulingIgnoredDuringExecution;
 
   /// Required pod anti-affinity scheduling requirements that must be met for pod scheduling
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _podAffinityTermFromJson,
+      toJson: _podAffinityTermToJson)
   List<PodAffinityTerm>? requiredDuringSchedulingIgnoredDuringExecution;
 
   factory PodAntiAffinity.fromJson(Map<String, dynamic> json) =>

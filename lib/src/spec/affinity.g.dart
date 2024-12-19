@@ -14,21 +14,21 @@ NodeAffinity _$NodeAffinityFromJson(Map<String, dynamic> json) => NodeAffinity()
       json['requiredDuringSchedulingIgnoredDuringExecution']
           as Map<String, dynamic>?)
   ..kind = $enumDecodeNullable(_$AffinityKindEnumMap, json['kind'])
-  ..affinity = json['affinity'] == null
-      ? null
-      : Affinity.fromJson(json['affinity'] as Map<String, dynamic>);
+  ..affinity = _affinityFromJson(json['affinity'] as Map<String, dynamic>?);
 
 Map<String, dynamic> _$NodeAffinityToJson(NodeAffinity instance) =>
     <String, dynamic>{
-      'preferredDuringSchedulingIgnoredDuringExecution':
-          _preferredSchedulingTermToJson(
-              instance.preferredDuringSchedulingIgnoredDuringExecution),
+      if (_preferredSchedulingTermToJson(
+              instance.preferredDuringSchedulingIgnoredDuringExecution)
+          case final value?)
+        'preferredDuringSchedulingIgnoredDuringExecution': value,
       if (_nodeSelectorToJson(
               instance.requiredDuringSchedulingIgnoredDuringExecution)
           case final value?)
         'requiredDuringSchedulingIgnoredDuringExecution': value,
-      'kind': _$AffinityKindEnumMap[instance.kind],
-      'affinity': instance.affinity,
+      'kind': _affinityKindToJson(instance.kind),
+      if (_affinityToJson(instance.affinity) case final value?)
+        'affinity': value,
     };
 
 const _$AffinityKindEnumMap = {
@@ -39,14 +39,11 @@ const _$AffinityKindEnumMap = {
 };
 
 PodAffinity _$PodAffinityFromJson(Map<String, dynamic> json) => PodAffinity()
-  ..preferredDuringSchedulingIgnoredDuringExecution = (json[
-          'preferredDuringSchedulingIgnoredDuringExecution'] as List<dynamic>?)
-      ?.map((e) => WeightedPodAffinityTerm.fromJson(e as Map<String, dynamic>))
-      .toList()
-  ..requiredDuringSchedulingIgnoredDuringExecution =
-      (json['requiredDuringSchedulingIgnoredDuringExecution'] as List<dynamic>?)
-          ?.map((e) => PodAffinityTerm.fromJson(e as Map<String, dynamic>))
-          .toList()
+  ..preferredDuringSchedulingIgnoredDuringExecution =
+      _weightedPodAffinityTermFromJson(
+          json['preferredDuringSchedulingIgnoredDuringExecution'] as List?)
+  ..requiredDuringSchedulingIgnoredDuringExecution = _podAffinityTermFromJson(
+      json['requiredDuringSchedulingIgnoredDuringExecution'] as List?)
   ..kind = $enumDecodeNullable(_$AffinityKindEnumMap, json['kind'])
   ..affinity = json['affinity'] == null
       ? null
@@ -54,10 +51,14 @@ PodAffinity _$PodAffinityFromJson(Map<String, dynamic> json) => PodAffinity()
 
 Map<String, dynamic> _$PodAffinityToJson(PodAffinity instance) =>
     <String, dynamic>{
-      'preferredDuringSchedulingIgnoredDuringExecution':
-          instance.preferredDuringSchedulingIgnoredDuringExecution,
-      'requiredDuringSchedulingIgnoredDuringExecution':
-          instance.requiredDuringSchedulingIgnoredDuringExecution,
+      if (_weightedPodAffinityTermToJson(
+              instance.preferredDuringSchedulingIgnoredDuringExecution)
+          case final value?)
+        'preferredDuringSchedulingIgnoredDuringExecution': value,
+      if (_podAffinityTermToJson(
+              instance.requiredDuringSchedulingIgnoredDuringExecution)
+          case final value?)
+        'requiredDuringSchedulingIgnoredDuringExecution': value,
       'kind': _$AffinityKindEnumMap[instance.kind],
       'affinity': instance.affinity,
     };
@@ -65,16 +66,10 @@ Map<String, dynamic> _$PodAffinityToJson(PodAffinity instance) =>
 PodAntiAffinity _$PodAntiAffinityFromJson(Map<String, dynamic> json) =>
     PodAntiAffinity(
       preferredDuringSchedulingIgnoredDuringExecution:
-          (json['preferredDuringSchedulingIgnoredDuringExecution']
-                  as List<dynamic>?)
-              ?.map((e) =>
-                  WeightedPodAffinityTerm.fromJson(e as Map<String, dynamic>))
-              .toList(),
-      requiredDuringSchedulingIgnoredDuringExecution:
-          (json['requiredDuringSchedulingIgnoredDuringExecution']
-                  as List<dynamic>?)
-              ?.map((e) => PodAffinityTerm.fromJson(e as Map<String, dynamic>))
-              .toList(),
+          _weightedPodAffinityTermFromJson(
+              json['preferredDuringSchedulingIgnoredDuringExecution'] as List?),
+      requiredDuringSchedulingIgnoredDuringExecution: _podAffinityTermFromJson(
+          json['requiredDuringSchedulingIgnoredDuringExecution'] as List?),
     )
       ..kind = $enumDecodeNullable(_$AffinityKindEnumMap, json['kind'])
       ..affinity = json['affinity'] == null
@@ -83,10 +78,14 @@ PodAntiAffinity _$PodAntiAffinityFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$PodAntiAffinityToJson(PodAntiAffinity instance) =>
     <String, dynamic>{
-      'preferredDuringSchedulingIgnoredDuringExecution':
-          instance.preferredDuringSchedulingIgnoredDuringExecution,
-      'requiredDuringSchedulingIgnoredDuringExecution':
-          instance.requiredDuringSchedulingIgnoredDuringExecution,
+      if (_weightedPodAffinityTermToJson(
+              instance.preferredDuringSchedulingIgnoredDuringExecution)
+          case final value?)
+        'preferredDuringSchedulingIgnoredDuringExecution': value,
+      if (_podAffinityTermToJson(
+              instance.requiredDuringSchedulingIgnoredDuringExecution)
+          case final value?)
+        'requiredDuringSchedulingIgnoredDuringExecution': value,
       'kind': _$AffinityKindEnumMap[instance.kind],
       'affinity': instance.affinity,
     };

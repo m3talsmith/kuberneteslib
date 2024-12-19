@@ -7,6 +7,31 @@ import 'secret_key_selector.dart';
 
 part 'env_var_source.g.dart';
 
+ConfigMapKeySelector? _configMapKeyRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : ConfigMapKeySelector.fromJson(json);
+
+Map<String, dynamic>? _configMapKeyRefToJson(ConfigMapKeySelector? instance) =>
+    instance?.toJson();
+
+ObjectFieldSelector? _fieldRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : ObjectFieldSelector.fromJson(json);
+
+Map<String, dynamic>? _fieldRefToJson(ObjectFieldSelector? instance) =>
+    instance?.toJson();
+
+ResourceFieldSelector? _resourceFieldRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : ResourceFieldSelector.fromJson(json);
+
+Map<String, dynamic>? _resourceFieldRefToJson(
+        ResourceFieldSelector? instance) =>
+    instance?.toJson();
+
+SecretKeySelector? _secretKeyRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : SecretKeySelector.fromJson(json);
+
+Map<String, dynamic>? _secretKeyRefToJson(SecretKeySelector? instance) =>
+    instance?.toJson();
+
 /// Represents a source for individual environment variables in Kubernetes containers.
 ///
 /// EnvVarSource enables containers to populate individual environment variables from
@@ -41,28 +66,40 @@ class EnvVarSource {
   ///
   /// Optional: When specified, the environment variable will take its value from
   /// the referenced key in the ConfigMap.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _configMapKeyRefFromJson,
+      toJson: _configMapKeyRefToJson)
   ConfigMapKeySelector? configMapKeyRef;
 
   /// Reference to a field in the pod specification.
   ///
   /// Optional: When specified, the environment variable will take its value from
   /// the referenced pod field (e.g., metadata.name, status.podIP).
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _fieldRefFromJson,
+      toJson: _fieldRefToJson)
   ObjectFieldSelector? fieldRef;
 
   /// Reference to a container resource value.
   ///
   /// Optional: When specified, the environment variable will take its value from
   /// the referenced container resource (e.g., limits.cpu, requests.memory).
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _resourceFieldRefFromJson,
+      toJson: _resourceFieldRefToJson)
   ResourceFieldSelector? resourceFieldRef;
 
   /// Reference to a specific key in a Secret.
   ///
   /// Optional: When specified, the environment variable will take its value from
   /// the referenced key in the Secret.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _secretKeyRefFromJson,
+      toJson: _secretKeyRefToJson)
   SecretKeySelector? secretKeyRef;
 
   factory EnvVarSource.fromJson(Map<String, dynamic> json) =>

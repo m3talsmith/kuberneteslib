@@ -4,6 +4,12 @@ import 'env_var_source.dart';
 
 part 'env_var.g.dart';
 
+EnvVarSource? _valueFromFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : EnvVarSource.fromJson(json);
+
+Map<String, dynamic>? _valueFromToJson(EnvVarSource? instance) =>
+    instance?.toJson();
+
 /// Represents an environment variable in a Kubernetes container.
 ///
 /// EnvVar defines individual environment variables that can be set in containers.
@@ -39,13 +45,17 @@ part 'env_var.g.dart';
 /// for more details about environment variables in containers.
 @JsonSerializable()
 class EnvVar {
-  EnvVar();
+  EnvVar({
+    this.name,
+    this.value,
+    this.valueFrom,
+  });
 
   /// Name of the environment variable.
   ///
   /// Required: Must be a C_IDENTIFIER (consisting of alphanumeric characters
   /// or '_' and must start with an alphabetic character or '_').
-  late String name;
+  String? name;
 
   /// Direct string value for the environment variable.
   ///
@@ -58,7 +68,10 @@ class EnvVar {
   ///
   /// Optional: Cannot be used if value is specified.
   /// Allows referencing values from ConfigMaps, Secrets, and other sources.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _valueFromFromJson,
+      toJson: _valueFromToJson)
   EnvVarSource? valueFrom;
 
   factory EnvVar.fromJson(Map<String, dynamic> json) => _$EnvVarFromJson(json);

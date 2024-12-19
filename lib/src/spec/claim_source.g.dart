@@ -6,7 +6,13 @@ part of 'claim_source.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ClaimSource _$ClaimSourceFromJson(Map<String, dynamic> json) => ClaimSource();
+ClaimSource _$ClaimSourceFromJson(Map<String, dynamic> json) => ClaimSource(
+      resourceClaimName: json['resourceClaimName'] as String?,
+      resourceClaimTemplate: json['resourceClaimTemplate'] as String?,
+    );
 
 Map<String, dynamic> _$ClaimSourceToJson(ClaimSource instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'resourceClaimName': instance.resourceClaimName,
+      'resourceClaimTemplate': instance.resourceClaimTemplate,
+    };

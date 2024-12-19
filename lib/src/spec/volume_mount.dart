@@ -31,7 +31,13 @@ part 'volume_mount.g.dart';
 /// for more details about volume mounts.
 @JsonSerializable()
 class VolumeMount {
-  VolumeMount();
+  VolumeMount({
+    this.name,
+    this.mountPath,
+    this.readOnly,
+    this.subPath,
+    this.subPathExpr,
+  });
 
   /// Path within the container at which the volume should be mounted.
   ///

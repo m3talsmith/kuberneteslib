@@ -4,6 +4,18 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'env_from_source.g.dart';
 
+ConfigMapEnvSource? _configMapRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : ConfigMapEnvSource.fromJson(json);
+
+Map<String, dynamic>? _configMapRefToJson(ConfigMapEnvSource? instance) =>
+    instance?.toJson();
+
+SecretEnvSource? _secretRefFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : SecretEnvSource.fromJson(json);
+
+Map<String, dynamic>? _secretRefToJson(SecretEnvSource? instance) =>
+    instance?.toJson();
+
 /// Represents a source for populating environment variables in Kubernetes containers.
 ///
 /// EnvFromSource enables containers to load multiple environment variables from
@@ -38,7 +50,10 @@ class EnvFromSource {
   ///
   /// Optional: When specified, all key-value pairs from the referenced ConfigMap
   /// will be added as environment variables to the container.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _configMapRefFromJson,
+      toJson: _configMapRefToJson)
   ConfigMapEnvSource? configMapRef;
 
   /// An optional prefix to add to all environment variable names.
@@ -52,7 +67,10 @@ class EnvFromSource {
   ///
   /// Optional: When specified, all key-value pairs from the referenced Secret
   /// will be added as environment variables to the container.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _secretRefFromJson,
+      toJson: _secretRefToJson)
   SecretEnvSource? secretRef;
 
   factory EnvFromSource.fromJson(Map<String, dynamic> json) =>

@@ -4,6 +4,14 @@ import 'node_selector_term.dart';
 
 part 'node_selector.g.dart';
 
+List<NodeSelectorTerm>? _nodeSelectorTermFromJson(List<dynamic>? json) => json
+    ?.map((e) => NodeSelectorTerm.fromJson(e as Map<String, dynamic>))
+    .toList();
+
+List<Map<String, dynamic>>? _nodeSelectorTermToJson(
+        List<NodeSelectorTerm>? instance) =>
+    instance?.map((e) => e.toJson()).toList();
+
 /// Represents a node selector in Kubernetes.
 ///
 /// NodeSelector defines a set of criteria for selecting nodes where pods can be scheduled.
@@ -43,14 +51,20 @@ part 'node_selector.g.dart';
 /// for more details about node selection.
 @JsonSerializable()
 class NodeSelector {
-  NodeSelector() : nodeSelectorTerms = [];
+  NodeSelector({
+    this.nodeSelectorTerms,
+  });
 
   /// List of node selector terms that define the selection criteria.
   ///
   /// Each term is evaluated independently, and the node must match all requirements
   /// within at least one term to be selected. Terms are combined using OR logic,
   /// while requirements within each term use AND logic.
-  List<NodeSelectorTerm> nodeSelectorTerms;
+  @JsonKey(
+      includeFromJson: true,
+      fromJson: _nodeSelectorTermFromJson,
+      toJson: _nodeSelectorTermToJson)
+  List<NodeSelectorTerm>? nodeSelectorTerms;
 
   factory NodeSelector.fromJson(Map<String, dynamic> json) =>
       _$NodeSelectorFromJson(json);

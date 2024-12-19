@@ -42,7 +42,11 @@ List<dynamic>? _valuesToJson(List<String>? instance) => instance?.toList();
 /// for more details about node selection.
 @JsonSerializable()
 class NodeSelectorRequirement {
-  NodeSelectorRequirement({this.key, this.operator, this.values});
+  NodeSelectorRequirement({
+    this.key,
+    this.operator,
+    this.values,
+  });
 
   /// The label or field key that the selector applies to.
   ///

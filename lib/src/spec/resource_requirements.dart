@@ -4,6 +4,13 @@ import 'resource_claim.dart';
 
 part 'resource_requirements.g.dart';
 
+List<ResourceClaim>? _claimsFromJson(List<dynamic>? json) => json
+    ?.map((e) => ResourceClaim.fromJson(e as Map<String, dynamic>))
+    .toList();
+
+List<Map<String, dynamic>>? _claimsToJson(List<ResourceClaim>? instance) =>
+    instance?.map((e) => e.toJson()).toList();
+
 /// Represents resource requirements for containers and pods in Kubernetes.
 ///
 /// ResourceRequirements defines compute and storage resources that a container/pod
@@ -38,12 +45,17 @@ part 'resource_requirements.g.dart';
 /// for more details about resource requirements.
 @JsonSerializable()
 class ResourceRequirements {
-  ResourceRequirements();
+  ResourceRequirements({
+    this.claims,
+    this.limits,
+    this.requests,
+  });
 
   /// Resource claims required by the container/pod.
   ///
   /// Used to request external resources like GPUs or specialized hardware.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false, fromJson: _claimsFromJson, toJson: _claimsToJson)
   List<ResourceClaim>? claims;
 
   /// Maximum resource limits enforced on the container/pod.

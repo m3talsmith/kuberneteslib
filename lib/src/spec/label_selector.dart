@@ -58,7 +58,10 @@ Map<String, dynamic>? _matchLabelsToJson(
 /// for more details about label selectors.
 @JsonSerializable()
 class LabelSelector {
-  LabelSelector();
+  LabelSelector({
+    this.matchExpressions,
+    this.matchLabels,
+  });
 
   /// List of label selector requirements.
   ///

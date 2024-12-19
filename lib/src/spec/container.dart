@@ -14,6 +14,59 @@ import 'volume_mount.dart';
 
 part 'container.g.dart';
 
+List<EnvFromSource>? _envFromFromJson(List<dynamic>? json) => json
+    ?.map((e) => EnvFromSource.fromJson(e as Map<String, dynamic>))
+    .toList();
+
+List<Map<String, dynamic>>? _envFromToJson(List<EnvFromSource>? instance) =>
+    instance?.map((e) => e.toJson()).toList();
+
+Lifecycle? _lifecycleFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : Lifecycle.fromJson(json);
+
+Map<String, dynamic>? _lifecycleToJson(Lifecycle? instance) =>
+    instance?.toJson();
+
+Probe? _probeFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : Probe.fromJson(json);
+
+Map<String, dynamic>? _probeToJson(Probe? instance) => instance?.toJson();
+
+List<ContainerResizePolicy>? _resizePolicyFromJson(List<dynamic>? json) => json
+    ?.map((e) => ContainerResizePolicy.fromJson(e as Map<String, dynamic>))
+    .toList();
+
+List<Map<String, dynamic>>? _resizePolicyToJson(
+        List<ContainerResizePolicy>? instance) =>
+    instance?.map((e) => e.toJson()).toList();
+
+ResourceRequirements? _resourceRequirementsFromJson(
+        Map<String, dynamic>? json) =>
+    json == null ? null : ResourceRequirements.fromJson(json);
+
+Map<String, dynamic>? _resourceRequirementsToJson(
+        ResourceRequirements? instance) =>
+    instance?.toJson();
+
+SecurityContext? _securityContextFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : SecurityContext.fromJson(json);
+
+Map<String, dynamic>? _securityContextToJson(SecurityContext? instance) =>
+    instance?.toJson();
+
+List<VolumeDevice>? _volumeDevicesFromJson(List<dynamic>? json) =>
+    json?.map((e) => VolumeDevice.fromJson(e as Map<String, dynamic>)).toList();
+
+List<Map<String, dynamic>>? _volumeDevicesToJson(
+        List<VolumeDevice>? instance) =>
+    instance?.map((e) => e.toJson()).toList();
+
+List<VolumeMount>? _volumeMountsFromJson(List<dynamic>? json) =>
+    json?.map((e) => VolumeMount.fromJson(e as Map<String, dynamic>)).toList();
+
+List<Map<String, dynamic>>? _volumeMountsToJson(List<VolumeMount>? instance) =>
+    instance?.map((e) => e.toJson()).toList();
+
 /// Represents a container specification in Kubernetes.
 ///
 /// Container defines the runtime properties of a container within a pod.
@@ -50,31 +103,32 @@ part 'container.g.dart';
 /// for more details about container configuration.
 @JsonSerializable()
 class Container {
-  Container(
-      {this.args,
-      this.command,
-      this.env,
-      this.envFrom,
-      this.image,
-      this.imagePullPolicy,
-      this.lifecycle,
-      this.livenessProbe,
-      this.name,
-      this.ports,
-      this.readinessProbe,
-      this.resizePolicy,
-      this.resources,
-      this.restartPolicy,
-      this.securityContext,
-      this.startupProbe,
-      this.stdin,
-      this.stdinOnce,
-      this.terminationMessagePath,
-      this.terminationMessagePolicy,
-      this.tty,
-      this.volumeDevices,
-      this.volumeMounts,
-      this.workingDir});
+  Container({
+    this.args,
+    this.command,
+    this.env,
+    this.envFrom,
+    this.image,
+    this.imagePullPolicy,
+    this.lifecycle,
+    this.livenessProbe,
+    this.name,
+    this.ports,
+    this.readinessProbe,
+    this.resizePolicy,
+    this.resources,
+    this.restartPolicy,
+    this.securityContext,
+    this.startupProbe,
+    this.stdin,
+    this.stdinOnce,
+    this.terminationMessagePath,
+    this.terminationMessagePolicy,
+    this.tty,
+    this.volumeDevices,
+    this.volumeMounts,
+    this.workingDir,
+  });
 
   /// The arguments to pass to the container command
   @JsonKey(includeIfNull: false)
@@ -89,7 +143,8 @@ class Container {
   List<EnvVar>? env;
 
   /// List of sources to populate environment variables in the container
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false, fromJson: _envFromFromJson, toJson: _envFromToJson)
   List<EnvFromSource>? envFrom;
 
   /// Container image name
@@ -101,11 +156,14 @@ class Container {
   String? imagePullPolicy;
 
   /// Actions that the management system should take in response to container lifecycle events
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _lifecycleFromJson,
+      toJson: _lifecycleToJson)
   Lifecycle? lifecycle;
 
   /// Periodic probe of container liveness
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, fromJson: _probeFromJson, toJson: _probeToJson)
   Probe? livenessProbe;
 
   /// Name of the container
@@ -118,15 +176,21 @@ class Container {
   List<ContainerPort>? ports;
 
   /// Periodic probe of container service readiness
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, fromJson: _probeFromJson, toJson: _probeToJson)
   Probe? readinessProbe;
 
   /// ResizePolicy defines the set of conditions that control how resize operations are handled
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _resizePolicyFromJson,
+      toJson: _resizePolicyToJson)
   List<ContainerResizePolicy>? resizePolicy;
 
   /// Compute resource requirements
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _resourceRequirementsFromJson,
+      toJson: _resourceRequirementsToJson)
   ResourceRequirements? resources;
 
   /// Restart policy for the container
@@ -134,11 +198,14 @@ class Container {
   String? restartPolicy;
 
   /// Security context settings for the container
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _securityContextFromJson,
+      toJson: _securityContextToJson)
   SecurityContext? securityContext;
 
   /// Probe to check if the container has started
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, fromJson: _probeFromJson, toJson: _probeToJson)
   Probe? startupProbe;
 
   /// Whether this container should allocate a buffer for stdin
@@ -162,11 +229,17 @@ class Container {
   bool? tty;
 
   /// List of block devices to be used by the container
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _volumeDevicesFromJson,
+      toJson: _volumeDevicesToJson)
   List<VolumeDevice>? volumeDevices;
 
   /// Pod volumes to mount into the container's filesystem
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _volumeMountsFromJson,
+      toJson: _volumeMountsToJson)
   List<VolumeMount>? volumeMounts;
 
   /// Container's working directory

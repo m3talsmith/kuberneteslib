@@ -145,7 +145,7 @@ void main() {
       expect(deserializedSpec.affinity, isNotNull);
       final requirement = (deserializedSpec.affinity as NodeAffinity?)
           ?.requiredDuringSchedulingIgnoredDuringExecution
-          ?.nodeSelectorTerms[0]
+          ?.nodeSelectorTerms?[0]
           .matchExpressions?[0];
 
       expect(requirement?.key, equals('kubernetes.io/e2e-az-name'));

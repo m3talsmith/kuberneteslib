@@ -1,5 +1,18 @@
 # KubernetesLib
 
+## 0.4.84
+
+- Added tests for PodSpec
+- Added tests for PodAffinity
+- Added tests for PodAntiAffinity
+- Added tests for NodeAffinity
+- Added tests for NodeSelector
+- Added tests for NodeSelectorRequirement
+- Added tests for NodeSelectorTerm
+- Added tests for LabelSelector
+- Added tests for LabelSelectorRequirement
+- Added tests for LabelSelectorTerm
+
 ## 0.4.83
 
 - Added pre-commit hook to run analysis, format, and tests

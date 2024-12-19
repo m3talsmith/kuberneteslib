@@ -6,13 +6,13 @@ part of 'volume_mount.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-VolumeMount _$VolumeMountFromJson(Map<String, dynamic> json) => VolumeMount()
-  ..mountPath = json['mountPath'] as String?
-  ..mountPropagation = json['mountPropagation'] as String?
-  ..name = json['name'] as String?
-  ..readOnly = json['readOnly'] as bool?
-  ..subPath = json['subPath'] as String?
-  ..subPathExpr = json['subPathExpr'] as String?;
+VolumeMount _$VolumeMountFromJson(Map<String, dynamic> json) => VolumeMount(
+      name: json['name'] as String?,
+      mountPath: json['mountPath'] as String?,
+      readOnly: json['readOnly'] as bool?,
+      subPath: json['subPath'] as String?,
+      subPathExpr: json['subPathExpr'] as String?,
+    )..mountPropagation = json['mountPropagation'] as String?;
 
 Map<String, dynamic> _$VolumeMountToJson(VolumeMount instance) =>
     <String, dynamic>{

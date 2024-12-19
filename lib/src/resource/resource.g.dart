@@ -12,8 +12,8 @@ Resource _$ResourceFromJson(Map<String, dynamic> json) => Resource(
       kind: json['kind'] as String?,
       namespace: json['namespace'] as String?,
       auth: Resource._authFromJson(json['auth']),
+      apiVersion: json['apiVersion'] as String?,
     )
-      ..apiVersion = json['apiVersion'] as String?
       ..spec = json['spec'] == null
           ? null
           : Spec.fromJson(json['spec'] as Map<String, dynamic>)

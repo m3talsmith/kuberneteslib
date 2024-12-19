@@ -7,11 +7,12 @@ part of 'label_selector.dart';
 // **************************************************************************
 
 LabelSelector _$LabelSelectorFromJson(Map<String, dynamic> json) =>
-    LabelSelector()
-      ..matchExpressions =
-          _matchExpressionsFromJson(json['matchExpressions'] as List?)
-      ..matchLabels =
-          _matchLabelsFromJson(json['matchLabels'] as Map<String, dynamic>?);
+    LabelSelector(
+      matchExpressions:
+          _matchExpressionsFromJson(json['matchExpressions'] as List?),
+      matchLabels:
+          _matchLabelsFromJson(json['matchLabels'] as Map<String, dynamic>?),
+    );
 
 Map<String, dynamic> _$LabelSelectorToJson(LabelSelector instance) =>
     <String, dynamic>{
