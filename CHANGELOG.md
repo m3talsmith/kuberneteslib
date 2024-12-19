@@ -1,5 +1,20 @@
 # KubernetesLib
 
+## 0.4.85
+
+- Added tests for ModeConverter
+- Added tests for KeyToPath
+- Added tests for SecretVolumeSource
+- Added tests for ConfigMapProjection
+- Added tests for ConfigMapVolumeSource
+- Added tests for DownwardAPIProjection
+- Added tests for DownwardAPIVolumeSource
+- Added tests for SecretProjection
+- Added tests for SecretVolumeSource
+- Added tests for HostAlias
+- Added tests for HostPathVolumeSource
+- Added tests for HostPath
+
 ## 0.4.84
 
 - Added tests for PodSpec

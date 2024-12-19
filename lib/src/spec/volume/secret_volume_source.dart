@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../helpers/mode_converter.dart';
 import '../../spec/key_to_path.dart';
 
 part 'secret_volume_source.g.dart';
@@ -51,7 +52,8 @@ class SecretVolumeSource {
   /// Must be a value between 0 and 0777.
   /// Can be overridden by individual items' mode settings.
   @JsonKey(includeIfNull: false)
-  int? defaultMode;
+  @ModeConverter()
+  dynamic defaultMode;
 
   /// Mapping of secret keys to specific paths.
   ///

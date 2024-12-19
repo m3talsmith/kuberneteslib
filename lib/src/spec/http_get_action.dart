@@ -4,6 +4,12 @@ import 'http_header.dart';
 
 part 'http_get_action.g.dart';
 
+List<HTTPHeader>? _httpHeadersFromJson(List<dynamic>? json) =>
+    json?.map((e) => HTTPHeader.fromJson(e as Map<String, dynamic>)).toList();
+
+List<Map<String, dynamic>>? _httpHeadersToJson(List<HTTPHeader>? instance) =>
+    instance?.map((e) => e.toJson()).toList();
+
 /// Represents an HTTP GET action in Kubernetes.
 ///
 /// HTTPGetAction defines how to perform HTTP GET requests for health checking
@@ -37,7 +43,8 @@ part 'http_get_action.g.dart';
 /// for more details about HTTP probes.
 @JsonSerializable()
 class HTTPGetAction {
-  HTTPGetAction();
+  HTTPGetAction(
+      {this.host, this.httpHeaders, this.path, this.port, this.scheme});
 
   /// The hostname to connect to.
   ///
@@ -49,7 +56,10 @@ class HTTPGetAction {
   /// Custom headers to set in the request.
   ///
   /// HTTP headers to set in the request. HTTP allows repeated headers.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _httpHeadersFromJson,
+      toJson: _httpHeadersToJson)
   List<HTTPHeader>? httpHeaders;
 
   /// Path to access on the HTTP server.

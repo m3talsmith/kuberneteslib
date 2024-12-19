@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import '../helpers/mode_converter.dart';
 
 part 'key_to_path.g.dart';
 
@@ -29,7 +30,7 @@ part 'key_to_path.g.dart';
 /// for more details about ConfigMap and Secret volume mounting.
 @JsonSerializable()
 class KeyToPath {
-  KeyToPath();
+  KeyToPath({this.key, dynamic mode, this.path}) : mode = encodeMode(mode);
 
   /// The key from the ConfigMap or Secret.
   ///
@@ -44,7 +45,8 @@ class KeyToPath {
   /// Must be an octal value between 0 and 0777.
   /// Can be used to set custom permissions on the mounted file.
   @JsonKey(includeIfNull: false)
-  int? mode;
+  @ModeConverter()
+  dynamic mode;
 
   /// The relative path of the file to create in the volume.
   ///

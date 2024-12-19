@@ -34,14 +34,16 @@ class GRPCAction {
   ///
   /// Required: The container port number where the gRPC service is listening.
   /// This must be a valid port number (1-65535).
-  late int port;
+  @JsonKey(includeIfNull: false)
+  int? port;
 
   /// The name of the gRPC service to probe.
   ///
   /// Required: The fully qualified name of the gRPC service.
   /// Format: "package.service"
   /// Example: "grpc.health.v1.Health"
-  late String service;
+  @JsonKey(includeIfNull: false)
+  String? service;
 
   factory GRPCAction.fromJson(Map<String, dynamic> json) =>
       _$GRPCActionFromJson(json);

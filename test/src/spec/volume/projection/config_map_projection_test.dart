@@ -104,11 +104,11 @@ void main() {
           KeyToPath()
             ..key = 'config.json'
             ..path = 'app/config.json'
-            ..mode = 0644
+            ..mode = '0644'
         ];
 
       final json = projection.toJson();
-      expect(json['items'][0]['mode'], equals(0644));
+      expect(json['items'][0]['mode'], equals('0644'));
     });
 
     test('fromMap handles missing optional fields', () {
@@ -127,17 +127,17 @@ void main() {
           KeyToPath()
             ..key = 'config1.json'
             ..path = 'app/config1.json'
-            ..mode = 0644,
+            ..mode = '0644',
           KeyToPath()
             ..key = 'config2.json'
             ..path = 'app/config2.json'
-            ..mode = 0755,
+            ..mode = '0755',
         ];
 
       final json = projection.toJson();
       expect(json['items'], hasLength(2));
-      expect(json['items'][0]['mode'], equals(0644));
-      expect(json['items'][1]['mode'], equals(0755));
+      expect(json['items'][0]['mode'], equals('0644'));
+      expect(json['items'][1]['mode'], equals('0755'));
     });
 
     test('fromJson handles empty map', () {
@@ -158,7 +158,7 @@ void main() {
         ];
 
       final json = projection.toJson();
-      expect(json['items'][0]['mode'], equals(-1));
+      expect(json['items'][0]['mode'], equals(null));
     });
   });
 }

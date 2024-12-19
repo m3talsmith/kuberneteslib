@@ -28,20 +28,20 @@ part 'host_alias.g.dart';
 /// for more details about host aliases.
 @JsonSerializable()
 class HostAlias {
-  HostAlias()
-      : hostnames = [],
-        ip = '';
+  HostAlias({this.hostnames, this.ip});
 
   /// List of hostnames to be mapped to the IP address.
   ///
   /// Each hostname will resolve to the specified IP address when looked up
   /// from within the pod.
-  List<String> hostnames;
+  @JsonKey(includeIfNull: false)
+  List<String>? hostnames;
 
   /// The IP address that the hostnames will resolve to.
   ///
   /// Must be a valid IPv4 or IPv6 address.
-  String ip;
+  @JsonKey(includeIfNull: false)
+  String? ip;
 
   factory HostAlias.fromJson(Map<String, dynamic> json) =>
       _$HostAliasFromJson(json);
