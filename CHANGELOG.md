@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.5.0
+
+- Added support for browser
+
 ## 0.4.85
 
 - Added tests for ModeConverter

@@ -9,8 +9,12 @@ import '../cluster/cluster.dart';
 import '../cluster/config.dart';
 import '../cluster/exec.dart';
 import '../cluster/user.dart';
-import 'bearer_client.dart';
-import 'cert_client.dart';
+import 'bearer_client_stub.dart'
+    if (dart.library.io) 'bearer_client_io.dart'
+    if (dart.library.html) 'bearer_client_web.dart';
+import 'cert_client_stub.dart'
+    if (dart.library.io) 'cert_client_io.dart'
+    if (dart.library.html) 'cert_client_web.dart';
 import 'cluster_auth_client.dart';
 
 part 'cluster.g.dart';

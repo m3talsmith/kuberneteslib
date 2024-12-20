@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'bearer_client.dart';
+part of 'bearer_client_web.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
