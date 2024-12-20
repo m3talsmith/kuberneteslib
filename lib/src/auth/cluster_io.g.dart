@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'cluster.dart';
+part of 'cluster_io.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

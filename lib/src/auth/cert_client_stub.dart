@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
@@ -72,10 +71,7 @@ class CertClient extends BaseClient implements ClusterAuthClient {
   /// - Client certificate for mutual TLS (if provided)
   /// - Client private key for authentication (if provided)
   @override
-  Future<StreamedResponse> send(
-    BaseRequest request, {
-    bool Function(X509Certificate, String, int)? badCertificateCallback,
-  }) async {
+  Future<StreamedResponse> send(BaseRequest request) async {
     throw UnimplementedError('CertClient is not implemented');
   }
 

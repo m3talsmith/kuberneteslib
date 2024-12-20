@@ -149,7 +149,7 @@
 library;
 
 // Authentication and cluster configuration
-export 'src/auth/cluster.dart';
+export 'src/auth/cluster_io.dart';
 export 'src/cluster/cluster.dart';
 export 'src/cluster/config.dart';
 export 'src/cluster/context.dart';

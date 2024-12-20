@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:kuberneteslib/src/auth/cluster.dart';
+import 'package:kuberneteslib/src/auth/cluster_io.dart';
 import 'package:kuberneteslib/src/cluster/config.dart';
 import 'package:kuberneteslib/src/cluster/cluster.dart';
 import 'package:kuberneteslib/src/cluster/context.dart';

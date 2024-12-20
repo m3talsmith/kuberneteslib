@@ -7,7 +7,7 @@ import 'package:kuberneteslib/src/helpers/yaml_parser.dart';
 import 'package:kuberneteslib/src/resource/resource_base.dart';
 import 'package:yaml/yaml.dart';
 
-import '../auth/cluster.dart';
+import '../auth/cluster_io.dart';
 import '../auth/exceptions.dart';
 import '../helpers/object_meta_converter.dart';
 import '../helpers/object_spec_converter.dart';

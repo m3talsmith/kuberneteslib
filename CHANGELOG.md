@@ -1,5 +1,11 @@
 # KubernetesLib
 
+## 0.5.3
+
+- Added ClusterAuthStub
+- Added ClusterAuthWeb
+- Added ClusterAuthIO
+
 ## 0.5.2
 
 - Removed dead code for CertClient

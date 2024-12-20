@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:http/http.dart';
 
 import 'cluster_auth_client.dart';
@@ -11,10 +9,7 @@ class BearerClient extends BaseClient implements ClusterAuthClient {
   final DateTime? expirationTimestamp;
 
   @override
-  Future<StreamedResponse> send(
-    BaseRequest request, {
-    bool Function(X509Certificate, String, int)? badCertificateCallback,
-  }) async {
+  Future<StreamedResponse> send(BaseRequest request) async {
     throw UnimplementedError('BearerClient is not implemented');
   }
 
