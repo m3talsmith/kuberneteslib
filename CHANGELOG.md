@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.5.1
+
+- Removed unused packages
+
 ## 0.5.0
 
 - Added support for browser
