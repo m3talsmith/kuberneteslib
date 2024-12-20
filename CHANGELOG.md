@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.5.2
+
+- Removed dead code for CertClient
+
 ## 0.5.1
 
 - Removed unused packages

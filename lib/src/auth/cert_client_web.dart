@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
@@ -86,13 +85,6 @@ class CertClient extends BaseClient implements ClusterAuthClient {
       default:
         request.headers['Content-Type'] = 'application/json';
     }
-    var context = SecurityContext()
-      ..allowLegacyUnsafeRenegotiation = true
-      ..setClientAuthoritiesBytes(clientCertificateAuthority);
-    if (clientCertificateData.isNotEmpty) {
-      context.useCertificateChainBytes(clientCertificateData);
-    }
-    if (clientKeyData.isNotEmpty) context.usePrivateKeyBytes(clientKeyData);
     var client = BrowserClient();
     return client.send(request);
   }
