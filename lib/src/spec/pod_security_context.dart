@@ -77,13 +77,19 @@ class PodSecurityContext {
   /// SELinux context applied to all containers.
   ///
   /// If unspecified, the container runtime allocates a random SELinux context.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _seLinuxOptionsFromJson,
+      toJson: _seLinuxOptionsToJson)
   SELinuxOptions? seLinuxOptions;
 
   /// Seccomp profile applied to all containers.
   ///
   /// Controls which system calls the container processes can make.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _seccompProfileFromJson,
+      toJson: _seccompProfileToJson)
   SeccompProfile? seccompProfile;
 
   /// Additional groups applied to container processes.
@@ -95,13 +101,17 @@ class PodSecurityContext {
   /// Sysctls applied to the pod.
   ///
   /// List of kernel parameters to be applied to the pod.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false, fromJson: _sysctlFromJson, toJson: _sysctlToJson)
   List<Sysctl>? sysctls;
 
   /// Windows-specific security settings.
   ///
   /// Only applicable when running on Windows nodes.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _windowsSecurityContextOptionsFromJson,
+      toJson: _windowsSecurityContextOptionsToJson)
   WindowsSecurityContextOptions? windowsOptions;
 
   factory PodSecurityContext.fromJson(Map<String, dynamic> json) =>
@@ -109,3 +119,29 @@ class PodSecurityContext {
 
   Map<String, dynamic> toJson() => _$PodSecurityContextToJson(this);
 }
+
+SELinuxOptions? _seLinuxOptionsFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : SELinuxOptions.fromJson(json);
+
+Map<String, dynamic>? _seLinuxOptionsToJson(SELinuxOptions? instance) =>
+    instance?.toJson();
+
+SeccompProfile? _seccompProfileFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : SeccompProfile.fromJson(json);
+
+Map<String, dynamic>? _seccompProfileToJson(SeccompProfile? instance) =>
+    instance?.toJson();
+
+List<Sysctl>? _sysctlFromJson(List? json) =>
+    json?.map((e) => Sysctl.fromJson(e as Map<String, dynamic>)).toList();
+
+List<Map<String, dynamic>>? _sysctlToJson(List<Sysctl>? instance) =>
+    instance?.map((e) => e.toJson()).toList();
+
+WindowsSecurityContextOptions? _windowsSecurityContextOptionsFromJson(
+        Map<String, dynamic>? json) =>
+    json == null ? null : WindowsSecurityContextOptions.fromJson(json);
+
+Map<String, dynamic>? _windowsSecurityContextOptionsToJson(
+        WindowsSecurityContextOptions? instance) =>
+    instance?.toJson();

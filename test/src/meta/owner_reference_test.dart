@@ -3,95 +3,116 @@ import 'package:kuberneteslib/src/meta/owner_reference.dart';
 
 void main() {
   group('OwnerReference', () {
-    test('serializes to JSON correctly', () {
-      final ref = OwnerReference()
-        ..apiVersion = 'apps/v1'
-        ..kind = 'Deployment'
-        ..name = 'nginx-deployment'
-        ..uid = 'abc-123'
-        ..controller = true
-        ..blockOwnerDeletion = true;
+    test('can be instantiated', () {
+      final ownerRef = OwnerReference(
+        apiVersion: 'apps/v1',
+        kind: 'Deployment',
+        name: 'nginx-deployment',
+        uid: 'a123-456b-789c-0d',
+        controller: true,
+        blockOwnerDeletion: true,
+      );
 
-      final json = ref.toJson();
+      expect(ownerRef.apiVersion, equals('apps/v1'));
+      expect(ownerRef.kind, equals('Deployment'));
+      expect(ownerRef.name, equals('nginx-deployment'));
+      expect(ownerRef.uid, equals('a123-456b-789c-0d'));
+      expect(ownerRef.controller, isTrue);
+      expect(ownerRef.blockOwnerDeletion, isTrue);
+    });
 
-      expect(json, {
-        'apiVersion': 'apps/v1',
-        'kind': 'Deployment',
-        'name': 'nginx-deployment',
-        'uid': 'abc-123',
-        'controller': true,
-        'blockOwnerDeletion': true,
+    test('can be instantiated with null values', () {
+      final ownerRef = OwnerReference();
+
+      expect(ownerRef.apiVersion, isNull);
+      expect(ownerRef.kind, isNull);
+      expect(ownerRef.name, isNull);
+      expect(ownerRef.uid, isNull);
+      expect(ownerRef.controller, isNull);
+      expect(ownerRef.blockOwnerDeletion, isNull);
+    });
+
+    group('serialization', () {
+      test('toJson() serializes all non-null fields', () {
+        final ownerRef = OwnerReference(
+          apiVersion: 'apps/v1',
+          kind: 'Deployment',
+          name: 'nginx-deployment',
+          uid: 'a123-456b-789c-0d',
+          controller: true,
+          blockOwnerDeletion: true,
+        );
+
+        final json = ownerRef.toJson();
+
+        expect(json, {
+          'apiVersion': 'apps/v1',
+          'kind': 'Deployment',
+          'name': 'nginx-deployment',
+          'uid': 'a123-456b-789c-0d',
+          'controller': true,
+          'blockOwnerDeletion': true,
+        });
+      });
+
+      test('toJson() omits null fields', () {
+        final ownerRef = OwnerReference(
+          apiVersion: 'apps/v1',
+          kind: 'Deployment',
+          name: 'nginx-deployment',
+          // uid, controller, and blockOwnerDeletion are null
+        );
+
+        final json = ownerRef.toJson();
+
+        expect(json, {
+          'apiVersion': 'apps/v1',
+          'kind': 'Deployment',
+          'name': 'nginx-deployment',
+        });
+        expect(json.containsKey('uid'), isFalse);
+        expect(json.containsKey('controller'), isFalse);
+        expect(json.containsKey('blockOwnerDeletion'), isFalse);
       });
     });
 
-    test('deserializes from JSON correctly', () {
-      final json = {
-        'apiVersion': 'apps/v1',
-        'kind': 'Deployment',
-        'name': 'nginx-deployment',
-        'uid': 'abc-123',
-        'controller': true,
-        'blockOwnerDeletion': true,
-      };
+    group('deserialization', () {
+      test('fromJson() deserializes all fields', () {
+        final json = {
+          'apiVersion': 'apps/v1',
+          'kind': 'Deployment',
+          'name': 'nginx-deployment',
+          'uid': 'a123-456b-789c-0d',
+          'controller': true,
+          'blockOwnerDeletion': true,
+        };
 
-      final ref = OwnerReference.fromJson(json);
+        final ownerRef = OwnerReference.fromJson(json);
 
-      expect(ref.apiVersion, 'apps/v1');
-      expect(ref.kind, 'Deployment');
-      expect(ref.name, 'nginx-deployment');
-      expect(ref.uid, 'abc-123');
-      expect(ref.controller, true);
-      expect(ref.blockOwnerDeletion, true);
-    });
+        expect(ownerRef.apiVersion, equals('apps/v1'));
+        expect(ownerRef.kind, equals('Deployment'));
+        expect(ownerRef.name, equals('nginx-deployment'));
+        expect(ownerRef.uid, equals('a123-456b-789c-0d'));
+        expect(ownerRef.controller, isTrue);
+        expect(ownerRef.blockOwnerDeletion, isTrue);
+      });
 
-    test('handles partial JSON deserialization', () {
-      final json = {
-        'apiVersion': 'v1',
-        'kind': 'Pod',
-        'name': 'test-pod',
-        // Omitting optional fields
-      };
+      test('fromJson() handles missing optional fields', () {
+        final json = {
+          'apiVersion': 'apps/v1',
+          'kind': 'Deployment',
+          'name': 'nginx-deployment',
+        };
 
-      final ref = OwnerReference.fromJson(json);
+        final ownerRef = OwnerReference.fromJson(json);
 
-      expect(ref.apiVersion, 'v1');
-      expect(ref.kind, 'Pod');
-      expect(ref.name, 'test-pod');
-      expect(ref.uid, null);
-      expect(ref.controller, null);
-      expect(ref.blockOwnerDeletion, null);
-    });
-
-    test('supports fluent interface pattern', () {
-      final ref = OwnerReference()
-        ..apiVersion = 'batch/v1'
-        ..kind = 'Job'
-        ..name = 'backup-job'
-        ..uid = 'def-456'
-        ..controller = true
-        ..blockOwnerDeletion = false;
-
-      expect(ref.apiVersion, 'batch/v1');
-      expect(ref.kind, 'Job');
-      expect(ref.name, 'backup-job');
-      expect(ref.uid, 'def-456');
-      expect(ref.controller, true);
-      expect(ref.blockOwnerDeletion, false);
-    });
-
-    test('maintains field independence', () {
-      final ref1 = OwnerReference()
-        ..apiVersion = 'v1'
-        ..kind = 'Pod';
-
-      final ref2 = OwnerReference()
-        ..apiVersion = 'apps/v1'
-        ..kind = 'Deployment';
-
-      expect(ref1.apiVersion, 'v1');
-      expect(ref1.kind, 'Pod');
-      expect(ref2.apiVersion, 'apps/v1');
-      expect(ref2.kind, 'Deployment');
+        expect(ownerRef.apiVersion, equals('apps/v1'));
+        expect(ownerRef.kind, equals('Deployment'));
+        expect(ownerRef.name, equals('nginx-deployment'));
+        expect(ownerRef.uid, isNull);
+        expect(ownerRef.controller, isNull);
+        expect(ownerRef.blockOwnerDeletion, isNull);
+      });
     });
   });
 }

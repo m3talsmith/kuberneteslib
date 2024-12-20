@@ -37,7 +37,8 @@ class PodDNSConfigOption {
   /// - 'timeout': DNS query timeout
   /// - 'attempts': Number of DNS query attempts
   /// - 'rotate': Enable round-robin selection of nameservers
-  late String name;
+  @JsonKey(includeIfNull: false)
+  String? name;
 
   /// The value for the DNS configuration option.
   ///

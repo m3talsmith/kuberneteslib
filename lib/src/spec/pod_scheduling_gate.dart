@@ -36,7 +36,8 @@ class PodSchedulingGate {
   /// - 'infrastructure-ready': Infrastructure prerequisites
   /// - 'maintenance-window': Time-based scheduling control
   /// - 'resource-ready': Resource availability checks
-  late String name;
+  @JsonKey(includeIfNull: false)
+  String? name;
 
   factory PodSchedulingGate.fromJson(Map<String, dynamic> json) =>
       _$PodSchedulingGateFromJson(json);

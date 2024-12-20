@@ -35,16 +35,19 @@ part 'managed_field_entry.g.dart';
 @JsonSerializable()
 class ManagedFieldEntry {
   /// The API version that the manager used when modifying the object.
-  String apiVersion;
+  @JsonKey(includeIfNull: false)
+  String? apiVersion;
 
   /// The format of the fields data structure.
   /// Currently, this is always "FieldsV1".
-  String fieldsType;
+  @JsonKey(includeIfNull: false)
+  String? fieldsType;
 
   /// The set of fields that were modified by this manager.
   /// Contains a structured description of the fields owned by this manager.
+  @JsonKey(includeIfNull: false)
   @FieldV1Converter()
-  FieldsV1 fieldsV1;
+  FieldsV1? fieldsV1;
 
   /// Identifier of the manager that modified these fields.
   ///
@@ -52,7 +55,8 @@ class ManagedFieldEntry {
   /// - A controller name (e.g., "kube-controller-manager")
   /// - A user name (e.g., "admin")
   /// - A tool identifier (e.g., "kubectl")
-  String manager;
+  @JsonKey(includeIfNull: false)
+  String? manager;
 
   /// The type of operation performed by the manager.
   ///
@@ -60,7 +64,8 @@ class ManagedFieldEntry {
   /// - "Apply": Fields modified through server-side apply
   /// - "Update": Direct updates to the object
   /// - "Create": Initial object creation
-  String operation;
+  @JsonKey(includeIfNull: false)
+  String? operation;
 
   /// The subresource that was modified, if any.
   ///
@@ -71,16 +76,18 @@ class ManagedFieldEntry {
   String? subresource;
 
   /// Timestamp when the fields were last modified by this manager.
-  DateTime time;
+  @JsonKey(includeIfNull: false)
+  DateTime? time;
 
-  ManagedFieldEntry()
-      : apiVersion = '',
-        fieldsType = '',
-        fieldsV1 = FieldsV1(),
-        manager = '',
-        operation = '',
-        subresource = '',
-        time = DateTime.now();
+  ManagedFieldEntry({
+    this.apiVersion,
+    this.fieldsType,
+    this.fieldsV1,
+    this.manager,
+    this.operation,
+    this.subresource,
+    this.time,
+  });
 
   factory ManagedFieldEntry.fromJson(Map<String, dynamic> json) =>
       _$ManagedFieldEntryFromJson(json);

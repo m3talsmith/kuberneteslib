@@ -65,9 +65,10 @@ class PersistentVolumeClaimTemplate {
   @JsonKey(includeIfNull: false, toJson: _specToJson, fromJson: _specFromJson)
   PersistentVolumeClaimSpec? spec;
 
-  PersistentVolumeClaimTemplate()
-      : metadata = ObjectMeta(),
-        spec = PersistentVolumeClaimSpec();
+  PersistentVolumeClaimTemplate({
+    this.metadata,
+    this.spec,
+  });
 
   factory PersistentVolumeClaimTemplate.fromJson(Map<String, dynamic> json) =>
       _$PersistentVolumeClaimTemplateFromJson(json);

@@ -29,26 +29,30 @@ part 'windows_security_context_options.g.dart';
 /// for more details about Windows container security options.
 @JsonSerializable()
 class WindowsSecurityContextOptions {
-  WindowsSecurityContextOptions()
-      : gmsaCredentialSpec = '',
-        gmsaCredentialSpecName = '',
-        hostProcess = false,
-        runAsUserName = '';
+  WindowsSecurityContextOptions({
+    this.gmsaCredentialSpec,
+    this.gmsaCredentialSpecName,
+    this.hostProcess,
+    this.runAsUserName,
+  });
 
   /// GMSA credential spec in JSON format.
   ///
   /// Contains the YAML/JSON formatted credential specification for Windows GMSA.
-  final String gmsaCredentialSpec;
+  @JsonKey(includeIfNull: false)
+  String? gmsaCredentialSpec;
 
   /// Name of the GMSA credential spec custom resource.
   ///
   /// References a GMSACredentialSpec resource in the cluster.
-  final String gmsaCredentialSpecName;
+  @JsonKey(includeIfNull: false)
+  String? gmsaCredentialSpecName;
 
   /// Indicates if this container should be a Windows HostProcess container.
   ///
   /// When true, runs with elevated privileges on the host Windows node.
-  final bool hostProcess;
+  @JsonKey(includeIfNull: false)
+  bool? hostProcess;
 
   /// Windows user account to run the container process as.
   ///
@@ -56,7 +60,8 @@ class WindowsSecurityContextOptions {
   /// - 'NT AUTHORITY\\SYSTEM'
   /// - 'NT AUTHORITY\\LOCAL SERVICE'
   /// - 'NT AUTHORITY\\NETWORK SERVICE'
-  final String runAsUserName;
+  @JsonKey(includeIfNull: false)
+  String? runAsUserName;
 
   factory WindowsSecurityContextOptions.fromJson(Map<String, dynamic> json) =>
       _$WindowsSecurityContextOptionsFromJson(json);

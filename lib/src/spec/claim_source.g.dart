@@ -13,6 +13,8 @@ ClaimSource _$ClaimSourceFromJson(Map<String, dynamic> json) => ClaimSource(
 
 Map<String, dynamic> _$ClaimSourceToJson(ClaimSource instance) =>
     <String, dynamic>{
-      'resourceClaimName': instance.resourceClaimName,
-      'resourceClaimTemplate': instance.resourceClaimTemplate,
+      if (instance.resourceClaimName case final value?)
+        'resourceClaimName': value,
+      if (instance.resourceClaimTemplate case final value?)
+        'resourceClaimTemplate': value,
     };

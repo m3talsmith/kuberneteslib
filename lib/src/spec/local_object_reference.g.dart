@@ -15,5 +15,5 @@ LocalObjectReference _$LocalObjectReferenceFromJson(
 Map<String, dynamic> _$LocalObjectReferenceToJson(
         LocalObjectReference instance) =>
     <String, dynamic>{
-      'name': instance.name,
+      if (instance.name case final value?) 'name': value,
     };

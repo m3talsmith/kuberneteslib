@@ -37,7 +37,8 @@ class PodOS {
   ///
   /// This field is used by the scheduler to select nodes with matching
   /// operating systems. Must match the OS field in the node specification.
-  late String name;
+  @JsonKey(includeIfNull: false)
+  String? name;
 
   factory PodOS.fromJson(Map<String, dynamic> json) => _$PodOSFromJson(json);
 

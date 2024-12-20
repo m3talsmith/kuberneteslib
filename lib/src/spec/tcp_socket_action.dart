@@ -28,13 +28,14 @@ part 'tcp_socket_action.g.dart';
 /// for more details about TCP socket probes.
 @JsonSerializable()
 class TCPSocketAction {
-  TCPSocketAction();
+  TCPSocketAction({this.host, this.port});
 
   /// The host name to connect to.
   ///
   /// Optional: Defaults to pod IP if not specified.
   /// Examples: 'localhost', 'mysql-service', '10.0.0.1'
-  late String host;
+  @JsonKey(includeIfNull: false)
+  String? host;
 
   /// The port number to connect to.
   ///
@@ -43,7 +44,7 @@ class TCPSocketAction {
   /// - String (e.g., "http")
   /// - Named port from container
   @JsonKey(includeIfNull: false)
-  late dynamic port;
+  dynamic port;
 
   factory TCPSocketAction.fromJson(Map<String, dynamic> json) =>
       _$TCPSocketActionFromJson(json);

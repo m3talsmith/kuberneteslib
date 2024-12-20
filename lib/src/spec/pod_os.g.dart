@@ -7,8 +7,8 @@ part of 'pod_os.dart';
 // **************************************************************************
 
 PodOS _$PodOSFromJson(Map<String, dynamic> json) =>
-    PodOS()..name = json['name'] as String;
+    PodOS()..name = json['name'] as String?;
 
 Map<String, dynamic> _$PodOSToJson(PodOS instance) => <String, dynamic>{
-      'name': instance.name,
+      if (instance.name case final value?) 'name': value,
     };

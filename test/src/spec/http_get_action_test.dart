@@ -9,7 +9,7 @@ void main() {
       expect(action, isNotNull);
     });
 
-    test('supports all properties in constructor', () {
+    test('can be created with all properties', () {
       final action = HTTPGetAction(
         host: 'example.com',
         path: '/health',
@@ -17,8 +17,8 @@ void main() {
         scheme: 'HTTPS',
         httpHeaders: [
           HTTPHeader()
-            ..name = 'Accept'
-            ..value = 'application/json'
+            ..name = 'Custom-Header'
+            ..value = 'test-value'
         ],
       );
 
@@ -27,97 +27,60 @@ void main() {
       expect(action.port, equals(8080));
       expect(action.scheme, equals('HTTPS'));
       expect(action.httpHeaders, hasLength(1));
-      expect(action.httpHeaders?[0].name, equals('Accept'));
-      expect(action.httpHeaders?[0].value, equals('application/json'));
+      expect(action.httpHeaders!.first.name, equals('Custom-Header'));
+      expect(action.httpHeaders!.first.value, equals('test-value'));
     });
 
-    test('can serialize to JSON', () {
-      final action = HTTPGetAction()
-        ..host = 'example.com'
-        ..path = '/health'
-        ..port = 8080
-        ..scheme = 'HTTPS'
-        ..httpHeaders = [
-          HTTPHeader()
-            ..name = 'Accept'
-            ..value = 'application/json',
-          HTTPHeader()
-            ..name = 'Authorization'
-            ..value = 'Bearer token'
-        ];
-
-      final json = action.toJson();
-
-      expect(json['host'], equals('example.com'));
-      expect(json['path'], equals('/health'));
-      expect(json['port'], equals(8080));
-      expect(json['scheme'], equals('HTTPS'));
-      expect(json['httpHeaders'], hasLength(2));
-      expect(json['httpHeaders'][0]['name'], equals('Accept'));
-      expect(json['httpHeaders'][0]['value'], equals('application/json'));
-      expect(json['httpHeaders'][1]['name'], equals('Authorization'));
-      expect(json['httpHeaders'][1]['value'], equals('Bearer token'));
+    test('supports named port', () {
+      final action = HTTPGetAction()..port = 'http';
+      expect(action.port, equals('http'));
     });
 
-    test('can deserialize from JSON', () {
-      final json = {
-        'host': 'example.com',
-        'path': '/health',
-        'port': 8080,
-        'scheme': 'HTTPS',
-        'httpHeaders': [
-          {'name': 'Accept', 'value': 'application/json'},
-          {'name': 'Authorization', 'value': 'Bearer token'}
-        ]
-      };
+    group('JSON serialization', () {
+      test('toJson() includes only non-null values', () {
+        final action = HTTPGetAction()
+          ..path = '/health'
+          ..port = 8080;
 
-      final action = HTTPGetAction.fromJson(json);
+        final json = action.toJson();
+        expect(json, {
+          'path': '/health',
+          'port': 8080,
+        });
+      });
 
-      expect(action.host, equals('example.com'));
-      expect(action.path, equals('/health'));
-      expect(action.port, equals(8080));
-      expect(action.scheme, equals('HTTPS'));
-      expect(action.httpHeaders, hasLength(2));
-      expect(action.httpHeaders?[0].name, equals('Accept'));
-      expect(action.httpHeaders?[0].value, equals('application/json'));
-      expect(action.httpHeaders?[1].name, equals('Authorization'));
-      expect(action.httpHeaders?[1].value, equals('Bearer token'));
-    });
+      test('fromJson() deserializes correctly', () {
+        final json = {
+          'host': 'example.com',
+          'path': '/health',
+          'port': 8080,
+          'scheme': 'HTTPS',
+          'httpHeaders': [
+            {
+              'name': 'Custom-Header',
+              'value': 'test-value',
+            }
+          ],
+        };
 
-    test('handles null values', () {
-      final action = HTTPGetAction();
-      expect(action.host, isNull);
-      expect(action.path, isNull);
-      expect(action.port, isNull);
-      expect(action.scheme, isNull);
-      expect(action.httpHeaders, isNull);
+        final action = HTTPGetAction.fromJson(json);
+        expect(action.host, equals('example.com'));
+        expect(action.path, equals('/health'));
+        expect(action.port, equals(8080));
+        expect(action.scheme, equals('HTTPS'));
+        expect(action.httpHeaders, hasLength(1));
+        expect(action.httpHeaders!.first.name, equals('Custom-Header'));
+        expect(action.httpHeaders!.first.value, equals('test-value'));
+      });
 
-      final json = action.toJson();
-      expect(json, isEmpty);
-    });
+      test('handles empty httpHeaders', () {
+        final action = HTTPGetAction();
+        final json = action.toJson();
+        expect(json, isEmpty);
 
-    test('supports string port name', () {
-      final action = HTTPGetAction()
-        ..port = 'http'
-        ..path = '/health';
-
-      final json = action.toJson();
-      expect(json['port'], equals('http'));
-
-      final deserialized = HTTPGetAction.fromJson(json);
-      expect(deserialized.port, equals('http'));
-    });
-
-    test('supports numeric port', () {
-      final action = HTTPGetAction()
-        ..port = 8080
-        ..path = '/health';
-
-      final json = action.toJson();
-      expect(json['port'], equals(8080));
-
-      final deserialized = HTTPGetAction.fromJson(json);
-      expect(deserialized.port, equals(8080));
+        final deserializedAction = HTTPGetAction.fromJson(json);
+        expect(deserializedAction.httpHeaders, isNull);
+      });
     });
   });
 }

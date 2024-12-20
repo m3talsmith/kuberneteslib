@@ -15,6 +15,6 @@ ObjectFieldSelector _$ObjectFieldSelectorFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ObjectFieldSelectorToJson(
         ObjectFieldSelector instance) =>
     <String, dynamic>{
-      'apiVersion': instance.apiVersion,
-      'fieldPath': instance.fieldPath,
+      if (instance.apiVersion case final value?) 'apiVersion': value,
+      if (instance.fieldPath case final value?) 'fieldPath': value,
     };

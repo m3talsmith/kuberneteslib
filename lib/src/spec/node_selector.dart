@@ -61,7 +61,7 @@ class NodeSelector {
   /// within at least one term to be selected. Terms are combined using OR logic,
   /// while requirements within each term use AND logic.
   @JsonKey(
-      includeFromJson: true,
+      includeIfNull: false,
       fromJson: _nodeSelectorTermFromJson,
       toJson: _nodeSelectorTermToJson)
   List<NodeSelectorTerm>? nodeSelectorTerms;

@@ -11,8 +11,7 @@ LabelSelectorRequirement _$LabelSelectorRequirementFromJson(
     LabelSelectorRequirement(
       key: json['key'] as String?,
       operator: json['operator'] as String?,
-      values:
-          (json['values'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      values: _valuesFromJson(json['values'] as List?),
     );
 
 Map<String, dynamic> _$LabelSelectorRequirementToJson(
@@ -20,5 +19,5 @@ Map<String, dynamic> _$LabelSelectorRequirementToJson(
     <String, dynamic>{
       if (instance.key case final value?) 'key': value,
       if (instance.operator case final value?) 'operator': value,
-      if (instance.values case final value?) 'values': value,
+      if (_valuesToJson(instance.values) case final value?) 'values': value,
     };

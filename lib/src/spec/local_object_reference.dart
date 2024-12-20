@@ -34,6 +34,7 @@ class LocalObjectReference {
   ///
   /// Required: Must be a valid object name in the same namespace.
   /// The name must be unique within the namespace.
+  @JsonKey(includeIfNull: false)
   String? name;
 
   factory LocalObjectReference.fromJson(Map<String, dynamic> json) =>

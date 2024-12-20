@@ -8,9 +8,10 @@ part of 'persistent_volume_claim_template.dart';
 
 PersistentVolumeClaimTemplate _$PersistentVolumeClaimTemplateFromJson(
         Map<String, dynamic> json) =>
-    PersistentVolumeClaimTemplate()
-      ..metadata = _metadataFromJson(json['metadata'] as Map<String, dynamic>?)
-      ..spec = _specFromJson(json['spec'] as Map<String, dynamic>?);
+    PersistentVolumeClaimTemplate(
+      metadata: _metadataFromJson(json['metadata'] as Map<String, dynamic>?),
+      spec: _specFromJson(json['spec'] as Map<String, dynamic>?),
+    );
 
 Map<String, dynamic> _$PersistentVolumeClaimTemplateToJson(
         PersistentVolumeClaimTemplate instance) =>

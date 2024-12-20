@@ -7,9 +7,9 @@ part of 'pod_scheduling_gate.dart';
 // **************************************************************************
 
 PodSchedulingGate _$PodSchedulingGateFromJson(Map<String, dynamic> json) =>
-    PodSchedulingGate()..name = json['name'] as String;
+    PodSchedulingGate()..name = json['name'] as String?;
 
 Map<String, dynamic> _$PodSchedulingGateToJson(PodSchedulingGate instance) =>
     <String, dynamic>{
-      'name': instance.name,
+      if (instance.name case final value?) 'name': value,
     };

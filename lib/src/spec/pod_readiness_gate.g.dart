@@ -7,9 +7,11 @@ part of 'pod_readiness_gate.dart';
 // **************************************************************************
 
 PodReadinessGate _$PodReadinessGateFromJson(Map<String, dynamic> json) =>
-    PodReadinessGate()..conditionType = json['conditionType'] as String;
+    PodReadinessGate(
+      conditionType: json['conditionType'] as String?,
+    );
 
 Map<String, dynamic> _$PodReadinessGateToJson(PodReadinessGate instance) =>
     <String, dynamic>{
-      'conditionType': instance.conditionType,
+      if (instance.conditionType case final value?) 'conditionType': value,
     };

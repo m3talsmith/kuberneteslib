@@ -8,11 +8,11 @@ part of 'pod_resource_claim.dart';
 
 PodResourceClaim _$PodResourceClaimFromJson(Map<String, dynamic> json) =>
     PodResourceClaim()
-      ..name = json['name'] as String
-      ..source = ClaimSource.fromJson(json['source'] as Map<String, dynamic>);
+      ..name = json['name'] as String?
+      ..source = _sourceFromJson(json['source'] as Map<String, dynamic>?);
 
 Map<String, dynamic> _$PodResourceClaimToJson(PodResourceClaim instance) =>
     <String, dynamic>{
-      'name': instance.name,
-      'source': instance.source,
+      if (instance.name case final value?) 'name': value,
+      if (_sourceToJson(instance.source) case final value?) 'source': value,
     };

@@ -1,5 +1,7 @@
 import 'package:test/test.dart';
 import 'package:kuberneteslib/src/meta/object_meta.dart';
+import 'package:kuberneteslib/src/meta/owner_reference.dart';
+import 'package:kuberneteslib/src/meta/managed_field_entry.dart';
 
 void main() {
   group('ObjectMeta', () {
@@ -69,6 +71,83 @@ void main() {
       expect(json.containsKey('namespace'), isFalse);
       expect(json.containsKey('annotations'), isFalse);
       expect(json.containsKey('deletionTimestamp'), isFalse);
+    });
+
+    test('can be instantiated with basic properties', () {
+      final meta = ObjectMeta(
+        name: 'test-object',
+        namespace: 'default',
+        labels: {'app': 'test'},
+        annotations: {'description': 'test object'},
+      );
+
+      expect(meta.name, equals('test-object'));
+      expect(meta.namespace, equals('default'));
+      expect(meta.labels?['app'], equals('test'));
+      expect(meta.annotations?['description'], equals('test object'));
+    });
+
+    test('handles DateTime serialization correctly', () {
+      final timestamp = DateTime.utc(2024, 1, 1, 12, 0);
+      final meta = ObjectMeta()
+        ..creationTimestamp = timestamp
+        ..deletionTimestamp = timestamp;
+
+      final json = meta.toJson();
+      expect(json['creationTimestamp'], equals('2024-01-01T12:00:00.000Z'));
+      expect(json['deletionTimestamp'], equals('2024-01-01T12:00:00.000Z'));
+
+      final decoded = ObjectMeta.fromJson(json);
+      expect(decoded.creationTimestamp, equals(timestamp));
+      expect(decoded.deletionTimestamp, equals(timestamp));
+    });
+
+    test('handles ownerReferences serialization', () {
+      final owner = OwnerReference(
+        apiVersion: 'apps/v1',
+        kind: 'Deployment',
+        name: 'test-deployment',
+        uid: '123-456',
+      );
+
+      final meta = ObjectMeta()..ownerReferences = [owner];
+      final json = meta.toJson();
+
+      expect(json['ownerReferences'], isList);
+      expect(json['ownerReferences']?.first['name'], equals('test-deployment'));
+
+      final decoded = ObjectMeta.fromJson(json);
+      expect(decoded.ownerReferences?.first.name, equals('test-deployment'));
+      expect(decoded.ownerReferences?.first.kind, equals('Deployment'));
+    });
+
+    test('handles managedFields serialization', () {
+      final field = ManagedFieldEntry(
+        manager: 'test-manager',
+        operation: 'Update',
+        apiVersion: 'v1',
+      );
+
+      final meta = ObjectMeta()..managedFields = [field];
+      final json = meta.toJson();
+
+      expect(json['managedFields'], isList);
+      expect(json['managedFields']?.first['manager'], equals('test-manager'));
+
+      final decoded = ObjectMeta.fromJson(json);
+      expect(decoded.managedFields?.first.manager, equals('test-manager'));
+      expect(decoded.managedFields?.first.operation, equals('Update'));
+    });
+
+    test('excludes null values from JSON', () {
+      final meta = ObjectMeta(name: 'test');
+      final json = meta.toJson();
+
+      expect(json.containsKey('namespace'), isFalse);
+      expect(json.containsKey('labels'), isFalse);
+      expect(json.containsKey('annotations'), isFalse);
+      expect(json.containsKey('ownerReferences'), isFalse);
+      expect(json.containsKey('managedFields'), isFalse);
     });
   });
 }

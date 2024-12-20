@@ -7,14 +7,11 @@ part of 'lifecycle.dart';
 // **************************************************************************
 
 Lifecycle _$LifecycleFromJson(Map<String, dynamic> json) => Lifecycle()
-  ..postStart = json['postStart'] == null
-      ? null
-      : LifecycleHandler.fromJson(json['postStart'] as Map<String, dynamic>)
-  ..preStop = json['preStop'] == null
-      ? null
-      : LifecycleHandler.fromJson(json['preStop'] as Map<String, dynamic>);
+  ..postStart = _postStartFromJson(json['postStart'] as Map<String, dynamic>?)
+  ..preStop = _preStopFromJson(json['preStop'] as Map<String, dynamic>?);
 
 Map<String, dynamic> _$LifecycleToJson(Lifecycle instance) => <String, dynamic>{
-      if (instance.postStart case final value?) 'postStart': value,
-      if (instance.preStop case final value?) 'preStop': value,
+      if (_postStartToJson(instance.postStart) case final value?)
+        'postStart': value,
+      if (_preStopToJson(instance.preStop) case final value?) 'preStop': value,
     };

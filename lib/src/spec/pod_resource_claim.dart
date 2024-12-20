@@ -29,6 +29,12 @@ part 'pod_resource_claim.g.dart';
 ///
 /// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/workloads/pods/pod-resource-claims/)
 /// for more details about Pod resource claims.
+ClaimSource? _sourceFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : ClaimSource.fromJson(json);
+
+Map<String, dynamic>? _sourceToJson(ClaimSource? instance) =>
+    instance?.toJson();
+
 @JsonSerializable()
 class PodResourceClaim {
   PodResourceClaim();
@@ -37,13 +43,16 @@ class PodResourceClaim {
   ///
   /// This name is used to reference the claim from container specifications
   /// and must be unique within the pod.
-  late String name;
+  @JsonKey(includeIfNull: false)
+  String? name;
 
   /// The source configuration for obtaining this resource.
   ///
   /// Specifies how the resource should be allocated or referenced,
   /// such as from an existing ResourceClaim or created dynamically.
-  late ClaimSource source;
+  @JsonKey(
+      includeIfNull: false, fromJson: _sourceFromJson, toJson: _sourceToJson)
+  ClaimSource? source;
 
   factory PodResourceClaim.fromJson(Map<String, dynamic> json) =>
       _$PodResourceClaimFromJson(json);

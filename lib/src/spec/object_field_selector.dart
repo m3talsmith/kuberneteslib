@@ -41,6 +41,7 @@ class ObjectFieldSelector {
   ///
   /// Typically 'v1' for core Kubernetes resources.
   /// Must match the API version of the referenced resource.
+  @JsonKey(includeIfNull: false)
   String? apiVersion;
 
   /// Path to the desired field in the specified API version.
@@ -50,6 +51,7 @@ class ObjectFieldSelector {
   /// - 'metadata.namespace': Pod namespace
   /// - 'spec.nodeName': Node name
   /// - 'status.podIP': Pod IP address
+  @JsonKey(includeIfNull: false)
   String? fieldPath;
 
   factory ObjectFieldSelector.fromJson(Map<String, dynamic> json) =>

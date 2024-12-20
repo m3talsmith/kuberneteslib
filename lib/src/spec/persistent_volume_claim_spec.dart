@@ -59,12 +59,16 @@ LabelSelector? _selectorFromJson(Map<String, dynamic>? json) =>
 /// for more details about persistent volume claims.
 @JsonSerializable()
 class PersistentVolumeClaimSpec {
-  PersistentVolumeClaimSpec()
-      : accessModes = [],
-        dataSource = TypedLocalObjectReference(),
-        dataSourceRef = TypedObjectReference(),
-        resources = ResourceRequirements(),
-        selector = LabelSelector();
+  PersistentVolumeClaimSpec({
+    this.accessModes,
+    this.dataSource,
+    this.dataSourceRef,
+    this.resources,
+    this.selector,
+    this.storageClassName,
+    this.volumeMode,
+    this.volumeName,
+  });
 
   /// List of desired access modes for the volume.
   ///
@@ -73,6 +77,7 @@ class PersistentVolumeClaimSpec {
   /// - `ReadOnlyMany` (ROX): Volume can be mounted as read-only by many nodes
   /// - `ReadWriteMany` (RWX): Volume can be mounted as read-write by many nodes
   /// - `ReadWriteOncePod` (RWOP): Volume can be mounted as read-write by a single pod
+  @JsonKey(includeIfNull: false)
   List<String>? accessModes;
 
   /// Reference to a volume snapshot or other data source in the same namespace.
@@ -119,6 +124,7 @@ class PersistentVolumeClaimSpec {
   ///
   /// The StorageClass determines the provisioning behavior and type of storage.
   /// Use empty string for immediate volume binding, or null to use the default class.
+  @JsonKey(includeIfNull: false)
   String? storageClassName;
 
   /// Defines how the volume should be formatted and mounted.
@@ -126,12 +132,14 @@ class PersistentVolumeClaimSpec {
   /// Values:
   /// - `Filesystem`: Traditional filesystem-based storage (default)
   /// - `Block`: Raw block device without a filesystem
+  @JsonKey(includeIfNull: false)
   String? volumeMode;
 
   /// Name of a specific PersistentVolume to bind to.
   ///
   /// If specified, binds exclusively to the named volume.
   /// Volume must exist and match other requirements (size, access modes, etc.).
+  @JsonKey(includeIfNull: false)
   String? volumeName;
 
   factory PersistentVolumeClaimSpec.fromJson(Map<String, dynamic> json) =>

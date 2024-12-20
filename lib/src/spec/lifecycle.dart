@@ -42,7 +42,10 @@ class Lifecycle {
   /// This handler runs asynchronously with respect to the container's main process
   /// and is executed after the container is created. The container's status will
   /// be marked as unhealthy and be restarted if the handler fails.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _postStartFromJson,
+      toJson: _postStartToJson)
   LifecycleHandler? postStart;
 
   /// Handler to be executed before the container stops.
@@ -50,7 +53,8 @@ class Lifecycle {
   /// This handler runs synchronously before the container is terminated,
   /// blocking the container's termination until the handler completes or until
   /// the termination grace period is reached.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false, fromJson: _preStopFromJson, toJson: _preStopToJson)
   LifecycleHandler? preStop;
 
   factory Lifecycle.fromJson(Map<String, dynamic> json) =>
@@ -58,3 +62,15 @@ class Lifecycle {
 
   Map<String, dynamic> toJson() => _$LifecycleToJson(this);
 }
+
+LifecycleHandler? _postStartFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : LifecycleHandler.fromJson(json);
+
+Map<String, dynamic>? _postStartToJson(LifecycleHandler? instance) =>
+    instance?.toJson();
+
+LifecycleHandler? _preStopFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : LifecycleHandler.fromJson(json);
+
+Map<String, dynamic>? _preStopToJson(LifecycleHandler? instance) =>
+    instance?.toJson();

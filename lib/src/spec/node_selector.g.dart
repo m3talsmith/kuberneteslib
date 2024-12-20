@@ -13,5 +13,6 @@ NodeSelector _$NodeSelectorFromJson(Map<String, dynamic> json) => NodeSelector(
 
 Map<String, dynamic> _$NodeSelectorToJson(NodeSelector instance) =>
     <String, dynamic>{
-      'nodeSelectorTerms': _nodeSelectorTermToJson(instance.nodeSelectorTerms),
+      if (_nodeSelectorTermToJson(instance.nodeSelectorTerms) case final value?)
+        'nodeSelectorTerms': value,
     };

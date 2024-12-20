@@ -17,12 +17,9 @@ PodSpec _$PodSpecFromJson(Map<String, dynamic> json) => PodSpec(
           json['dnsConfig'], const PodDNSConfigConverter().fromJson),
       dnsPolicy: json['dnsPolicy'] as String?,
       enableServiceLinks: json['enableServiceLinks'] as bool?,
-      ephemeralContainers: (json['ephemeralContainers'] as List<dynamic>?)
-          ?.map((e) => EphemeralContainer.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      hostAliases: (json['hostAliases'] as List<dynamic>?)
-          ?.map((e) => HostAlias.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      ephemeralContainers:
+          _ephemeralContainersFromJson(json['ephemeralContainers'] as List?),
+      hostAliases: _hostAliasesFromJson(json['hostAliases'] as List?),
       hostIPC: json['hostIPC'] as bool?,
       hostNetwork: json['hostNetwork'] as bool?,
       hostUsers: json['hostUsers'] as bool?,
@@ -35,25 +32,20 @@ PodSpec _$PodSpecFromJson(Map<String, dynamic> json) => PodSpec(
               json['initContainers'], const ContainersConverter().fromJson),
       nodeName: json['nodeName'] as String?,
       nodeSelector: json['nodeSelector'] as Map<String, dynamic>?,
-      os: json['os'] == null
-          ? null
-          : PodOS.fromJson(json['os'] as Map<String, dynamic>),
+      os: _podOSFromJson(json['os'] as Map<String, dynamic>?),
       overhead: json['overhead'] as Map<String, dynamic>?,
       preemptionPolicy: json['preemptionPolicy'] as String?,
       priority: (json['priority'] as num?)?.toInt(),
       priorityClassName: json['priorityClassName'] as String?,
-      readinessGates: (json['readinessGates'] as List<dynamic>?)
-          ?.map((e) => PodReadinessGate.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      resourceClaims: (json['resourceClaims'] as List<dynamic>?)
-          ?.map((e) => PodResourceClaim.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      readinessGates:
+          _podReadinessGatesFromJson(json['readinessGates'] as List?),
+      resourceClaims:
+          _podResourceClaimsFromJson(json['resourceClaims'] as List?),
       resourcePolicy: json['resourcePolicy'] as String?,
       runtimeClassName: json['runtimeClassName'] as String?,
       schedulerName: json['schedulerName'] as String?,
-      schedulingGates: (json['schedulingGates'] as List<dynamic>?)
-          ?.map((e) => PodSchedulingGate.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      schedulingGates:
+          _podSchedulingGatesFromJson(json['schedulingGates'] as List?),
       securityContext:
           _$JsonConverterFromJson<Map<String, dynamic>, PodSecurityContext>(
               json['securityContext'],
@@ -65,17 +57,10 @@ PodSpec _$PodSpecFromJson(Map<String, dynamic> json) => PodSpec(
       subdomain: json['subdomain'] as String?,
       terminationGracePeriodSeconds:
           (json['terminationGracePeriodSeconds'] as num?)?.toInt(),
-      tolerations: (json['tolerations'] as List<dynamic>?)
-          ?.map((e) => Toleration.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      topologySpreadConstraints:
-          (json['topologySpreadConstraints'] as List<dynamic>?)
-              ?.map((e) =>
-                  TopologySpreadConstraint.fromJson(e as Map<String, dynamic>))
-              .toList(),
-      volumes: (json['volumes'] as List<dynamic>?)
-          ?.map((e) => Volume.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      tolerations: _tolerationsFromJson(json['tolerations'] as List?),
+      topologySpreadConstraints: _topologySpreadConstraintsFromJson(
+          json['topologySpreadConstraints'] as List?),
+      volumes: _volumesFromJson(json['volumes'] as List?),
       kind: json['kind'] as String? ?? 'pod',
     );
 
@@ -98,9 +83,11 @@ Map<String, dynamic> _$PodSpecToJson(PodSpec instance) => <String, dynamic>{
       if (instance.dnsPolicy case final value?) 'dnsPolicy': value,
       if (instance.enableServiceLinks case final value?)
         'enableServiceLinks': value,
-      if (instance.ephemeralContainers case final value?)
+      if (_ephemeralContainersToJson(instance.ephemeralContainers)
+          case final value?)
         'ephemeralContainers': value,
-      if (instance.hostAliases case final value?) 'hostAliases': value,
+      if (_hostAliasesToJson(instance.hostAliases) case final value?)
+        'hostAliases': value,
       if (instance.hostIPC case final value?) 'hostIPC': value,
       if (instance.hostNetwork case final value?) 'hostNetwork': value,
       if (instance.hostUsers case final value?) 'hostUsers': value,
@@ -116,20 +103,23 @@ Map<String, dynamic> _$PodSpecToJson(PodSpec instance) => <String, dynamic>{
         'initContainers': value,
       if (instance.nodeName case final value?) 'nodeName': value,
       if (instance.nodeSelector case final value?) 'nodeSelector': value,
-      if (instance.os case final value?) 'os': value,
+      if (_podOSToJson(instance.os) case final value?) 'os': value,
       if (instance.overhead case final value?) 'overhead': value,
       if (instance.preemptionPolicy case final value?)
         'preemptionPolicy': value,
       if (instance.priority case final value?) 'priority': value,
       if (instance.priorityClassName case final value?)
         'priorityClassName': value,
-      if (instance.readinessGates case final value?) 'readinessGates': value,
-      if (instance.resourceClaims case final value?) 'resourceClaims': value,
+      if (_podReadinessGatesToJson(instance.readinessGates) case final value?)
+        'readinessGates': value,
+      if (_podResourceClaimsToJson(instance.resourceClaims) case final value?)
+        'resourceClaims': value,
       if (instance.resourcePolicy case final value?) 'resourcePolicy': value,
       if (instance.runtimeClassName case final value?)
         'runtimeClassName': value,
       if (instance.schedulerName case final value?) 'schedulerName': value,
-      if (instance.schedulingGates case final value?) 'schedulingGates': value,
+      if (_podSchedulingGatesToJson(instance.schedulingGates) case final value?)
+        'schedulingGates': value,
       if (_$JsonConverterToJson<Map<String, dynamic>, PodSecurityContext>(
               instance.securityContext,
               const PodSecurityContextConverter().toJson)
@@ -145,10 +135,12 @@ Map<String, dynamic> _$PodSpecToJson(PodSpec instance) => <String, dynamic>{
       if (instance.subdomain case final value?) 'subdomain': value,
       if (instance.terminationGracePeriodSeconds case final value?)
         'terminationGracePeriodSeconds': value,
-      if (instance.tolerations case final value?) 'tolerations': value,
-      if (instance.topologySpreadConstraints case final value?)
+      if (_tolerationsToJson(instance.tolerations) case final value?)
+        'tolerations': value,
+      if (_topologySpreadConstraintsToJson(instance.topologySpreadConstraints)
+          case final value?)
         'topologySpreadConstraints': value,
-      if (instance.volumes case final value?) 'volumes': value,
+      if (_volumesToJson(instance.volumes) case final value?) 'volumes': value,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(

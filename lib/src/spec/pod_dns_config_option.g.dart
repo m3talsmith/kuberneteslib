@@ -8,11 +8,11 @@ part of 'pod_dns_config_option.dart';
 
 PodDNSConfigOption _$PodDNSConfigOptionFromJson(Map<String, dynamic> json) =>
     PodDNSConfigOption()
-      ..name = json['name'] as String
+      ..name = json['name'] as String?
       ..value = json['value'] as String?;
 
 Map<String, dynamic> _$PodDNSConfigOptionToJson(PodDNSConfigOption instance) =>
     <String, dynamic>{
-      'name': instance.name,
+      if (instance.name case final value?) 'name': value,
       if (instance.value case final value?) 'value': value,
     };

@@ -32,6 +32,14 @@ part 'pod_dns_config.g.dart';
 ///
 /// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 /// for more details about Pod DNS configuration.
+
+List<PodDNSConfigOption>? _optionsFromJson(List<dynamic>? json) => json
+    ?.map((e) => PodDNSConfigOption.fromJson(e as Map<String, dynamic>))
+    .toList();
+
+List<dynamic>? _optionsToJson(List<PodDNSConfigOption>? instance) =>
+    instance?.map((e) => e.toJson()).toList();
+
 @JsonSerializable()
 class PodDNSConfig {
   PodDNSConfig();
@@ -41,6 +49,7 @@ class PodDNSConfig {
   /// These nameservers are used in the order specified. If this field is empty,
   /// the pod inherits the name server settings from the node.
   /// Example: ['8.8.8.8', '8.8.4.4']
+  @JsonKey(includeIfNull: false)
   List<String>? nameservers;
 
   /// List of DNS resolver options for the pod.
@@ -50,6 +59,8 @@ class PodDNSConfig {
   /// - ndots: minimum number of dots in name for absolute lookup
   /// - timeout: DNS query timeout
   /// - attempts: number of DNS query attempts
+  @JsonKey(
+      includeIfNull: false, fromJson: _optionsFromJson, toJson: _optionsToJson)
   List<PodDNSConfigOption>? options;
 
   /// List of DNS search domains for hostname lookup in the pod.
@@ -57,6 +68,7 @@ class PodDNSConfig {
   /// These search domains are used to expand short names into fully qualified
   /// domain names. They are tried in the order specified.
   /// Example: ['ns1.svc.cluster.local', 'svc.cluster.local', 'cluster.local']
+  @JsonKey(includeIfNull: false)
   List<String>? searches;
 
   factory PodDNSConfig.fromJson(Map<String, dynamic> json) =>

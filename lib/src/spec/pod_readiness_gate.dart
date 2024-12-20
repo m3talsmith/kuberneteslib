@@ -27,7 +27,7 @@ part 'pod_readiness_gate.g.dart';
 /// for more details about Pod readiness gates.
 @JsonSerializable()
 class PodReadinessGate {
-  PodReadinessGate();
+  PodReadinessGate({this.conditionType});
 
   /// The condition type that must be true for pod readiness.
   ///
@@ -37,7 +37,8 @@ class PodReadinessGate {
   /// - 'custom.io/app-ready': Application-specific readiness
   /// - 'example.com/feature-available': Feature availability
   /// - 'pod-ready': Basic pod readiness
-  late String conditionType;
+  @JsonKey(includeIfNull: false)
+  String? conditionType;
 
   factory PodReadinessGate.fromJson(Map<String, dynamic> json) =>
       _$PodReadinessGateFromJson(json);

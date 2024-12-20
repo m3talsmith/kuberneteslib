@@ -148,11 +148,17 @@ class PodSpec implements ObjectSpec {
 
   /// Temporary containers that may be added to an existing pod for user-initiated activities.
   /// Commonly used for debugging purposes.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _ephemeralContainersFromJson,
+      toJson: _ephemeralContainersToJson)
   List<EphemeralContainer>? ephemeralContainers;
 
   /// Additional entries to add to the pod's /etc/hosts file.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _hostAliasesFromJson,
+      toJson: _hostAliasesToJson)
   List<HostAlias>? hostAliases;
 
   /// Use the host's IPC namespace.
@@ -196,7 +202,7 @@ class PodSpec implements ObjectSpec {
   Map<String, dynamic>? nodeSelector;
 
   /// Operating system configuration for the pod.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, fromJson: _podOSFromJson, toJson: _podOSToJson)
   PodOS? os;
 
   /// Resources consumed by the pod infrastructure, not directly by its containers.
@@ -217,11 +223,17 @@ class PodSpec implements ObjectSpec {
   String? priorityClassName;
 
   /// Additional conditions that must be met for pod readiness.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _podReadinessGatesFromJson,
+      toJson: _podReadinessGatesToJson)
   List<PodReadinessGate>? readinessGates;
 
   /// Claims for resources that the pod requires.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _podResourceClaimsFromJson,
+      toJson: _podResourceClaimsToJson)
   List<PodResourceClaim>? resourceClaims;
 
   /// Resource management policy for the pod.
@@ -239,7 +251,10 @@ class PodSpec implements ObjectSpec {
   String? schedulerName;
 
   /// Gates that must be satisfied before the pod can be scheduled.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _podSchedulingGatesFromJson,
+      toJson: _podSchedulingGatesToJson)
   List<PodSchedulingGate>? schedulingGates;
 
   /// Security context settings that apply to the entire pod.
@@ -273,15 +288,22 @@ class PodSpec implements ObjectSpec {
   int? terminationGracePeriodSeconds;
 
   /// Pod scheduling rules that allow it to tolerate specific node taints.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _tolerationsFromJson,
+      toJson: _tolerationsToJson)
   List<Toleration>? tolerations;
 
   /// Rules for how pods ought to spread across topology domains.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _topologySpreadConstraintsFromJson,
+      toJson: _topologySpreadConstraintsToJson)
   List<TopologySpreadConstraint>? topologySpreadConstraints;
 
   /// List of volumes that can be mounted by containers in the pod.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false, fromJson: _volumesFromJson, toJson: _volumesToJson)
   List<Volume>? volumes;
 
   /// Creates a new PodSpec from a Map representation.
@@ -301,3 +323,71 @@ List<Container>? _containersFromJson(List<dynamic>? json) =>
 
 List<Map<String, dynamic>>? _containersToJson(List<Container>? containers) =>
     containers?.map((e) => e.toJson()).toList();
+
+List<Volume>? _volumesFromJson(List<dynamic>? json) =>
+    json?.map((e) => Volume.fromJson(e as Map<String, dynamic>)).toList();
+
+List<Map<String, dynamic>>? _volumesToJson(List<Volume>? volumes) =>
+    volumes?.map((e) => e.toJson()).toList();
+
+List<TopologySpreadConstraint>? _topologySpreadConstraintsFromJson(
+        List<dynamic>? json) =>
+    json
+        ?.map(
+            (e) => TopologySpreadConstraint.fromJson(e as Map<String, dynamic>))
+        .toList();
+
+List<Map<String, dynamic>>? _topologySpreadConstraintsToJson(
+        List<TopologySpreadConstraint>? constraints) =>
+    constraints?.map((e) => e.toJson()).toList();
+
+List<EphemeralContainer>? _ephemeralContainersFromJson(List<dynamic>? json) =>
+    json
+        ?.map((e) => EphemeralContainer.fromJson(e as Map<String, dynamic>))
+        .toList();
+
+List<Map<String, dynamic>>? _ephemeralContainersToJson(
+        List<EphemeralContainer>? containers) =>
+    containers?.map((e) => e.toJson()).toList();
+
+List<HostAlias>? _hostAliasesFromJson(List<dynamic>? json) =>
+    json?.map((e) => HostAlias.fromJson(e as Map<String, dynamic>)).toList();
+
+List<Map<String, dynamic>>? _hostAliasesToJson(List<HostAlias>? aliases) =>
+    aliases?.map((e) => e.toJson()).toList();
+
+List<PodReadinessGate>? _podReadinessGatesFromJson(List<dynamic>? json) => json
+    ?.map((e) => PodReadinessGate.fromJson(e as Map<String, dynamic>))
+    .toList();
+
+List<Map<String, dynamic>>? _podReadinessGatesToJson(
+        List<PodReadinessGate>? gates) =>
+    gates?.map((e) => e.toJson()).toList();
+
+List<PodResourceClaim>? _podResourceClaimsFromJson(List<dynamic>? json) => json
+    ?.map((e) => PodResourceClaim.fromJson(e as Map<String, dynamic>))
+    .toList();
+
+List<Map<String, dynamic>>? _podResourceClaimsToJson(
+        List<PodResourceClaim>? claims) =>
+    claims?.map((e) => e.toJson()).toList();
+
+List<PodSchedulingGate>? _podSchedulingGatesFromJson(List<dynamic>? json) =>
+    json
+        ?.map((e) => PodSchedulingGate.fromJson(e as Map<String, dynamic>))
+        .toList();
+
+List<Map<String, dynamic>>? _podSchedulingGatesToJson(
+        List<PodSchedulingGate>? gates) =>
+    gates?.map((e) => e.toJson()).toList();
+
+List<Toleration>? _tolerationsFromJson(List<dynamic>? json) =>
+    json?.map((e) => Toleration.fromJson(e as Map<String, dynamic>)).toList();
+
+List<Map<String, dynamic>>? _tolerationsToJson(List<Toleration>? tolerations) =>
+    tolerations?.map((e) => e.toJson()).toList();
+
+PodOS? _podOSFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : PodOS.fromJson(json);
+
+Map<String, dynamic>? _podOSToJson(PodOS? os) => os?.toJson();
