@@ -15,9 +15,10 @@ Toleration _$TolerationFromJson(Map<String, dynamic> json) => Toleration()
 
 Map<String, dynamic> _$TolerationToJson(Toleration instance) =>
     <String, dynamic>{
-      'effect': instance.effect,
-      'key': instance.key,
-      'operator': instance.operator,
-      'tolerationSeconds': instance.tolerationSeconds,
-      'value': instance.value,
+      if (instance.effect case final value?) 'effect': value,
+      if (instance.key case final value?) 'key': value,
+      if (instance.operator case final value?) 'operator': value,
+      if (instance.tolerationSeconds case final value?)
+        'tolerationSeconds': value,
+      if (instance.value case final value?) 'value': value,
     };

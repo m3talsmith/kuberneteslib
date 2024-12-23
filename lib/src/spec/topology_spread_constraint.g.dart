@@ -9,10 +9,8 @@ part of 'topology_spread_constraint.dart';
 TopologySpreadConstraint _$TopologySpreadConstraintFromJson(
         Map<String, dynamic> json) =>
     TopologySpreadConstraint()
-      ..labelSelector = json['labelSelector'] == null
-          ? null
-          : LabelSelector.fromJson(
-              json['labelSelector'] as Map<String, dynamic>)
+      ..labelSelector =
+          _labelSelectorFromJson(json['labelSelector'] as Map<String, dynamic>?)
       ..matchLabelKeys = (json['matchLabelKeys'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList()
@@ -26,12 +24,16 @@ TopologySpreadConstraint _$TopologySpreadConstraintFromJson(
 Map<String, dynamic> _$TopologySpreadConstraintToJson(
         TopologySpreadConstraint instance) =>
     <String, dynamic>{
-      'labelSelector': instance.labelSelector,
-      'matchLabelKeys': instance.matchLabelKeys,
-      'maxSkew': instance.maxSkew,
-      'minDomains': instance.minDomains,
-      'nodeAffinityPolicy': instance.nodeAffinityPolicy,
-      'nodeTaintsPolicy': instance.nodeTaintsPolicy,
-      'topologyKey': instance.topologyKey,
-      'whenUnsatisfiable': instance.whenUnsatisfiable,
+      if (_labelSelectorToJson(instance.labelSelector) case final value?)
+        'labelSelector': value,
+      if (instance.matchLabelKeys case final value?) 'matchLabelKeys': value,
+      if (instance.maxSkew case final value?) 'maxSkew': value,
+      if (instance.minDomains case final value?) 'minDomains': value,
+      if (instance.nodeAffinityPolicy case final value?)
+        'nodeAffinityPolicy': value,
+      if (instance.nodeTaintsPolicy case final value?)
+        'nodeTaintsPolicy': value,
+      if (instance.topologyKey case final value?) 'topologyKey': value,
+      if (instance.whenUnsatisfiable case final value?)
+        'whenUnsatisfiable': value,
     };

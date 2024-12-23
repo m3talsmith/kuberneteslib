@@ -29,7 +29,10 @@ part 'volume_device.g.dart';
 /// for more details about block device volumes.
 @JsonSerializable()
 class VolumeDevice {
-  VolumeDevice({required this.devicePath, required this.name});
+  VolumeDevice({
+    this.devicePath,
+    this.name,
+  });
 
   /// Path inside the container at which the device will be mounted.
   ///
@@ -37,12 +40,14 @@ class VolumeDevice {
   /// - '/dev/xvdf'
   /// - '/dev/sda'
   /// - '/dev/block/volume1'
-  String devicePath;
+  @JsonKey(includeIfNull: false)
+  String? devicePath;
 
   /// Name of the volume that should be mounted as a device.
   ///
   /// Must match the name of a persistentVolumeClaim in the pod.
-  String name;
+  @JsonKey(includeIfNull: false)
+  String? name;
 
   factory VolumeDevice.fromJson(Map<String, dynamic> json) =>
       _$VolumeDeviceFromJson(json);

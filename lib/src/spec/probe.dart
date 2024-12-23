@@ -43,7 +43,10 @@ class Probe {
   /// The command's exit status indicates container health:
   /// - 0: Success
   /// - Non-zero: Failure
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _execActionFromJson,
+      toJson: _execActionToJson)
   ExecAction? exec;
 
   /// Number of consecutive failures needed to consider the probe failed.
@@ -55,13 +58,19 @@ class Probe {
   /// gRPC-based health checking configuration.
   ///
   /// Uses gRPC health checking protocol to determine container health.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _grpcActionFromJson,
+      toJson: _grpcActionToJson)
   GRPCAction? grpc;
 
   /// HTTP GET request configuration for health checking.
   ///
   /// Probe succeeds if the HTTP response code is >= 200 and < 400.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _httpGetActionFromJson,
+      toJson: _httpGetActionToJson)
   HTTPGetAction? httpGet;
 
   /// Delay before first probe execution after container starts.
@@ -86,7 +95,10 @@ class Probe {
   /// TCP socket connection test configuration.
   ///
   /// Probe succeeds if connection can be established.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _tcpSocketActionFromJson,
+      toJson: _tcpSocketActionToJson)
   TCPSocketAction? tcpSocket;
 
   /// Grace period for stopping container after failed probe.
@@ -106,3 +118,27 @@ class Probe {
 
   Map<String, dynamic> toJson() => _$ProbeToJson(this);
 }
+
+ExecAction? _execActionFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : ExecAction.fromJson(json);
+
+Map<String, dynamic>? _execActionToJson(ExecAction? instance) =>
+    instance?.toJson();
+
+GRPCAction? _grpcActionFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : GRPCAction.fromJson(json);
+
+Map<String, dynamic>? _grpcActionToJson(GRPCAction? instance) =>
+    instance?.toJson();
+
+HTTPGetAction? _httpGetActionFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : HTTPGetAction.fromJson(json);
+
+Map<String, dynamic>? _httpGetActionToJson(HTTPGetAction? instance) =>
+    instance?.toJson();
+
+TCPSocketAction? _tcpSocketActionFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : TCPSocketAction.fromJson(json);
+
+Map<String, dynamic>? _tcpSocketActionToJson(TCPSocketAction? instance) =>
+    instance?.toJson();

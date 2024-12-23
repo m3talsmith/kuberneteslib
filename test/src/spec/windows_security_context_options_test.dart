@@ -1,5 +1,5 @@
-import 'package:test/test.dart';
 import 'package:kuberneteslib/src/spec/windows_security_context_options.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('WindowsSecurityContextOptions', () {
@@ -8,81 +8,73 @@ void main() {
       expect(options, isNotNull);
     });
 
-    test('has correct default values', () {
-      final options = WindowsSecurityContextOptions();
-      expect(options.gmsaCredentialSpec, isNull);
-      expect(options.gmsaCredentialSpecName, isNull);
-      expect(options.hostProcess, isNull);
-      expect(options.runAsUserName, isNull);
-    });
-
-    test('can be instantiated with custom values', () {
+    test('supports JSON serialization', () {
       final options = WindowsSecurityContextOptions(
-        gmsaCredentialSpec: 'credSpec',
-        gmsaCredentialSpecName: 'credSpecName',
+        gmsaCredentialSpec: '{"credential": "spec"}',
+        gmsaCredentialSpecName: 'webapp-gmsa',
         hostProcess: true,
         runAsUserName: 'NT AUTHORITY\\SYSTEM',
       );
 
-      expect(options.gmsaCredentialSpec, equals('credSpec'));
-      expect(options.gmsaCredentialSpecName, equals('credSpecName'));
-      expect(options.hostProcess, isTrue);
-      expect(options.runAsUserName, equals('NT AUTHORITY\\SYSTEM'));
+      final json = options.toJson();
+      expect(json, {
+        'gmsaCredentialSpec': '{"credential": "spec"}',
+        'gmsaCredentialSpecName': 'webapp-gmsa',
+        'hostProcess': true,
+        'runAsUserName': 'NT AUTHORITY\\SYSTEM',
+      });
     });
 
-    group('serialization', () {
-      test('toJson() creates correct JSON', () {
-        final options = WindowsSecurityContextOptions(
-          gmsaCredentialSpec: 'credSpec',
-          gmsaCredentialSpecName: 'credSpecName',
-          hostProcess: true,
-          runAsUserName: 'NT AUTHORITY\\SYSTEM',
-        );
+    test('supports JSON deserialization', () {
+      final json = {
+        'gmsaCredentialSpec': '{"credential": "spec"}',
+        'gmsaCredentialSpecName': 'webapp-gmsa',
+        'hostProcess': true,
+        'runAsUserName': 'NT AUTHORITY\\SYSTEM',
+      };
 
+      final options = WindowsSecurityContextOptions.fromJson(json);
+      expect(options.gmsaCredentialSpec, '{"credential": "spec"}');
+      expect(options.gmsaCredentialSpecName, 'webapp-gmsa');
+      expect(options.hostProcess, true);
+      expect(options.runAsUserName, 'NT AUTHORITY\\SYSTEM');
+    });
+
+    test('excludes null values during serialization', () {
+      final options = WindowsSecurityContextOptions(
+        gmsaCredentialSpec: null,
+        gmsaCredentialSpecName: 'webapp-gmsa',
+        hostProcess: null,
+        runAsUserName: null,
+      );
+
+      final json = options.toJson();
+      expect(json, {
+        'gmsaCredentialSpecName': 'webapp-gmsa',
+      });
+      expect(json.containsKey('gmsaCredentialSpec'), false);
+      expect(json.containsKey('hostProcess'), false);
+      expect(json.containsKey('runAsUserName'), false);
+    });
+
+    test('handles empty initialization', () {
+      final options = WindowsSecurityContextOptions();
+      final json = options.toJson();
+      expect(json, isEmpty);
+    });
+
+    test('supports common Windows service accounts', () {
+      final serviceAccounts = [
+        'NT AUTHORITY\\SYSTEM',
+        'NT AUTHORITY\\LOCAL SERVICE',
+        'NT AUTHORITY\\NETWORK SERVICE',
+      ];
+
+      for (final account in serviceAccounts) {
+        final options = WindowsSecurityContextOptions(runAsUserName: account);
         final json = options.toJson();
-
-        expect(
-            json,
-            equals({
-              'gmsaCredentialSpec': 'credSpec',
-              'gmsaCredentialSpecName': 'credSpecName',
-              'hostProcess': true,
-              'runAsUserName': 'NT AUTHORITY\\SYSTEM',
-            }));
-      });
-
-      test('toJson() omits null values', () {
-        final options = WindowsSecurityContextOptions();
-        final json = options.toJson();
-
-        expect(json, isEmpty);
-      });
-
-      test('fromJson() creates correct instance', () {
-        final json = {
-          'gmsaCredentialSpec': 'credSpec',
-          'gmsaCredentialSpecName': 'credSpecName',
-          'hostProcess': true,
-          'runAsUserName': 'NT AUTHORITY\\SYSTEM',
-        };
-
-        final options = WindowsSecurityContextOptions.fromJson(json);
-
-        expect(options.gmsaCredentialSpec, equals('credSpec'));
-        expect(options.gmsaCredentialSpecName, equals('credSpecName'));
-        expect(options.hostProcess, isTrue);
-        expect(options.runAsUserName, equals('NT AUTHORITY\\SYSTEM'));
-      });
-
-      test('fromJson() handles missing values', () {
-        final json = <String, dynamic>{};
-        final options = WindowsSecurityContextOptions.fromJson(json);
-
-        expect(options.gmsaCredentialSpec, isNull);
-        expect(options.gmsaCredentialSpecName, isNull);
-        expect(options.hostProcess, isNull);
-        expect(options.runAsUserName, isNull);
-      });
+        expect(json['runAsUserName'], account);
+      }
     });
   });
 }

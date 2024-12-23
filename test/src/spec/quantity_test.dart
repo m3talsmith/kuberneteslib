@@ -1,51 +1,41 @@
-import 'package:test/test.dart';
 import 'package:kuberneteslib/src/spec/quantity.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('Quantity', () {
     test('can be null', () {
-      Quantity quantity;
-      quantity = null;
+      const Quantity quantity = null;
       expect(quantity, isNull);
     });
 
-    test('accepts valid CPU formats', () {
-      Quantity quantity;
-
-      quantity = '100m'; // 100 millicpu
-      expect(quantity, equals('100m'));
-
-      quantity = '0.5'; // 500 millicpu
-      expect(quantity, equals('0.5'));
-
-      quantity = '2'; // 2 CPU cores
-      expect(quantity, equals('2'));
+    test('supports decimal CPU values', () {
+      Quantity cpuQuantity = '0.5';
+      expect(cpuQuantity, equals('0.5'));
     });
 
-    test('accepts valid memory formats', () {
-      Quantity quantity;
-
-      quantity = '256Mi'; // Mebibytes
-      expect(quantity, equals('256Mi'));
-
-      quantity = '1Gi'; // Gibibytes
-      expect(quantity, equals('1Gi'));
-
-      quantity = '512'; // Bytes
-      expect(quantity, equals('512'));
+    test('supports millicpu values', () {
+      Quantity cpuQuantity = '500m';
+      expect(cpuQuantity, equals('500m'));
     });
 
-    test('accepts valid storage formats', () {
-      Quantity quantity;
+    test('supports memory values with binary suffixes', () {
+      Quantity memoryQuantity = '256Mi';
+      expect(memoryQuantity, equals('256Mi'));
+    });
 
-      quantity = '10Gi'; // Gibibytes
-      expect(quantity, equals('10Gi'));
+    test('supports memory values with decimal suffixes', () {
+      Quantity memoryQuantity = '1G';
+      expect(memoryQuantity, equals('1G'));
+    });
 
-      quantity = '100M'; // Megabytes
-      expect(quantity, equals('100M'));
+    test('supports plain integer values', () {
+      Quantity plainQuantity = '1234';
+      expect(plainQuantity, equals('1234'));
+    });
 
-      quantity = '1Ti'; // Tebibytes
-      expect(quantity, equals('1Ti'));
+    test('supports storage values', () {
+      Quantity storageQuantity = '10Gi';
+      expect(storageQuantity, equals('10Gi'));
     });
   });
 }

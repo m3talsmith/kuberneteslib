@@ -3,6 +3,7 @@ import 'package:test/test.dart';
 import 'package:kuberneteslib/src/spec/spec.dart';
 import 'package:kuberneteslib/src/spec/pod_spec.dart';
 import 'package:kuberneteslib/src/helpers/object_spec_converter.dart';
+import 'package:kuberneteslib/src/resource/resource_kind.dart';
 
 void main() {
   group('ObjectSpecConverter', () {
@@ -45,23 +46,25 @@ void main() {
   });
 
   group('Spec', () {
-    test('creates PodSpec from JSON with explicit kind', () {
-      final json = {
+    test('creates from pod JSON with explicit kind', () {
+      final podJson = {
+        'kind': 'pod',
         'containers': [
           {
             'name': 'web',
             'image': 'nginx:1.14.2',
           }
-        ],
+        ]
       };
 
-      final spec = Spec.fromJson(json, kind: 'pod');
+      final spec = Spec.fromJson(podJson, kind: ResourceKind.pod.name);
+
       expect(spec.spec, isA<PodSpec>());
-      expect(spec.spec?.toJson()['containers'], json['containers']);
+      expect(spec.toJson(), equals(podJson));
     });
 
-    test('creates PodSpec from JSON with kind in metadata', () {
-      final json = {
+    test('creates from pod JSON with kind in metadata', () {
+      final podJson = {
         'metadata': {
           'kind': 'Pod',
         },
@@ -70,12 +73,13 @@ void main() {
             'name': 'web',
             'image': 'nginx:1.14.2',
           }
-        ],
+        ]
       };
 
-      final spec = Spec.fromJson(json);
+      final spec = Spec.fromJson(podJson);
+
       expect(spec.spec, isA<PodSpec>());
-      expect(spec.spec?.toJson()['containers'], json['containers']);
+      expect(spec.toJson()['containers'], equals(podJson['containers']));
     });
 
     test('defaults to PodSpec for unknown kind', () {
@@ -85,16 +89,18 @@ void main() {
             'name': 'web',
             'image': 'nginx:1.14.2',
           }
-        ],
+        ]
       };
 
-      final spec = Spec.fromJson(json, kind: 'Unknown');
+      final spec = Spec.fromJson(json, kind: 'unknown');
+
       expect(spec.spec, isA<PodSpec>());
     });
 
-    test('converts empty spec to empty JSON', () {
+    test('returns empty map for null spec', () {
       final spec = Spec(spec: null);
-      expect(spec.toJson(), isEmpty);
+
+      expect(spec.toJson(), equals({}));
     });
   });
 }

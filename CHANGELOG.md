@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.5.4
+
+- Added tests the rest of the spec classes
+
 ## 0.5.3
 
 - Added ClusterAuthStub

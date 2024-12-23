@@ -36,7 +36,8 @@ class TypedObjectReference {
   /// - 'apps' for Deployments
   /// - 'batch' for Jobs
   /// - 'networking.k8s.io' for Ingresses
-  String apiGroup;
+  @JsonKey(includeIfNull: false)
+  String? apiGroup;
 
   /// The kind of resource being referenced.
   ///
@@ -44,21 +45,25 @@ class TypedObjectReference {
   /// - 'Deployment'
   /// - 'StatefulSet'
   /// - 'Service'
-  String kind;
+  @JsonKey(includeIfNull: false)
+  String? kind;
 
   /// The name of the referenced resource.
-  String name;
+  @JsonKey(includeIfNull: false)
+  String? name;
 
   /// The namespace where the referenced resource exists.
   ///
   /// If empty, defaults to the namespace of the referring object.
-  String namespace;
+  @JsonKey(includeIfNull: false)
+  String? namespace;
 
-  TypedObjectReference()
-      : apiGroup = '',
-        kind = '',
-        name = '',
-        namespace = '';
+  TypedObjectReference({
+    this.apiGroup,
+    this.kind,
+    this.name,
+    this.namespace,
+  });
 
   factory TypedObjectReference.fromJson(Map<String, dynamic> json) =>
       _$TypedObjectReferenceFromJson(json);

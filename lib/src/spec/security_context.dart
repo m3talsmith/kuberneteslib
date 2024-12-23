@@ -49,7 +49,10 @@ class SecurityContext {
   /// Linux capabilities that can be added to or dropped from the container.
   ///
   /// Allows fine-grained control over specific Linux capabilities.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _capabilitiesFromJson,
+      toJson: _capabilitiesToJson)
   Capabilities? capabilities;
 
   /// Runs the container in privileged mode.
@@ -94,19 +97,28 @@ class SecurityContext {
   /// SELinux options to apply to the container.
   ///
   /// Configures Security-Enhanced Linux settings.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _seLinuxOptionsFromJson,
+      toJson: _seLinuxOptionsToJson)
   SELinuxOptions? seLinuxOptions;
 
   /// The seccomp profile applied to the container.
   ///
   /// Controls which system calls the container can make.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _seccompProfileFromJson,
+      toJson: _seccompProfileToJson)
   SeccompProfile? seccompProfile;
 
   /// Windows-specific security options.
   ///
   /// Only applicable when running containers on Windows nodes.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false,
+      fromJson: _windowsSecurityContextOptionsFromJson,
+      toJson: _windowsSecurityContextOptionsToJson)
   WindowsSecurityContextOptions? windowsOptions;
 
   factory SecurityContext.fromJson(Map<String, dynamic> json) =>
@@ -114,3 +126,29 @@ class SecurityContext {
 
   Map<String, dynamic> toJson() => _$SecurityContextToJson(this);
 }
+
+Capabilities? _capabilitiesFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : Capabilities.fromJson(json);
+
+Map<String, dynamic>? _capabilitiesToJson(Capabilities? instance) =>
+    instance?.toJson();
+
+SELinuxOptions? _seLinuxOptionsFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : SELinuxOptions.fromJson(json);
+
+Map<String, dynamic>? _seLinuxOptionsToJson(SELinuxOptions? instance) =>
+    instance?.toJson();
+
+SeccompProfile? _seccompProfileFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : SeccompProfile.fromJson(json);
+
+Map<String, dynamic>? _seccompProfileToJson(SeccompProfile? instance) =>
+    instance?.toJson();
+
+WindowsSecurityContextOptions? _windowsSecurityContextOptionsFromJson(
+        Map<String, dynamic>? json) =>
+    json == null ? null : WindowsSecurityContextOptions.fromJson(json);
+
+Map<String, dynamic>? _windowsSecurityContextOptionsToJson(
+        WindowsSecurityContextOptions? instance) =>
+    instance?.toJson();

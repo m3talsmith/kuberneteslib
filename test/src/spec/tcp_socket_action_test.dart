@@ -18,61 +18,58 @@ void main() {
     });
 
     group('JSON serialization', () {
-      test('toJson() creates correct JSON', () {
-        final action = TCPSocketAction(
-          host: 'example.com',
-          port: 443,
-        );
+      test('toJson() creates correct JSON with all fields', () {
+        final action = TCPSocketAction()
+          ..host = 'mysql-service'
+          ..port = 3306;
 
         final json = action.toJson();
         expect(json, {
-          'host': 'example.com',
-          'port': 443,
+          'host': 'mysql-service',
+          'port': 3306,
         });
       });
 
-      test('fromJson() creates correct object', () {
+      test('toJson() omits null values', () {
+        final action = TCPSocketAction()..port = 8080;
+
+        final json = action.toJson();
+        expect(json, {
+          'port': 8080,
+        });
+        expect(json.containsKey('host'), isFalse);
+      });
+
+      test('fromJson() creates correct instance', () {
         final json = {
-          'host': 'test-host',
-          'port': 80,
+          'host': 'redis-service',
+          'port': 6379,
         };
 
         final action = TCPSocketAction.fromJson(json);
-        expect(action.host, equals('test-host'));
-        expect(action.port, equals(80));
+        expect(action.host, equals('redis-service'));
+        expect(action.port, equals(6379));
       });
 
-      test('handles string port values', () {
-        final action = TCPSocketAction(
-          host: 'localhost',
-          port: 'http',
-        );
+      test('fromJson() handles string port values', () {
+        final json = {
+          'host': 'web-service',
+          'port': 'http',
+        };
 
-        final json = action.toJson();
-        expect(json['port'], equals('http'));
-
-        final decoded = TCPSocketAction.fromJson(json);
-        expect(decoded.port, equals('http'));
+        final action = TCPSocketAction.fromJson(json);
+        expect(action.host, equals('web-service'));
+        expect(action.port, equals('http'));
       });
 
-      test('excludes null port from JSON', () {
-        final action = TCPSocketAction(
-          host: 'localhost',
-        );
+      test('fromJson() handles missing optional fields', () {
+        final json = {
+          'port': 8080,
+        };
 
-        final json = action.toJson();
-        expect(json.containsKey('port'), isFalse);
-      });
-
-      test('handles empty values', () {
-        final action = TCPSocketAction();
-        final json = action.toJson();
-
-        expect(json, {});
-
-        final decoded = TCPSocketAction.fromJson(json);
-        expect(decoded.host, isNull);
-        expect(decoded.port, isNull);
+        final action = TCPSocketAction.fromJson(json);
+        expect(action.host, isNull);
+        expect(action.port, equals(8080));
       });
     });
   });
