@@ -1,5 +1,12 @@
 # KubernetesLib
 
+## 0.6.0
+
+- Added tests for ContainerState
+- Added tests for ContainerStateRunning
+- Added tests for ContainerStateTerminated
+- Added tests for ContainerStateWaiting
+
 ## 0.5.4
 
 - Added tests the rest of the spec classes
