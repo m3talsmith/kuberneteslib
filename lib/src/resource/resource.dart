@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:humanizer/humanizer.dart';
 import 'package:json2yaml/json2yaml.dart';
@@ -476,7 +477,23 @@ spec:
         (json.containsKey('metadata') && json['metadata']!.containsKey('kind'))
             ? json['metadata']['kind']
             : 'unknown';
-    return _$ResourceFromJson(json);
+    final resource = Resource(
+      metadata: _$JsonConverterFromJson<Map<String, dynamic>, ObjectMeta>(
+          json['metadata'], const ObjectMetaConverter().fromJson),
+      kind: json['kind'] as String?,
+      namespace: json['namespace'] as String?,
+      auth: Resource._authFromJson(json['auth']),
+      apiVersion: json['apiVersion'] as String?,
+    );
+    if (json['spec'] != null) {
+      json['spec']['kind'] = json['kind'];
+      resource.spec = Spec.fromJson(json['spec'] as Map<String, dynamic>);
+    }
+    if (json['status'] != null) {
+      json['status']['kind'] = json['kind'];
+      resource.status = Status.fromJson(json['status'] as Map<String, dynamic>);
+    }
+    return resource;
   }
 
   Map<String, dynamic> toJson() => _$ResourceToJson(this);

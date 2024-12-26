@@ -1,11 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'status.dart';
+part of 'namespace.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Status _$StatusFromJson(Map<String, dynamic> json) => Status();
+NamespaceStatus _$NamespaceStatusFromJson(Map<String, dynamic> json) =>
+    NamespaceStatus();
 
-Map<String, dynamic> _$StatusToJson(Status instance) => <String, dynamic>{};
+Map<String, dynamic> _$NamespaceStatusToJson(NamespaceStatus instance) =>
+    <String, dynamic>{};
