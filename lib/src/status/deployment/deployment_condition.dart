@@ -31,10 +31,8 @@ class DeploymentCondition {
   @JsonKey(includeIfNull: false)
   final String? type;
 
-  @override
   factory DeploymentCondition.fromJson(Map<String, dynamic> json) =>
       _$DeploymentConditionFromJson(json);
 
-  @override
   Map<String, dynamic> toJson() => _$DeploymentConditionToJson(this);
 }
