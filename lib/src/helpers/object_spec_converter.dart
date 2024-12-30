@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../kuberneteslib.dart';
-import '../spec/object_spec.dart';
 
 /// JSON converter for Kubernetes resource specifications.
 ///

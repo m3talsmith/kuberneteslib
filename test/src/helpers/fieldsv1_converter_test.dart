@@ -1,5 +1,4 @@
 import 'package:test/test.dart';
-import 'package:kuberneteslib/src/helpers/fieldsv1_converter.dart';
 import 'package:kuberneteslib/kuberneteslib.dart';
 
 void main() {

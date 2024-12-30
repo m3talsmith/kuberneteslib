@@ -1,5 +1,12 @@
 # KubernetesLib
 
+## 0.6.10
+
+- Exports all classes from the library
+## 0.6.9
+
+- Fixed Generated code bug
+
 ## 0.6.8
 
 - Added DeploymentCondition
