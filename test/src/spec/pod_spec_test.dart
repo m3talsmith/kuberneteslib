@@ -23,7 +23,7 @@ void main() {
     test('supports JSON serialization/deserialization', () {
       final podSpec = PodSpec(
         containers: [
-          Container()
+          SpecContainer()
             ..name = 'web'
             ..image = 'nginx:1.14.2'
             ..ports = [
@@ -55,7 +55,7 @@ void main() {
     test('serializes complex nested objects', () {
       final podSpec = PodSpec()
         ..containers = [
-          Container()
+          SpecContainer()
             ..name = 'app'
             ..image = 'my-app:latest'
         ]
@@ -123,7 +123,7 @@ void main() {
     test('handles resource requirements', () {
       final podSpec = PodSpec()
         ..containers = [
-          Container()
+          SpecContainer()
             ..name = 'resource-test'
             ..resources = (ResourceRequirements()
               ..limits = {

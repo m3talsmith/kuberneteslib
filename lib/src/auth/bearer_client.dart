@@ -1,3 +1,3 @@
-export 'bearer_client_stub.dart'
+export 'bearer_client_io.dart'
     if (dart.library.io) 'bearer_client_io.dart'
-    if (dart.library.html) 'bearer_client_web.dart';
+    if (dart.library.js_interop) 'bearer_client_web.dart';

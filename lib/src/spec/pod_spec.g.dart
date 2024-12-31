@@ -27,9 +27,9 @@ PodSpec _$PodSpecFromJson(Map<String, dynamic> json) => PodSpec(
       imagePullSecrets: _$JsonConverterFromJson<List<Map<String, dynamic>>,
               List<LocalObjectReference>>(json['imagePullSecrets'],
           const LocalObjectReferencesConverter().fromJson),
-      initContainers:
-          _$JsonConverterFromJson<List<Map<String, dynamic>>, List<Container>>(
-              json['initContainers'], const ContainersConverter().fromJson),
+      initContainers: _$JsonConverterFromJson<List<Map<String, dynamic>>,
+              List<SpecContainer>>(
+          json['initContainers'], const ContainersConverter().fromJson),
       nodeName: json['nodeName'] as String?,
       nodeSelector: json['nodeSelector'] as Map<String, dynamic>?,
       os: _podOSFromJson(json['os'] as Map<String, dynamic>?),
@@ -97,7 +97,8 @@ Map<String, dynamic> _$PodSpecToJson(PodSpec instance) => <String, dynamic>{
               const LocalObjectReferencesConverter().toJson)
           case final value?)
         'imagePullSecrets': value,
-      if (_$JsonConverterToJson<List<Map<String, dynamic>>, List<Container>>(
+      if (_$JsonConverterToJson<List<Map<String, dynamic>>,
+                  List<SpecContainer>>(
               instance.initContainers, const ContainersConverter().toJson)
           case final value?)
         'initContainers': value,

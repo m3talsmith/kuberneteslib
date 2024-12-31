@@ -1,4 +1,4 @@
-import 'package:kuberneteslib/kuberneteslib.dart';
+import '../../kuberneteslib.dart';
 
 /// A template class for creating Kubernetes resources with specific API versions.
 ///
