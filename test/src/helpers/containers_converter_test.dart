@@ -48,12 +48,12 @@ void main() {
 
     test('toJson converts list of Containers to list of maps', () {
       final containers = [
-        Container(
+        SpecContainer(
           name: 'container1',
           image: 'nginx:latest',
           ports: [ContainerPort(hostPort: 80, containerPort: 80)],
         ),
-        Container(
+        SpecContainer(
           name: 'container2',
           image: 'redis:latest',
           ports: [ContainerPort(hostPort: 6379, containerPort: 6379)],

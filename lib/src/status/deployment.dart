@@ -24,7 +24,11 @@ class DeploymentStatus implements Status {
   @JsonKey(includeIfNull: false)
   final int? collisionCount;
 
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+    includeIfNull: false,
+    fromJson: _conditionsFromJson,
+    toJson: _conditionsToJson,
+  )
   final List<DeploymentCondition>? conditions;
 
   @JsonKey(includeIfNull: false)
@@ -49,3 +53,11 @@ class DeploymentStatus implements Status {
   @override
   Map<String, dynamic> toJson() => _$DeploymentStatusToJson(this);
 }
+
+List<DeploymentCondition>? _conditionsFromJson(List<dynamic>? json) => json
+    ?.map((e) => DeploymentCondition.fromJson(e as Map<String, dynamic>))
+    .toList();
+
+List<Map<String, dynamic>>? _conditionsToJson(
+        List<DeploymentCondition>? conditions) =>
+    conditions?.map((e) => e.toJson()).toList();

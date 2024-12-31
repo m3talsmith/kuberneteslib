@@ -33,7 +33,7 @@ void main() {
     test('converts PodSpec to JSON correctly', () {
       final podSpec = PodSpec(
         containers: [
-          Container()
+          SpecContainer()
             ..name = 'test-container'
             ..image = 'nginx:latest'
         ],

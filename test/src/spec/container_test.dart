@@ -7,12 +7,12 @@ import 'package:kuberneteslib/src/spec/volume_mount.dart';
 void main() {
   group('Container', () {
     test('creates empty container', () {
-      final container = Container();
+      final container = SpecContainer();
       expect(container.toJson(), isEmpty);
     });
 
     test('serializes basic container configuration', () {
-      final container = Container(
+      final container = SpecContainer(
         name: 'web-server',
         image: 'nginx:1.14.2',
         imagePullPolicy: 'IfNotPresent',
@@ -26,7 +26,7 @@ void main() {
     });
 
     test('serializes container with ports', () {
-      final container = Container(
+      final container = SpecContainer(
         name: 'web-server',
         ports: [
           ContainerPort(
@@ -50,7 +50,7 @@ void main() {
     });
 
     test('serializes container with resources', () {
-      final container = Container(
+      final container = SpecContainer(
         name: 'web-server',
         resources: ResourceRequirements(
           requests: {
@@ -97,7 +97,7 @@ void main() {
         ],
       };
 
-      final container = Container.fromJson(json);
+      final container = SpecContainer.fromJson(json);
 
       expect(container.name, 'web-server');
       expect(container.image, 'nginx:1.14.2');
@@ -108,7 +108,7 @@ void main() {
     });
 
     test('handles volume mounts correctly', () {
-      final container = Container(
+      final container = SpecContainer(
         name: 'storage-container',
         volumeMounts: [
           VolumeMount(

@@ -102,8 +102,8 @@ List<Map<String, dynamic>>? _volumeMountsToJson(List<VolumeMount>? instance) =>
 /// See the [Kubernetes documentation](https://kubernetes.io/docs/concepts/containers/)
 /// for more details about container configuration.
 @JsonSerializable()
-class Container {
-  Container({
+class SpecContainer {
+  SpecContainer({
     this.args,
     this.command,
     this.env,
@@ -246,8 +246,8 @@ class Container {
   @JsonKey(includeIfNull: false)
   String? workingDir;
 
-  factory Container.fromJson(Map<String, dynamic> json) =>
-      _$ContainerFromJson(json);
+  factory SpecContainer.fromJson(Map<String, dynamic> json) =>
+      _$SpecContainerFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ContainerToJson(this);
+  Map<String, dynamic> toJson() => _$SpecContainerToJson(this);
 }

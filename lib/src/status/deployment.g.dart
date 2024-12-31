@@ -10,9 +10,7 @@ DeploymentStatus _$DeploymentStatusFromJson(Map<String, dynamic> json) =>
     DeploymentStatus(
       availableReplicas: (json['availableReplicas'] as num?)?.toInt(),
       collisionCount: (json['collisionCount'] as num?)?.toInt(),
-      conditions: (json['conditions'] as List<dynamic>?)
-          ?.map((e) => DeploymentCondition.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      conditions: _conditionsFromJson(json['conditions'] as List?),
       observedGeneration: (json['observedGeneration'] as num?)?.toInt(),
       readyReplicas: (json['readyReplicas'] as num?)?.toInt(),
       replicas: (json['replicas'] as num?)?.toInt(),
@@ -25,7 +23,8 @@ Map<String, dynamic> _$DeploymentStatusToJson(DeploymentStatus instance) =>
       if (instance.availableReplicas case final value?)
         'availableReplicas': value,
       if (instance.collisionCount case final value?) 'collisionCount': value,
-      if (instance.conditions case final value?) 'conditions': value,
+      if (_conditionsToJson(instance.conditions) case final value?)
+        'conditions': value,
       if (instance.observedGeneration case final value?)
         'observedGeneration': value,
       if (instance.readyReplicas case final value?) 'readyReplicas': value,

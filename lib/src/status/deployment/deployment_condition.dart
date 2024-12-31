@@ -13,10 +13,18 @@ class DeploymentCondition {
     this.type,
   });
 
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+    includeIfNull: false,
+    fromJson: _lastTransitionTimeFromJson,
+    toJson: _lastTransitionTimeToJson,
+  )
   final DateTime? lastTransitionTime;
 
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+    includeIfNull: false,
+    fromJson: _lastUpdateTimeFromJson,
+    toJson: _lastUpdateTimeToJson,
+  )
   final DateTime? lastUpdateTime;
 
   @JsonKey(includeIfNull: false)
@@ -36,3 +44,13 @@ class DeploymentCondition {
 
   Map<String, dynamic> toJson() => _$DeploymentConditionToJson(this);
 }
+
+DateTime? _lastTransitionTimeFromJson(String? json) =>
+    json == null ? null : DateTime.parse(json);
+
+String? _lastTransitionTimeToJson(DateTime? date) => date?.toIso8601String();
+
+DateTime? _lastUpdateTimeFromJson(String? json) =>
+    json == null ? null : DateTime.parse(json);
+
+String? _lastUpdateTimeToJson(DateTime? date) => date?.toIso8601String();

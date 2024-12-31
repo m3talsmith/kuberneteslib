@@ -5,10 +5,20 @@ void main() {
   final regex = RegExp(r'(.*)\.dart');
 
   final exports = <String>[];
-  final exclude = ['.g.', '_web', '_io', '_stub'];
+  final exclude = ['.g.dart', '_web.dart', '_io.dart'];
   dir.listSync(recursive: true).forEach((file) {
     if (regex.hasMatch(file.path)) {
       if (exclude.any((e) => file.path.contains(e))) return;
+//       if (file.path.contains('_io.dart')) {
+//         final ioPath = file.path.replaceAll('lib/', '');
+//         final webPath = ioPath.replaceAll('_io.dart', '_web.dart');
+//         exports.add('''
+// export '${ioPath}'
+//     if (dart.library.io) '${ioPath}'
+//     if (dart.library.js_interop) '${webPath}';
+// ''');
+//         return;
+//       }
       exports.add("export '${file.path.replaceAll('lib/', '')}';");
     }
   });

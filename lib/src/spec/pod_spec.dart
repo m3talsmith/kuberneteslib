@@ -128,7 +128,7 @@ class PodSpec implements ObjectSpec {
       fromJson: _containersFromJson,
       toJson: _containersToJson)
   // @ContainersConverter()
-  List<Container>? containers;
+  List<SpecContainer>? containers;
 
   /// Custom DNS settings for the pod.
   /// Allows fine-grained control over DNS resolution.
@@ -190,7 +190,7 @@ class PodSpec implements ObjectSpec {
   /// Used for setup or initialization tasks.
   @JsonKey(includeIfNull: false)
   @ContainersConverter()
-  List<Container>? initContainers;
+  List<SpecContainer>? initContainers;
 
   /// Request to schedule this pod onto a specific node.
   @JsonKey(includeIfNull: false)
@@ -318,10 +318,12 @@ class PodSpec implements ObjectSpec {
   Map<String, dynamic> toJson() => _$PodSpecToJson(this);
 }
 
-List<Container>? _containersFromJson(List<dynamic>? json) =>
-    json?.map((e) => Container.fromJson(e as Map<String, dynamic>)).toList();
+List<SpecContainer>? _containersFromJson(List<dynamic>? json) => json
+    ?.map((e) => SpecContainer.fromJson(e as Map<String, dynamic>))
+    .toList();
 
-List<Map<String, dynamic>>? _containersToJson(List<Container>? containers) =>
+List<Map<String, dynamic>>? _containersToJson(
+        List<SpecContainer>? containers) =>
     containers?.map((e) => e.toJson()).toList();
 
 List<Volume>? _volumesFromJson(List<dynamic>? json) =>

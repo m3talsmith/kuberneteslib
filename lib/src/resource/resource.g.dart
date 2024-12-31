@@ -14,12 +14,9 @@ Resource _$ResourceFromJson(Map<String, dynamic> json) => Resource(
       auth: Resource._authFromJson(json['auth']),
       apiVersion: json['apiVersion'] as String?,
     )
-      ..spec = json['spec'] == null
-          ? null
-          : Spec.fromJson(json['spec'] as Map<String, dynamic>)
-      ..status = json['status'] == null
-          ? null
-          : Status.fromJson(json['status'] as Map<String, dynamic>);
+      ..spec = _specFromJson(json['spec'] as Map<String, dynamic>?)
+      ..status = _statusFromJson(json['status'] as Map<String, dynamic>?)
+      ..conditions = _conditionsFromJson(json['conditions'] as List?);
 
 Map<String, dynamic> _$ResourceToJson(Resource instance) => <String, dynamic>{
       if (instance.apiVersion case final value?) 'apiVersion': value,
@@ -27,10 +24,12 @@ Map<String, dynamic> _$ResourceToJson(Resource instance) => <String, dynamic>{
               instance.metadata, const ObjectMetaConverter().toJson)
           case final value?)
         'metadata': value,
-      if (instance.spec case final value?) 'spec': value,
-      if (instance.status case final value?) 'status': value,
+      if (_specToJson(instance.spec) case final value?) 'spec': value,
+      if (_statusToJson(instance.status) case final value?) 'status': value,
       if (instance.kind case final value?) 'kind': value,
       if (instance.namespace case final value?) 'namespace': value,
+      if (_conditionsToJson(instance.conditions) case final value?)
+        'conditions': value,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(

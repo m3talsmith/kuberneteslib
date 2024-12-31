@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../resource/resource_kind.dart';
 
 import 'container.dart';
@@ -45,6 +47,7 @@ class Status {
   const Status();
 
   factory Status.fromJson(Map<String, dynamic> json) {
+    log('Status.fromJson: $json');
     switch (ResourceKind.fromString(json['kind'])) {
       case ResourceKind.container:
         return ContainerStatus.fromJson(json);

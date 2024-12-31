@@ -1,8 +1,25 @@
 # KubernetesLib
 
+## 0.7.18
+
+- Added conditions to Resource
+
+## 0.7.0
+
+- Renamed Container to SpecContainer to avoid conflicts with Flutter Container
+
+## 0.6.12
+
+- Fixed bad exports
+
+## 0.6.11
+
+- Exports webhooks
+
 ## 0.6.10
 
 - Exports all classes from the library
+
 ## 0.6.9
 
 - Fixed Generated code bug

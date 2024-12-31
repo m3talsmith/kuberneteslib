@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:kuberneteslib/kuberneteslib.dart';
 
@@ -173,8 +175,16 @@ enum ResourceKind {
 
   /// Converts a string to a [ResourceKind].
   /// Returns [ResourceKind.unknown] if the string does not match any known resource kind.
-  static ResourceKind fromString(String value) => ResourceKind.values
-      .firstWhere((e) => e.name == value, orElse: () => ResourceKind.unknown);
+  static ResourceKind fromString(String value) {
+    log('fromString: $value');
+    final kind = ResourceKind.values
+        .firstWhere((e) => e.name == value, orElse: () => ResourceKind.unknown);
+    log('kind: $kind');
+    if (kind == ResourceKind.unknown) {
+      log('Unknown resource kind: $value');
+    }
+    return kind;
+  }
 
   /// Returns a sorted list of resource kinds excluding [ResourceKind.unknown].
   static List<ResourceKind> sorted() =>

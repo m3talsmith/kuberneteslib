@@ -6,7 +6,8 @@ part of 'container.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Container _$ContainerFromJson(Map<String, dynamic> json) => Container(
+SpecContainer _$SpecContainerFromJson(Map<String, dynamic> json) =>
+    SpecContainer(
       args: (json['args'] as List<dynamic>?)?.map((e) => e as String).toList(),
       command:
           (json['command'] as List<dynamic>?)?.map((e) => e as String).toList(),
@@ -43,7 +44,8 @@ Container _$ContainerFromJson(Map<String, dynamic> json) => Container(
       workingDir: json['workingDir'] as String?,
     );
 
-Map<String, dynamic> _$ContainerToJson(Container instance) => <String, dynamic>{
+Map<String, dynamic> _$SpecContainerToJson(SpecContainer instance) =>
+    <String, dynamic>{
       if (instance.args case final value?) 'args': value,
       if (instance.command case final value?) 'command': value,
       if (instance.env case final value?) 'env': value,

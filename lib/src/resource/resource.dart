@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:humanizer/humanizer.dart';
 import 'package:json2yaml/json2yaml.dart';
@@ -10,10 +11,10 @@ import 'package:yaml/yaml.dart';
 import '../auth/cluster_io.dart';
 import '../auth/exceptions.dart';
 import '../helpers/object_meta_converter.dart';
-import '../helpers/object_spec_converter.dart';
 import '../meta/object_meta.dart';
 import '../spec/spec.dart';
 import '../status/status.dart';
+import 'condition.dart';
 import 'resource_kind.dart';
 
 part 'resource.g.dart';
@@ -77,12 +78,19 @@ class Resource implements ResourceBase {
   ObjectMeta? metadata;
 
   /// Resource specification defining desired state.
-  @JsonKey(includeIfNull: false)
-  @ObjectSpecConverter()
+  @JsonKey(
+    includeIfNull: false,
+    fromJson: _specFromJson,
+    toJson: _specToJson,
+  )
   Spec? spec;
 
   /// Current status of the resource.
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+    includeIfNull: false,
+    fromJson: _statusFromJson,
+    toJson: _statusToJson,
+  )
   Status? status;
 
   /// The type of resource (e.g., 'Pod', 'Deployment').
@@ -92,6 +100,13 @@ class Resource implements ResourceBase {
   /// The namespace where this resource exists.
   @JsonKey(includeIfNull: false)
   String? namespace;
+
+  @JsonKey(
+    includeIfNull: false,
+    fromJson: _conditionsFromJson,
+    toJson: _conditionsToJson,
+  )
+  List<Condition>? conditions;
 
   /// Authentication configuration for API operations.
   @JsonKey(includeIfNull: false, fromJson: _authFromJson, includeToJson: false)
@@ -305,6 +320,7 @@ class Resource implements ResourceBase {
     /// Adds additional internal tracking for the [auth] instance used
     data['auth'] = auth;
 
+    log('[Resource.show] data: ${data['conditions']}');
     return Resource.fromJson(data);
   }
 
@@ -492,8 +508,28 @@ spec:
       json['status']['kind'] = json['kind'];
       resource.status = Status.fromJson(json['status'] as Map<String, dynamic>);
     }
+    if (json['conditions'] != null) {
+      resource.conditions =
+          _conditionsFromJson(json['conditions'] as List<dynamic>);
+    }
     return resource;
   }
 
   Map<String, dynamic> toJson() => _$ResourceToJson(this);
 }
+
+Status? _statusFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : Status.fromJson(json);
+
+Map<String, dynamic>? _statusToJson(Status? status) => status?.toJson();
+
+Spec? _specFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : Spec.fromJson(json);
+
+Map<String, dynamic>? _specToJson(Spec? spec) => spec?.toJson();
+
+List<Condition>? _conditionsFromJson(List<dynamic>? json) =>
+    json?.map((e) => Condition.fromJson(e as Map<String, dynamic>)).toList();
+
+List<Map<String, dynamic>>? _conditionsToJson(List<Condition>? conditions) =>
+    conditions?.map((e) => e.toJson()).toList();
