@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.7.19
+
+- Fixed merge of conditions
+
 ## 0.7.18
 
 - Added conditions to Resource
