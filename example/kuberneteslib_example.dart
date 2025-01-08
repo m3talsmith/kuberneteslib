@@ -2,11 +2,10 @@ import 'package:kuberneteslib/kuberneteslib.dart';
 
 Future<void> main() async {
   //Initialize cluster configuration from default kubectl config
-  final config = Config.fromYaml('<kubernetes config yaml>');
+  // final config = Config.fromYaml('<kubernetes config yaml>');
 
   // Initialize an auth
-  final auth = ClusterAuth.fromConfig(config!);
-  await auth.ensureInitialization();
+  // final auth = ClusterAuth.fromConfig(config!);
 
   //List all pods in the 'default' namespace
   final pods = await Resource.list(resourceKind: 'pod', namespace: 'default');

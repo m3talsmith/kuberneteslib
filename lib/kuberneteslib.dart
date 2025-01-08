@@ -206,8 +206,6 @@ export 'src/spec/key_to_path.dart';
 export 'src/spec/se_linux_options.dart';
 export 'src/auth/exceptions.dart';
 export 'src/auth/cert_client.dart';
-export 'src/auth/cluster_auth_client.dart';
-export 'src/auth/bearer_client.dart';
 export 'src/auth/cluster.dart';
 export 'src/meta/fields_v1.dart';
 export 'src/meta/managed_field_entry.dart';

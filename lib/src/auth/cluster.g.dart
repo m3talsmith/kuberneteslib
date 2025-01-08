@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'cluster_io.dart';
+part of 'cluster.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -22,10 +22,7 @@ ClusterAuth _$ClusterAuthFromJson(Map<String, dynamic> json) => ClusterAuth(
       ..clientCertificateData = _$JsonConverterFromJson<String, Uint8List>(
           json['clientCertificateData'], const Uint8ListConverter().fromJson)
       ..clientKeyData = _$JsonConverterFromJson<String, Uint8List>(
-          json['clientKeyData'], const Uint8ListConverter().fromJson)
-      ..client = json['client'] == null
-          ? null
-          : ClusterAuthClient.fromJson(json['client'] as Map<String, dynamic>);
+          json['clientKeyData'], const Uint8ListConverter().fromJson);
 
 Map<String, dynamic> _$ClusterAuthToJson(ClusterAuth instance) =>
     <String, dynamic>{
@@ -47,7 +44,6 @@ Map<String, dynamic> _$ClusterAuthToJson(ClusterAuth instance) =>
               instance.clientKeyData, const Uint8ListConverter().toJson)
           case final value?)
         'clientKeyData': value,
-      if (instance.client case final value?) 'client': value,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(

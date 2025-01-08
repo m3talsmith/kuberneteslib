@@ -1,5 +1,13 @@
 # KubernetesLib
 
+## 0.8.1
+
+- Refactor cluster auth code to be browser compatible
+
+## 0.7.21
+
+- Removed IO to make this browser compatible
+
 ## 0.7.19
 
 - Fixed merge of conditions
