@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.8.5
+
+- Fixed CertClient for browser
+
 ## 0.8.1
 
 - Refactor cluster auth code to be browser compatible

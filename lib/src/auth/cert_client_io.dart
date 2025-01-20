@@ -1,28 +1,21 @@
 import 'dart:io';
+import 'dart:typed_data';
 
-import 'bearer_client.dart';
+import 'cert_client.dart';
 
-class BearerClientIO implements BearerClient {
+class CertClientIO implements CertClient {
   Map<String, dynamic> sendOptions({
-    required String token,
+    required Uint8List clientCertificateAuthority,
+    required Uint8List clientCertificateData,
+    required Uint8List clientKeyData,
     Map<String, String>? headers,
     String? method,
-    DateTime? expirationTimestamp,
     bool Function(X509Certificate, String, int)? badCertificateCallback,
   }) {
+    final options = <String, dynamic>{};
     badCertificateCallback ??= (_, __, ___) => true;
 
-    if (expirationTimestamp != null) {
-      final now = DateTime.now();
-      if (expirationTimestamp.isBefore(now)) {
-        throw Exception('Bearer token is expired');
-      }
-    }
-
-    final options = <String, dynamic>{};
-
     headers ??= <String, String>{};
-    headers['Authorization'] = 'Bearer $token';
     if (method != null) {
       switch (method.toUpperCase()) {
         case 'PATCH':
@@ -33,7 +26,14 @@ class BearerClientIO implements BearerClient {
       }
     }
     options['headers'] = headers;
-    var context = SecurityContext()..allowLegacyUnsafeRenegotiation = true;
+
+    var context = SecurityContext()
+      ..allowLegacyUnsafeRenegotiation = true
+      ..setClientAuthoritiesBytes(clientCertificateAuthority);
+    if (clientCertificateData.isNotEmpty) {
+      context.useCertificateChainBytes(clientCertificateData);
+    }
+    if (clientKeyData.isNotEmpty) context.usePrivateKeyBytes(clientKeyData);
     options['context'] = context;
     options['badCertificateCallback'] = badCertificateCallback;
 

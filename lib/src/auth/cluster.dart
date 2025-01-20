@@ -12,10 +12,10 @@ import 'package:kuberneteslib/src/helpers/uint8list_converter.dart';
 import '../cluster/cluster.dart';
 import '../cluster/config.dart';
 import '../cluster/user.dart';
-import 'bearer_client_io.dart' as bearer_client
-    if (dart.library.io) 'bearer_client_io.dart'
-    if (dart.library.html) 'bearer_client_web.dart';
-import 'cert_client.dart' as cert_client;
+import 'bearer_client_io.dart';
+import 'bearer_client_web.dart';
+import 'cert_client_io.dart';
+import 'cert_client_web.dart';
 
 part 'cluster.g.dart';
 
@@ -130,10 +130,31 @@ class ClusterAuth extends http.BaseClient {
     request.headers['User-Agent'] = 'kuberneteslib';
 
     if (token != null) {
-      final options = bearer_client.sendOptions(
-        token: token!,
-        badCertificateCallback: (_, __, ___) => true,
-      );
+      final options = <String, dynamic>{};
+
+      if (Platform.isLinux ||
+          Platform.isMacOS ||
+          Platform.isWindows ||
+          Platform.isAndroid ||
+          Platform.isIOS) {
+        for (var option in BearerClientIO()
+            .sendOptions(
+              token: token!,
+              badCertificateCallback: (_, __, ___) => true,
+            )
+            .entries) {
+          options[option.key] = option.value;
+        }
+      } else {
+        for (var option in BearerClientWeb()
+            .sendOptions(
+              token: token!,
+              badCertificateCallback: (_, __, ___) => true,
+            )
+            .entries) {
+          options[option.key] = option.value;
+        }
+      }
 
       for (var option in options.entries) {
         request.headers[option.key] = option.value;
@@ -151,12 +172,35 @@ class ClusterAuth extends http.BaseClient {
       return BrowserClient().send(request);
     }
 
-    final options = cert_client.sendOptions(
-      clientCertificateAuthority: clientCertificateAuthority!,
-      clientCertificateData: clientCertificateData!,
-      clientKeyData: clientKeyData!,
-      badCertificateCallback: (_, __, ___) => true,
-    );
+    final options = <String, dynamic>{};
+
+    if (Platform.isLinux ||
+        Platform.isMacOS ||
+        Platform.isWindows ||
+        Platform.isAndroid ||
+        Platform.isIOS) {
+      for (var option in CertClientIO()
+          .sendOptions(
+            clientCertificateAuthority: clientCertificateAuthority!,
+            clientCertificateData: clientCertificateData!,
+            clientKeyData: clientKeyData!,
+            badCertificateCallback: (_, __, ___) => true,
+          )
+          .entries) {
+        options[option.key] = option.value;
+      }
+    } else {
+      for (var option in CertClientWeb()
+          .sendOptions(
+            clientCertificateAuthority: clientCertificateAuthority!,
+            clientCertificateData: clientCertificateData!,
+            clientKeyData: clientKeyData!,
+            badCertificateCallback: (_, __, ___) => true,
+          )
+          .entries) {
+        options[option.key] = option.value;
+      }
+    }
 
     for (var option in options.entries) {
       request.headers[option.key] = option.value;

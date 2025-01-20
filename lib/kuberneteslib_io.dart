@@ -205,13 +205,12 @@ export 'src/spec/http_header.dart';
 export 'src/spec/key_to_path.dart';
 export 'src/spec/se_linux_options.dart';
 export 'src/auth/exceptions.dart';
-export 'src/auth/cluster.dart';
+export 'src/auth/bearer_client_io.dart';
 export 'src/auth/bearer_client.dart';
+export 'src/auth/cert_client_io.dart';
 export 'src/auth/cert_client.dart';
+export 'src/auth/cluster.dart';
 export 'src/meta/fields_v1.dart';
 export 'src/meta/managed_field_entry.dart';
 export 'src/meta/owner_reference.dart';
 export 'src/meta/object_meta.dart';
-
-export 'kuberneteslib_web.dart' if (dart.library.html) 'kuberneteslib_web.dart';
-export 'kuberneteslib_io.dart' if (dart.library.io) 'kuberneteslib_io.dart';

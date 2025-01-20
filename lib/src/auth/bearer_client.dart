@@ -1,13 +1,11 @@
 import 'dart:io';
-import 'dart:typed_data';
 
-abstract class CertClient {
+abstract class BearerClient {
   Map<String, dynamic> sendOptions({
-    required Uint8List clientCertificateAuthority,
-    required Uint8List clientCertificateData,
-    required Uint8List clientKeyData,
+    required String token,
     Map<String, String>? headers,
     String? method,
+    DateTime? expirationTimestamp,
     bool Function(X509Certificate, String, int)? badCertificateCallback,
   });
 }

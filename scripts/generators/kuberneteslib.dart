@@ -9,16 +9,16 @@ void main() {
   dir.listSync(recursive: true).forEach((file) {
     if (regex.hasMatch(file.path)) {
       if (exclude.any((e) => file.path.contains(e))) return;
-//       if (file.path.contains('_io.dart')) {
-//         final ioPath = file.path.replaceAll('lib/', '');
-//         final webPath = ioPath.replaceAll('_io.dart', '_web.dart');
-//         exports.add('''
-// export '${ioPath}'
-//     if (dart.library.io) '${ioPath}'
-//     if (dart.library.js_interop) '${webPath}';
-// ''');
-//         return;
-//       }
+      if (file.path.contains('_stub.dart')) {
+        final path = file.path.replaceAll('lib/', '');
+        final ioPath = path.replaceAll('_stub.dart', '_io.dart');
+        final webPath = path.replaceAll('_stub.dart', '_web.dart');
+        exports.add('''export '$path'
+  if (dart.library.io) '$ioPath'
+  if (dart.library.html) '$webPath';
+''');
+        return;
+      }
       exports.add("export '${file.path.replaceAll('lib/', '')}';");
     }
   });
