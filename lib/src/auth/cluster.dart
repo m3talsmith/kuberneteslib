@@ -151,32 +151,6 @@ class ClusterAuth extends http.BaseClient {
   /// @return A [Future<StreamedResponse>] containing the server's response
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) {
-    request.headers['User-Agent'] = 'kuberneteslib';
-
-    if (token != null) {
-      BearerClient()
-          .sendOptions(
-        token: token!,
-        badCertificateCallback: (_, __, ___) => true,
-      )['headers']
-          .forEach((key, value) {
-        request.headers[key] = value;
-      });
-
-      return BrowserClient().send(request);
-    }
-
-    CertClient()
-        .sendOptions(
-      clientCertificateAuthority: clientCertificateAuthority!,
-      clientCertificateData: clientCertificateData!,
-      clientKeyData: clientKeyData!,
-      badCertificateCallback: (_, __, ___) => true,
-    )['headers']
-        .forEach((key, value) {
-      request.headers[key] = value;
-    });
-
-    return BrowserClient().send(request);
+    throw UnimplementedError();
   }
 }

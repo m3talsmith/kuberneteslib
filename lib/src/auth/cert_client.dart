@@ -10,22 +10,6 @@ class CertClient {
     String? method,
     bool Function(X509Certificate, String, int)? badCertificateCallback,
   }) {
-    final options = <String, dynamic>{};
-    badCertificateCallback ??= (_, __, ___) => true;
-
-    headers ??= <String, String>{};
-    if (method != null) {
-      switch (method.toUpperCase()) {
-        case 'PATCH':
-          headers['Content-Type'] = 'application/merge-patch+json';
-          break;
-        default:
-          headers['Content-Type'] = 'application/json';
-      }
-    }
-    options['headers'] = headers;
-    options['badCertificateCallback'] = badCertificateCallback;
-
-    return options;
+    throw UnimplementedError();
   }
 }
