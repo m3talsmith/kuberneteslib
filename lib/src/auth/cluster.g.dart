@@ -7,11 +7,9 @@ part of 'cluster.dart';
 // **************************************************************************
 
 ClusterAuth _$ClusterAuthFromJson(Map<String, dynamic> json) => ClusterAuth(
-      cluster: json['cluster'],
+      cluster: _clusterFromJson(json['cluster'] as Map<String, dynamic>?),
     )
-      ..user = json['user'] == null
-          ? null
-          : User.fromJson(json['user'] as Map<String, dynamic>)
+      ..user = _userFromJson(json['user'] as Map<String, dynamic>?)
       ..token = json['token'] as String?
       ..expirationTimestamp = json['expirationTimestamp'] == null
           ? null
@@ -26,8 +24,8 @@ ClusterAuth _$ClusterAuthFromJson(Map<String, dynamic> json) => ClusterAuth(
 
 Map<String, dynamic> _$ClusterAuthToJson(ClusterAuth instance) =>
     <String, dynamic>{
-      if (instance.cluster case final value?) 'cluster': value,
-      if (instance.user case final value?) 'user': value,
+      if (_clusterToJson(instance.cluster) case final value?) 'cluster': value,
+      if (_userToJson(instance.user) case final value?) 'user': value,
       if (instance.token case final value?) 'token': value,
       if (instance.expirationTimestamp?.toIso8601String() case final value?)
         'expirationTimestamp': value,

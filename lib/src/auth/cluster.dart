@@ -3,21 +3,26 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart'
-    if (dart.library.io) 'package:http/io_client.dart';
-import 'package:http/browser_client.dart'
-    if (dart.library.html) 'package:http/browser_client.dart';
+import 'package:http/browser_client.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:kuberneteslib/src/helpers/uint8list_converter.dart';
 import '../cluster/cluster.dart';
 import '../cluster/config.dart';
 import '../cluster/user.dart';
-import 'bearer_client_io.dart';
-import 'bearer_client_web.dart';
-import 'cert_client_io.dart';
-import 'cert_client_web.dart';
+import 'bearer_client.dart';
+import 'cert_client.dart';
 
 part 'cluster.g.dart';
+
+Cluster? _clusterFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : Cluster.fromJson(json);
+
+Map<String, dynamic>? _clusterToJson(Cluster? instance) => instance?.toJson();
+
+User? _userFromJson(Map<String, dynamic>? json) =>
+    json == null ? null : User.fromJson(json);
+
+Map<String, dynamic>? _userToJson(User? instance) => instance?.toJson();
 
 /// [ClusterAuth] is a core class for Kubernetes API authentication. It handles
 /// authentication to the Kubernetes API calls and acts as an HTTP client wrapper.
@@ -46,11 +51,12 @@ class ClusterAuth extends http.BaseClient {
   ClusterAuth({required cluster});
 
   /// The cluster configuration containing server and certificate information
-  @JsonKey(includeIfNull: false)
+  @JsonKey(
+      includeIfNull: false, toJson: _clusterToJson, fromJson: _clusterFromJson)
   Cluster? cluster;
 
   /// The user configuration containing authentication details
-  @JsonKey(includeIfNull: false)
+  @JsonKey(includeIfNull: false, toJson: _userToJson, fromJson: _userFromJson)
   User? user;
 
   /// Bearer token for token-based authentication
@@ -97,6 +103,23 @@ class ClusterAuth extends http.BaseClient {
     clientKeyData = base64Decode(user?.clientKeyData ?? '');
   }
 
+  ClusterAuth.fromSelectedContext(Config config, String contextName) {
+    final context = config.contexts.firstWhere(
+        (e) => (e.name != null && e.name == contextName),
+        orElse: () => config.contexts.first);
+    cluster = config.clusters.firstWhere(
+        (e) => (e.name != null && e.name == context.cluster),
+        orElse: () => config.clusters.first);
+    user = config.users.firstWhere(
+        (e) => (e.name != null && e.name == context.user),
+        orElse: () => config.users.first);
+
+    clientCertificateAuthority =
+        base64Decode(cluster?.certificateAuthorityData ?? '');
+    clientCertificateData = base64Decode(user?.clientCertificateData ?? '');
+    clientKeyData = base64Decode(user?.clientKeyData ?? '');
+  }
+
   factory ClusterAuth.fromJson(Map<String, dynamic> json) =>
       _$ClusterAuthFromJson(json);
 
@@ -126,95 +149,34 @@ class ClusterAuth extends http.BaseClient {
   ///
   /// @param request The [BaseRequest] to be sent
   /// @return A [Future<StreamedResponse>] containing the server's response
+  @override
   Future<http.StreamedResponse> send(http.BaseRequest request) {
     request.headers['User-Agent'] = 'kuberneteslib';
 
     if (token != null) {
-      final options = <String, dynamic>{};
+      BearerClient()
+          .sendOptions(
+        token: token!,
+        badCertificateCallback: (_, __, ___) => true,
+      )['headers']
+          .forEach((key, value) {
+        request.headers[key] = value;
+      });
 
-      if (Platform.isLinux ||
-          Platform.isMacOS ||
-          Platform.isWindows ||
-          Platform.isAndroid ||
-          Platform.isIOS) {
-        for (var option in BearerClientIO()
-            .sendOptions(
-              token: token!,
-              badCertificateCallback: (_, __, ___) => true,
-            )
-            .entries) {
-          options[option.key] = option.value;
-        }
-      } else {
-        for (var option in BearerClientWeb()
-            .sendOptions(
-              token: token!,
-              badCertificateCallback: (_, __, ___) => true,
-            )
-            .entries) {
-          options[option.key] = option.value;
-        }
-      }
-
-      for (var option in options.entries) {
-        request.headers[option.key] = option.value;
-      }
-
-      if (Platform.isLinux ||
-          Platform.isMacOS ||
-          Platform.isWindows ||
-          Platform.isAndroid ||
-          Platform.isIOS) {
-        final client = HttpClient(context: options['context'])
-          ..badCertificateCallback = options['badCertificateCallback'];
-        return IOClient(client).send(request);
-      }
       return BrowserClient().send(request);
     }
 
-    final options = <String, dynamic>{};
+    CertClient()
+        .sendOptions(
+      clientCertificateAuthority: clientCertificateAuthority!,
+      clientCertificateData: clientCertificateData!,
+      clientKeyData: clientKeyData!,
+      badCertificateCallback: (_, __, ___) => true,
+    )['headers']
+        .forEach((key, value) {
+      request.headers[key] = value;
+    });
 
-    if (Platform.isLinux ||
-        Platform.isMacOS ||
-        Platform.isWindows ||
-        Platform.isAndroid ||
-        Platform.isIOS) {
-      for (var option in CertClientIO()
-          .sendOptions(
-            clientCertificateAuthority: clientCertificateAuthority!,
-            clientCertificateData: clientCertificateData!,
-            clientKeyData: clientKeyData!,
-            badCertificateCallback: (_, __, ___) => true,
-          )
-          .entries) {
-        options[option.key] = option.value;
-      }
-    } else {
-      for (var option in CertClientWeb()
-          .sendOptions(
-            clientCertificateAuthority: clientCertificateAuthority!,
-            clientCertificateData: clientCertificateData!,
-            clientKeyData: clientKeyData!,
-            badCertificateCallback: (_, __, ___) => true,
-          )
-          .entries) {
-        options[option.key] = option.value;
-      }
-    }
-
-    for (var option in options.entries) {
-      request.headers[option.key] = option.value;
-    }
-
-    if (Platform.isLinux ||
-        Platform.isMacOS ||
-        Platform.isWindows ||
-        Platform.isAndroid ||
-        Platform.isIOS) {
-      final client = HttpClient(context: options['context'])
-        ..badCertificateCallback = options['badCertificateCallback'];
-      return IOClient(client).send(request);
-    }
     return BrowserClient().send(request);
   }
 }

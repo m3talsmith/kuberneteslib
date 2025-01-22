@@ -212,6 +212,3 @@ export 'src/meta/fields_v1.dart';
 export 'src/meta/managed_field_entry.dart';
 export 'src/meta/owner_reference.dart';
 export 'src/meta/object_meta.dart';
-
-export 'kuberneteslib_web.dart' if (dart.library.html) 'kuberneteslib_web.dart';
-export 'kuberneteslib_io.dart' if (dart.library.io) 'kuberneteslib_io.dart';
