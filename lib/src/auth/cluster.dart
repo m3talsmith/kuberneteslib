@@ -3,14 +3,11 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
-import 'package:http/browser_client.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:kuberneteslib/src/helpers/uint8list_converter.dart';
 import '../cluster/cluster.dart';
 import '../cluster/config.dart';
 import '../cluster/user.dart';
-import 'bearer_client.dart';
-import 'cert_client.dart';
 
 part 'cluster.g.dart';
 
