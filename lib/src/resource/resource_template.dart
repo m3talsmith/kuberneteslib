@@ -1,4 +1,8 @@
-import '../../kuberneteslib.dart';
+import '../resource/resource.dart';
+import '../meta/object_meta.dart';
+import '../spec/spec.dart';
+import '../status/status.dart';
+import '../auth/cluster.dart';
 
 /// A template class for creating Kubernetes resources with specific API versions.
 ///

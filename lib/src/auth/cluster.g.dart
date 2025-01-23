@@ -8,19 +8,19 @@ part of 'cluster.dart';
 
 ClusterAuth _$ClusterAuthFromJson(Map<String, dynamic> json) => ClusterAuth(
       cluster: _clusterFromJson(json['cluster'] as Map<String, dynamic>?),
-    )
-      ..user = _userFromJson(json['user'] as Map<String, dynamic>?)
-      ..token = json['token'] as String?
-      ..expirationTimestamp = json['expirationTimestamp'] == null
+      user: _userFromJson(json['user'] as Map<String, dynamic>?),
+      token: json['token'] as String?,
+      expirationTimestamp: json['expirationTimestamp'] == null
           ? null
-          : DateTime.parse(json['expirationTimestamp'] as String)
-      ..clientCertificateAuthority = _$JsonConverterFromJson<String, Uint8List>(
+          : DateTime.parse(json['expirationTimestamp'] as String),
+      clientCertificateAuthority: _$JsonConverterFromJson<String, Uint8List>(
           json['clientCertificateAuthority'],
-          const Uint8ListConverter().fromJson)
-      ..clientCertificateData = _$JsonConverterFromJson<String, Uint8List>(
-          json['clientCertificateData'], const Uint8ListConverter().fromJson)
-      ..clientKeyData = _$JsonConverterFromJson<String, Uint8List>(
-          json['clientKeyData'], const Uint8ListConverter().fromJson);
+          const Uint8ListConverter().fromJson),
+      clientCertificateData: _$JsonConverterFromJson<String, Uint8List>(
+          json['clientCertificateData'], const Uint8ListConverter().fromJson),
+      clientKeyData: _$JsonConverterFromJson<String, Uint8List>(
+          json['clientKeyData'], const Uint8ListConverter().fromJson),
+    );
 
 Map<String, dynamic> _$ClusterAuthToJson(ClusterAuth instance) =>
     <String, dynamic>{
