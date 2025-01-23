@@ -1,18 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../cluster/cluster.dart';
 import '../cluster/config.dart';
 import '../cluster/user.dart';
 import '../helpers/uint8list_converter.dart';
-
-import '../helpers/platform.dart' as platform;
-import '../helpers/platform_stub.dart'
-    if (dart.library.io) '../helpers/platform_io.dart'
-    if (dart.library.html) '../helpers/platform_web.dart';
-import 'cluster_io.dart' as auth_io if (dart.library.io) 'cluster_io.dart';
-import 'cluster_web.dart' as auth_web if (dart.library.html) 'cluster_web.dart';
 
 part 'cluster.g.dart';
 
@@ -63,50 +59,97 @@ class ClusterAuth extends http.BaseClient {
   Uint8List? clientKeyData;
 
   static ClusterAuth fromConfig(Config config) {
-    ClusterAuth ca;
+    final context = config.contexts.firstWhere(
+        (e) => (e.name != null && e.name == config.currentContext),
+        orElse: () => config.contexts.first);
+    final cluster = config.clusters.firstWhere(
+        (e) => (e.name != null && e.name == context.cluster),
+        orElse: () => config.clusters.first);
+    final user = config.users.firstWhere(
+        (e) => (e.name != null && e.name == context.user),
+        orElse: () => config.users.first);
 
-    if (getPlatform() == platform.Platform.web) {
-      ca = auth_web.fromConfig(config);
-    } else {
-      ca = auth_io.fromConfig(config);
-    }
+    final clientCertificateAuthority =
+        base64Decode(cluster.certificateAuthorityData ?? '');
+    final clientCertificateData =
+        base64Decode(user.clientCertificateData ?? '');
+    final clientKeyData = base64Decode(user.clientKeyData ?? '');
 
     return ClusterAuth(
-        cluster: ca.cluster,
-        user: ca.user,
-        token: ca.token,
-        expirationTimestamp: ca.expirationTimestamp,
-        clientCertificateAuthority: ca.clientCertificateAuthority,
-        clientCertificateData: ca.clientCertificateData,
-        clientKeyData: ca.clientKeyData);
+        cluster: cluster,
+        user: user,
+        token: null,
+        expirationTimestamp: null,
+        clientCertificateAuthority: clientCertificateAuthority,
+        clientCertificateData: clientCertificateData,
+        clientKeyData: clientKeyData);
   }
 
   static ClusterAuth fromSelectedContext(Config config, String contextName) {
-    ClusterAuth ca;
+    final context = config.contexts.firstWhere(
+        (e) => (e.name != null && e.name == contextName),
+        orElse: () => config.contexts.first);
+    final cluster = config.clusters.firstWhere(
+        (e) => (e.name != null && e.name == context.cluster),
+        orElse: () => config.clusters.first);
+    final user = config.users.firstWhere(
+        (e) => (e.name != null && e.name == context.user),
+        orElse: () => config.users.first);
 
-    if (getPlatform() == platform.Platform.web) {
-      ca = auth_web.fromSelectedContext(config, contextName);
-    } else {
-      ca = auth_io.fromSelectedContext(config, contextName);
-    }
+    final clientCertificateAuthority =
+        base64Decode(cluster.certificateAuthorityData ?? '');
+    final clientCertificateData =
+        base64Decode(user.clientCertificateData ?? '');
+    final clientKeyData = base64Decode(user.clientKeyData ?? '');
 
     return ClusterAuth(
-        cluster: ca.cluster,
-        user: ca.user,
-        token: ca.token,
-        expirationTimestamp: ca.expirationTimestamp,
-        clientCertificateAuthority: ca.clientCertificateAuthority,
-        clientCertificateData: ca.clientCertificateData,
-        clientKeyData: ca.clientKeyData);
+        cluster: cluster,
+        user: user,
+        token: null,
+        expirationTimestamp: null,
+        clientCertificateAuthority: clientCertificateAuthority,
+        clientCertificateData: clientCertificateData,
+        clientKeyData: clientKeyData);
   }
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) {
-    if (getPlatform() == platform.Platform.web) {
-      return auth_web.send(this, request);
-    } else {
-      return auth_io.send(this, request);
+    badCertificateCallback(_, __, ___) => true;
+
+    if (expirationTimestamp != null) {
+      final now = DateTime.now();
+      if (expirationTimestamp!.isBefore(now)) {
+        throw Exception('Bearer token is expired');
+      }
     }
+
+    request.headers['User-Agent'] = 'kuberneteslib';
+
+    switch (request.method.toUpperCase()) {
+      case 'PATCH':
+        request.headers['Content-Type'] = 'application/merge-patch+json';
+        break;
+      default:
+        request.headers['Content-Type'] = 'application/json';
+    }
+
+    if (token != null) {
+      request.headers['Authorization'] = 'Bearer $token';
+    }
+
+    final context = SecurityContext()..allowLegacyUnsafeRenegotiation = true;
+    if (token == null) {
+      context.setClientAuthoritiesBytes(clientCertificateAuthority!);
+      if (clientCertificateData?.isNotEmpty ?? false) {
+        context.useCertificateChainBytes(clientCertificateData!);
+      }
+      if (clientKeyData?.isNotEmpty ?? false) {
+        context.usePrivateKeyBytes(clientKeyData!);
+      }
+    }
+    final client = HttpClient(context: context)
+      ..badCertificateCallback = badCertificateCallback;
+    return IOClient(client).send(request);
   }
 
   factory ClusterAuth.fromJson(Map<String, dynamic> json) =>

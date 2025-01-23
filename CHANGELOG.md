@@ -1,5 +1,13 @@
 # KubernetesLib
 
+## 0.9.3
+
+- Ripped out web support for now
+
+## 0.9.2
+
+- Integrated ClusterAuth with conditional io/web imports
+
 ## 0.9.1
 
 - Added ClusterAuth with conditional io/web imports
