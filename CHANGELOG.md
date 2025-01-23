@@ -1,5 +1,9 @@
 # KubernetesLib
 
+## 0.9.1
+
+- Added ClusterAuth with conditional io/web imports
+
 ## 0.8.5
 
 - Fixed CertClient for browser

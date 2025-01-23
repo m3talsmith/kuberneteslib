@@ -1,44 +1,45 @@
 library kuberneteslib;
 
 /// # KubernetesLib
-///
+/// 
 /// A Dart library that implements the Kubernetes API natively. Built using official Kubernetes specifications, it currently supports most V1 Core, Apps, and Batch resources.
-///
+/// 
 /// [![Pub Version](https://img.shields.io/pub/v/kuberneteslib)](https://pub.dev/packages/kuberneteslib)
-///
+/// 
 /// ## Features
-///
+/// 
 /// - Native Kubernetes API implementation
 /// - Support for V1 Core Resources
 /// - Support for V1 Apps Resources
 /// - Support for V1 Batch Resources
 /// - List, Show, and Delete operations
 /// - Type-safe resource handling
-///
+/// 
 /// ## Slack
-///
+/// 
 /// We've got a slack channel for questions and technical help: https://kuberneteslib.slack.com
-///
+/// 
 /// ## Installation
-///
+/// 
 /// Install with `dart pub add kuberneteslib`.
-///
+/// 
 /// ## Usage
-///
+/// 
 /// See [kubectl_dashboard]
 /// (https://github.com/m3talsmith/kubectl_dashboard) for usage examples.
-///
+/// 
 /// ## Additional information
-///
+/// 
 /// This is very much a beta product, being tested for a kubernetes dashboard. The dashboard is a good place to find working examples of this library.
-///
+/// 
 /// Source: https://github.com/m3talsmith/kuberneteslib
 /// Dashboard: https://github.com/m3talsmith/kubectl_dashboard
-///
+/// 
 /// Expect to see drastic improvements over the coming weeks.
-///
+/// 
 
 export 'src/helpers/pod_security_context_converter.dart';
+export 'src/helpers/platform_stub.dart';
 export 'src/helpers/container_ports_converter.dart';
 export 'src/helpers/mode_converter.dart';
 export 'src/helpers/quantity_converter.dart';
@@ -46,6 +47,7 @@ export 'src/helpers/containers_converter.dart';
 export 'src/helpers/uint8list_converter.dart';
 export 'src/helpers/fieldsv1_converter.dart';
 export 'src/helpers/local_object_references_converter.dart';
+export 'src/helpers/platform.dart';
 export 'src/helpers/yaml_parser.dart';
 export 'src/helpers/object_spec_converter.dart';
 export 'src/helpers/pod_dns_config_converter.dart';
@@ -205,7 +207,7 @@ export 'src/spec/http_header.dart';
 export 'src/spec/key_to_path.dart';
 export 'src/spec/se_linux_options.dart';
 export 'src/auth/exceptions.dart';
-export 'src/auth/cluster_io.dart';
+export 'src/auth/cluster.dart';
 export 'src/meta/fields_v1.dart';
 export 'src/meta/managed_field_entry.dart';
 export 'src/meta/owner_reference.dart';
